@@ -9,6 +9,7 @@ const { initDatabase } = require('./src/config/initDatabase');
 const testRoutes = require('./src/routes/testRoutes');
 const authRoutes = require('./src/routes/authRoutes');
 const { limitGlobal } = require('./src/middlewares/rateLimit');
+const snippetRoutes = require('./src/routes/snippetRoutes');
 
 const app = express();
 app.set('trust proxy', 1);
@@ -25,6 +26,7 @@ app.use(limitGlobal);
 // Rutas
 app.use('/api/test', testRoutes);
 app.use('/api/auth', authRoutes);
+app.use('/api/snippets', snippetRoutes);
 
 // Ruta de bienvenida
 app.get('/', (req, res) => {
