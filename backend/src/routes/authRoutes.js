@@ -2,11 +2,13 @@ const express = require('express');
 const { body } = require('express-validator');
 const { register, login, profile } = require('../controllers/authController');
 const { verifyToken } = require('../middlewares/verifyToken');
+const { limitAuthLogin, limitAuthRegister } = require('../middlewares/rateLimit');
 
 const router = express.Router();
 
 router.post(
   '/register',
+  limitAuthRegister, 
   [
     body('username').trim().isLength({ min: 3, max: 50 }).withMessage('username 3-50 chars'),
     body('email').isEmail().withMessage('email inválido').normalizeEmail(),
@@ -19,6 +21,7 @@ router.post(
 
 router.post(
   '/login',
+  limitAuthLogin, 
   [
     body('email').isEmail().withMessage('email inválido').normalizeEmail(),
     body('password').notEmpty().withMessage('password requerido')
