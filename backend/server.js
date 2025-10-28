@@ -21,7 +21,6 @@ app.use(express.urlencoded({ extended: true }));
 
 // Rutas
 app.use('/api/test', testRoutes);
-app.use('/api/test', testRoutes);
 app.use('/api/auth', authRoutes);
 
 // Ruta de bienvenida
