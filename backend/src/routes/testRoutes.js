@@ -18,7 +18,6 @@ router.get('/', (req, res) => {
 // GET /api/test/health - Verificación de salud del sistema
 router.get('/health', async (req, res) => {
   try {
-    // Verificar conexión a la base de datos
     const result = await query('SELECT 1 as test');
     
     res.json({
@@ -45,33 +44,34 @@ router.get('/health', async (req, res) => {
   }
 });
 
-// GET /api/test/db - Prueba específica de base de datos
-router.get('/db', async (req, res) => {
+// GET /api/test/tables - Verificar que las tablas existen
+router.get('/tables', async (req, res) => {
   try {
-    // Crear tabla de prueba si no existe
-    await query(`
-      CREATE TABLE IF NOT EXISTS test_table (
-        id INT AUTO_INCREMENT PRIMARY KEY,
-        message VARCHAR(255),
-        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-      )
-    `);
+    const tables = await query(`
+      SELECT TABLE_NAME, TABLE_ROWS 
+      FROM information_schema.TABLES 
+      WHERE TABLE_SCHEMA = ?
+    `, [process.env.DB_NAME || 'sniphub_db']);
 
-    // Insertar un registro de prueba
-    await query('INSERT INTO test_table (message) VALUES (?)', ['Test desde SnipHub API']);
-
-    // Consultar los registros
-    const results = await query('SELECT * FROM test_table ORDER BY created_at DESC LIMIT 5');
+    const categories = await query('SELECT COUNT(*) as count FROM categories');
+    const users = await query('SELECT COUNT(*) as count FROM users');
+    const snippets = await query('SELECT COUNT(*) as count FROM snippets');
 
     res.json({
-      message: '✅ Base de datos funcionando correctamente',
-      test_table_created: true,
-      recent_records: results,
-      total_records: results.length
+      message: '✅ Tablas verificadas correctamente',
+      tables: tables.map(t => ({
+        name: t.TABLE_NAME,
+        rows: t.TABLE_ROWS
+      })),
+      counts: {
+        categories: categories[0].count,
+        users: users[0].count,
+        snippets: snippets[0].count
+      }
     });
   } catch (error) {
     res.status(500).json({
-      error: '❌ Error en la base de datos',
+      error: '❌ Error verificando tablas',
       message: error.message
     });
   }
