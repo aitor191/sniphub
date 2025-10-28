@@ -3,6 +3,7 @@ const { body } = require('express-validator');
 const { register, login, profile } = require('../controllers/authController');
 const { verifyToken } = require('../middlewares/verifyToken');
 const { limitAuthLogin, limitAuthRegister } = require('../middlewares/rateLimit');
+const { bruteGuardLogin } = require('../middlewares/bruteGuard');
 
 const router = express.Router();
 
@@ -22,11 +23,12 @@ router.post(
 router.post(
   '/login',
   limitAuthLogin, 
+  bruteGuardLogin, 
   [
     body('email').isEmail().withMessage('email inválido').normalizeEmail(),
     body('password').notEmpty().withMessage('password requerido')
   ],
-  login
+  async (requestAnimationFrame, resizeBy, next) => next()
 );
 
 router.get('/profile', verifyToken, profile);

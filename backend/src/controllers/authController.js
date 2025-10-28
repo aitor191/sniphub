@@ -40,12 +40,13 @@ async function login(req, res) {
   const { email, password } = req.body;
 
   const user = await findByEmail(email);
-  if (!user) return res.status(401).json({ error: 'Credenciales inválidas' });
-  if (user.is_active === 0) return res.status(403).json({ error: 'Usuario inactivo' });
+  if (!user) { res.onAuthFail?.(); return res.status(401).json({ error: 'Credenciales inválidas' }); }
+  if (user.is_active === 0)  { res.onAuthFail?.(); return res.status(403).json({ error: 'Usuario inactivo' }); }
 
   const ok = await comparePassword(password, user.password);
-  if (!ok) return res.status(401).json({ error: 'Credenciales inválidas' });
+  if (!ok) { res.onAuthFail?.(); return res.status(401).json({ error: 'Credenciales inválidas' }); }
 
+  res.onAuthSuccess?.();
   const token = signToken({ id: user.id, username: user.username });
 
   return res.json({
