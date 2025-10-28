@@ -11,6 +11,7 @@ const authRoutes = require('./src/routes/authRoutes');
 const { limitGlobal } = require('./src/middlewares/rateLimit');
 
 const app = express();
+app.set('trust proxy', 1);
 const PORT = process.env.PORT || 4000;
 
 // Middlewares de seguridad y logging

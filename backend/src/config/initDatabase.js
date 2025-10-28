@@ -69,6 +69,20 @@ const initDatabase = async () => {
     `);
     console.log('✅ Tabla user_favorites creada');
 
+    // Tabla para registrar intentos
+    await query(`
+      CREATE TABLE IF NOT EXISTS auth_attempts (
+        id INT AUTO_INCREMENT PRIMARY KEY,
+        email VARCHAR(255),
+        ip VARCHAR(45) NOT NULL,
+        success TINYINT(1) NOT NULL,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        INDEX idx_email_created (email, created_at),
+        INDEX idx_ip_created (ip, created_at)
+      )
+    `);
+    console.log('✅ Tabla auth_attempts creada');
+
     // Insertar categorías por defecto
     const defaultCategories = [
       { name: 'JavaScript', description: 'Código JavaScript/Node.js', color: '#F7DF1E', icon: 'js' },

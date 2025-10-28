@@ -4,6 +4,7 @@ const { register, login, profile } = require('../controllers/authController');
 const { verifyToken } = require('../middlewares/verifyToken');
 const { limitAuthLogin, limitAuthRegister } = require('../middlewares/rateLimit');
 const { bruteGuardLogin } = require('../middlewares/bruteGuard');
+const { bruteGuardDbLogin } = require('../middlewares/bruteGuardDb');
 
 const router = express.Router();
 
@@ -24,6 +25,7 @@ router.post(
   '/login',
   limitAuthLogin, 
   bruteGuardLogin, 
+  bruteGuardDbLogin, 
   [
     body('email').isEmail().withMessage('email inválido').normalizeEmail(),
     body('password').notEmpty().withMessage('password requerido')
