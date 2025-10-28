@@ -7,6 +7,7 @@ require('dotenv').config();
 const { connectDB } = require('./src/config/database');
 const { initDatabase } = require('./src/config/initDatabase');
 const testRoutes = require('./src/routes/testRoutes');
+const authRoutes = require('./src/routes/authRoutes');
 
 const app = express();
 const PORT = process.env.PORT || 4000;
@@ -20,6 +21,8 @@ app.use(express.urlencoded({ extended: true }));
 
 // Rutas
 app.use('/api/test', testRoutes);
+app.use('/api/test', testRoutes);
+app.use('/api/auth', authRoutes);
 
 // Ruta de bienvenida
 app.get('/', (req, res) => {
