@@ -6,7 +6,8 @@ const {
   listMySnippetsController,
   getMySnippetByIdController,
   updateMySnippetController,
-  deleteMySnippetController
+  deleteMySnippetController,
+  toggleFavoriteController
 } = require('../controllers/snippetController');
 
 const router = express.Router();
@@ -55,6 +56,16 @@ router.put(
     body('tags').optional()
   ],
   updateMySnippetController
+);
+
+// PATCH /api/snippets/:id/favorite - marcar/desmarcar favorito
+router.patch(
+  '/:id/favorite',
+  [
+    param('id').isInt().withMessage('id debe ser entero'),
+    body('is_favorite').isBoolean().withMessage('is_favorite debe ser boolean')
+  ],
+  toggleFavoriteController
 );
 
 // DELETE /api/snippets/:id - eliminar propio
