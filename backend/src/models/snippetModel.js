@@ -77,10 +77,91 @@ async function deleteSnippet(id, user_id) {
   return { affectedRows: result.affectedRows };
 }
 
+/**
+ * Filtros
+ */
+async function countSnippetsByUserWithFilters(user_id, { language, is_favorite, category_id }) {
+  const where = ['user_id = ?'];
+  const params = [user_id];
+
+  if (language) { where.push('language = ?'); params.push(language); }
+  if (typeof is_favorite === 'boolean') { where.push('is_favorite = ?'); params.push(is_favorite ? 1 : 0); }
+  if (category_id) { where.push('category_id = ?'); params.push(Number(category_id)); }
+
+  const rows = await query(`SELECT COUNT(*) AS total FROM snippets WHERE ${where.join(' AND ')}`, params);
+  return Number(rows[0]?.total || 0);
+}
+
+async function getSnippetsByUserPaged(user_id, { language, is_favorite, category_id, limit = 10, offset = 0 }) {
+  const where = ['user_id = ?'];
+  const params = [user_id];
+
+  if (language) { where.push('language = ?'); params.push(language); }
+  if (typeof is_favorite === 'boolean') { where.push('is_favorite = ?'); params.push(is_favorite ? 1 : 0); }
+  if (category_id) { where.push('category_id = ?'); params.push(Number(category_id)); }
+
+  params.push(Number(limit));
+  params.push(Number(offset));
+
+  return await query(
+    `SELECT id, title, description, code, language, category_id, user_id, is_public, is_favorite, tags, created_at, updated_at
+     FROM snippets
+     WHERE ${where.join(' AND ')}
+     ORDER BY updated_at DESC
+     LIMIT ? OFFSET ?`,
+    params
+  );
+}
+
+async function toggleFavorite(id, user_id, is_favorite) {
+  const result = await query(
+    `UPDATE snippets SET is_favorite = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ? AND user_id = ?`,
+    [is_favorite ? 1 : 0, id, user_id]
+  );
+  return { affectedRows: result.affectedRows };
+}
+
+async function countPublicSnippets({ language, category_id, q }) {
+  const where = ['is_public = 1'];
+  const params = [];
+
+  if (language) { where.push('language = ?'); params.push(language); }
+  if (category_id) { where.push('category_id = ?'); params.push(Number(category_id)); }
+  if (q) { where.push('(title LIKE ? OR description LIKE ?)'); params.push(`%${q}%`, `%${q}%`); }
+
+  const rows = await query(`SELECT COUNT(*) AS total FROM snippets WHERE ${where.join(' AND ')}`, params);
+  return Number(rows[0]?.total || 0);
+}
+
+async function getPublicSnippets({ language, category_id, q, limit = 12, offset = 0 }) {
+  const where = ['is_public = 1'];
+  const params = [];
+
+  if (language) { where.push('language = ?'); params.push(language); }
+  if (category_id) { where.push('category_id = ?'); params.push(Number(category_id)); }
+  if (q) { where.push('(title LIKE ? OR description LIKE ?)'); params.push(`%${q}%`, `%${q}%`); }
+
+  params.push(Number(limit), Number(offset));
+
+  return await query(
+    `SELECT id, title, description, code, language, category_id, user_id, is_public, is_favorite, tags, created_at, updated_at
+     FROM snippets
+     WHERE ${where.join(' AND ')}
+     ORDER BY updated_at DESC
+     LIMIT ? OFFSET ?`,
+    params
+  );
+}
+
 module.exports = {
   createSnippet,
   getSnippetsByUser,
   getSnippetById,
   updateSnippet,
-  deleteSnippet
+  deleteSnippet,
+  countSnippetsByUserWithFilters,
+  getSnippetsByUserPaged,
+  toggleFavorite,
+  countPublicSnippets,
+  getPublicSnippets
 };
