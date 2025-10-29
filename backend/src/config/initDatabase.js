@@ -55,6 +55,14 @@ const initDatabase = async () => {
     `);
     console.log('✅ Tabla snippets creada');
 
+    // Indices para futura escabilidad de la app
+    await query(`CREATE INDEX IF NOT EXISTS idx_snippets_user ON snippets (user_id, updated_at)`);
+    await query(`CREATE INDEX IF NOT EXISTS idx_snippets_user_fav ON snippets (user_id, is_favorite)`);
+    await query(`CREATE INDEX IF NOT EXISTS idx_snippets_user_lang ON snippets (user_id, language)`);
+    await query(`CREATE INDEX IF NOT EXISTS idx_snippets_user_cat ON snippets (user_id, category_id)`);
+    await query(`CREATE INDEX IF NOT EXISTS idx_snippets_public ON snippets (is_public, updated_at)`);
+    await query(`CREATE INDEX IF NOT EXISTS idx_snippets_public_lang ON snippets (is_public, language)`);
+
     // Tabla de favoritos (relación muchos a muchos)
     await query(`
       CREATE TABLE IF NOT EXISTS user_favorites (
