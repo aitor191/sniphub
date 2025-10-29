@@ -4,7 +4,12 @@ const {
   getSnippetsByUser,
   getSnippetById,
   updateSnippet,
-  deleteSnippet
+  deleteSnippet,
+  countSnippetsByUserWithFilters,
+  getSnippetsByUserPaged,
+  toggleFavorite,
+  countPublicSnippets,
+  getPublicSnippets
 } = require('../models/snippetModel');
 
 /**
@@ -112,10 +117,75 @@ async function deleteMySnippetController(req, res) {
   return res.json({ message: 'Snippet eliminado correctamente' });
 }
 
+function parseBool(v) {
+  if (v === undefined) return undefined;
+  if (typeof v === 'boolean') return v;
+  return String(v).toLowerCase() === 'true' ? true : String(v).toLowerCase() === 'false' ? false : undefined;
+}
+
+// Listado paginado + filtros
+async function listMySnippetsController(req, res) {
+  const user_id = req.user.id;
+  const page = Math.max(1, parseInt(req.query.page || '1', 10));
+  const limit = Math.min(50, Math.max(1, parseInt(req.query.limit || '12', 10)));
+  const language = req.query.language || undefined;
+  const is_favorite = parseBool(req.query.is_favorite);
+  const category_id = req.query.category_id ? Number(req.query.category_id) : undefined;
+
+  const offset = (page - 1) * limit;
+  const total = await countSnippetsByUserWithFilters(user_id, { language, is_favorite, category_id });
+  const rows = await getSnippetsByUserPaged(user_id, { language, is_favorite, category_id, limit, offset });
+  const items = rows.map(r => ({ ...r, tags: r.tags ? JSON.parse(r.tags) : null }));
+
+  return res.json({ items, page, limit, total, hasNext: page * limit < total });
+}
+
+// Toggle favorito
+async function toggleFavoriteController(req, res) {
+  const user_id = req.user.id;
+  const id = Number(req.params.id);
+  const snip = await getSnippetById(id);
+  if (!snip) return res.status(404).json({ message: 'Snippet no encontrado' });
+  if (snip.user_id !== user_id) return res.status(403).json({ message: 'Acceso denegado: este snippet no pertenece al usuario.' });
+
+  const is_favorite = parseBool(req.body?.is_favorite);
+  if (typeof is_favorite !== 'boolean') return res.status(400).json({ message: 'is_favorite debe ser boolean' });
+
+  const result = await toggleFavorite(id, user_id, is_favorite);
+  if (result.affectedRows === 0) return res.status(400).json({ message: 'No se aplicaron cambios' });
+  return res.json({ message: 'Actualizado', is_favorite });
+}
+
+// Públicos: lista y detalle
+async function listPublicSnippetsController(req, res) {
+  const page = Math.max(1, parseInt(req.query.page || '1', 10));
+  const limit = Math.min(50, Math.max(1, parseInt(req.query.limit || '12', 10)));
+  const language = req.query.language || undefined;
+  const category_id = req.query.category_id ? Number(req.query.category_id) : undefined;
+  const q = req.query.q?.trim() || undefined;
+
+  const offset = (page - 1) * limit;
+  const total = await countPublicSnippets({ language, category_id, q });
+  const rows = await getPublicSnippets({ language, category_id, q, limit, offset });
+  const items = rows.map(r => ({ ...r, tags: r.tags ? JSON.parse(r.tags) : null }));
+
+  return res.json({ items, page, limit, total, hasNext: page * limit < total });
+}
+
+async function getPublicSnippetByIdController(req, res) {
+  const id = Number(req.params.id);
+  const snip = await getSnippetById(id);
+  if (!snip || !snip.is_public) return res.status(404).json({ message: 'Snippet no encontrado' });
+  return res.json({ ...snip, tags: snip.tags ? JSON.parse(snip.tags) : null });
+}
+
 module.exports = {
   createSnippetController,
   listMySnippetsController,
   getMySnippetByIdController,
   updateMySnippetController,
-  deleteMySnippetController
+  deleteMySnippetController,
+  toggleFavoriteController,
+  listPublicSnippetsController,
+  getPublicSnippetByIdController
 };
