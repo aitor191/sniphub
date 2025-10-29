@@ -30,7 +30,7 @@ router.post(
     body('email').isEmail().withMessage('email inválido').normalizeEmail(),
     body('password').notEmpty().withMessage('password requerido')
   ],
-  async (requestAnimationFrame, resizeBy, next) => next()
+  login
 );
 
 router.get('/profile', verifyToken, profile);
