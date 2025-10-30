@@ -5,13 +5,13 @@ const axios = require('axios');
  * @param {string} prompt - Mensaje a enviar al modelo.
  */
 async function callHuggingFaceApi(prompt) {
-  const HF_TOKEN = process.env.HF_TOKEN;
+  const HF_TOKEN = process.env.HUGGING_FACE_API_KEY;
   const MODEL = 'mistralai/Mistral-7B-Instruct-v0.2';
   const API_URL = `https://api-inference.huggingface.co/models/${MODEL}`;
 
   // Configura cabeceras seguras (token de API gratuita de Hugging Face)
   const headers = {
-    Authorization: ` ${HF_TOKEN}`,
+    Authorization: `Bearer ${HF_TOKEN}`,
     'Content-Type': 'application/json'
   };
 
