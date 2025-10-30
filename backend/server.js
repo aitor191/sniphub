@@ -11,6 +11,7 @@ const authRoutes = require('./src/routes/authRoutes');
 const { limitGlobal } = require('./src/middlewares/rateLimit');
 const snippetRoutes = require('./src/routes/snippetRoutes');
 const publicSnippetRoutes = require('./src/routes/publicSnippetRoutes');
+const aiRoutes = require('./src/routes/aiRoutes');
 
 const app = express();
 app.set('trust proxy', 1);
@@ -29,6 +30,7 @@ app.use('/api/test', testRoutes);
 app.use('/api/auth', authRoutes);
 app.use('/api/snippets', snippetRoutes);
 app.use('/api/public', publicSnippetRoutes);
+app.use('/api/ai', aiRoutes);
 
 // Ruta de bienvenida
 app.get('/', (req, res) => {
