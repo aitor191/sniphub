@@ -3,6 +3,7 @@ const { body } = require('express-validator');
 const { generateCode, explainCode } = require('../controllers/aiController');
 const { verifyToken } = require('../middlewares/verifyToken');
 const rateLimit = require('express-rate-limit');
+const { ipKeyGenerator } = require('express-rate-limit');
 
 const router = express.Router();
 
@@ -13,7 +14,7 @@ const aiLimiter = rateLimit({
   standardHeaders: true,
   legacyHeaders: false,
   message: { error: "Límite de uso de IA alcanzado. Intenta más tarde." },
-  keyGenerator: req => req.user?.id || req.ip // limita por usuario autenticado
+  keyGenerator: req => req.user?.id || ipKeyGenerator(req) // limita por usuario autenticado
 });
 
 // Proteger con JWT y limitador
