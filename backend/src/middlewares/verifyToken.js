@@ -7,7 +7,7 @@ async function verifyToken(req, res, next) {
     const token = header.startsWith('Bearer ') ? header.slice(7) : null;
     if (!token) return res.status(401).json({ error: 'Token no proporcionado' });
 
-    const decoded = verifyTokenString(token); // { id, username, iat, exp }
+    const decoded = verifyTokenString(token);
     const user = await findByIdPublic(decoded.id);
     if (!user || user.is_active === 0) return res.status(401).json({ error: 'Usuario inválido o inactivo' });
 
