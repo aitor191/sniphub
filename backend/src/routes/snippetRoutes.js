@@ -21,8 +21,8 @@ router.post(
   '/',
   [
     body('title').trim().isLength({ min: 1, max: 200 }).withMessage('Require un titulo entre 1 y 200 caracteres'),
-    body('code').isLength({ min: 1 }).withMessage('Introduce el snippet de código'),
-    body('language').trim().isLength({ min: 1, max: 50 }).withMessage('Selecciona el lenguaje'),
+    body('code').isLength({ min: 1 }).withMessage('Introduce el código para crear el snippet'),
+    body('language').trim().isLength({ min: 1, max: 50 }).withMessage('Escoge un lenguaje de programación'),
     body('description').optional().isString(),
     body('category_id').optional().isInt().withMessage('El ID de la categoría debe ser un número entero'),
     body('is_public').optional().isBoolean(),
@@ -76,7 +76,7 @@ router.patch(
 // DELETE /api/snippets/:id - eliminar propio
 router.delete(
   '/:id',
-  [param('id').isInt().withMessage('id debe s er entero')],
+  [param('id').isInt().withMessage('El ID debe ser un número entero')],
   validateRequest,
   deleteMySnippetController
 );
