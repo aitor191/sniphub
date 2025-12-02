@@ -1,6 +1,6 @@
 const express = require('express');
 const { body } = require('express-validator');
-const { generateCode, explainCode } = require('../controllers/aiController');
+const { explainCode } = require('../controllers/aiController');
 const { verifyToken } = require('../middlewares/verifyToken');
 const rateLimit = require('express-rate-limit');
 const { ipKeyGenerator } = require('express-rate-limit');
@@ -17,15 +17,7 @@ const aiLimiter = rateLimit({
   keyGenerator: req => req.user?.id || ipKeyGenerator(req) // limita por usuario autenticado
 });
 
-// Proteger con JWT y limitador
-router.post(
-  '/generate',
-  verifyToken,
-  aiLimiter,
-  [body('prompt').isString().withMessage('prompt es obligatorio')],
-  generateCode
-);
-
+// Ruta única: explicar código (protegida con JWT y limitador)
 router.post(
   '/explain',
   verifyToken,
