@@ -18,11 +18,11 @@ async function callGroqApi(prompt) {
   };
 
   const data = {
-    model: 'llama-3.1-8b-instant', // Modelo rápido y gratuito
+    model: 'llama-3.1-8b-instant',
     messages: [
       {
         role: 'system',
-        content: 'Eres un experto en programación. Explica código de forma clara y concisa en español.'
+        content: 'Explica código en español de forma concisa.'
       },
       {
         role: 'user',
@@ -30,7 +30,7 @@ async function callGroqApi(prompt) {
       }
     ],
     temperature: 0.7,
-    max_tokens: 500
+    max_tokens: 300
   };
 
   const res = await axios.post(API_URL, data, { headers, timeout: 30_000 });
@@ -99,7 +99,13 @@ async function explainCode(req, res) {
     return res.status(400).json({ error: "Debes enviar el código a explicar en el campo 'code'." });
   }
 
-  const prompt = `Explica brevemente el siguiente código en español de forma clara y concisa:\n\n\`\`\`\n${code}\n\`\`\``;
+  // Limitar código a 2000 caracteres (ajustable)
+  const MAX_CODE_LENGTH = 2000;
+  const truncatedCode = code.length > MAX_CODE_LENGTH 
+    ? code.substring(0, MAX_CODE_LENGTH) + '\n// ... (código truncado)'
+    : code;
+
+  const prompt = `Explica este código en español:\n\n${truncatedCode}`;
 
   // Intenta con Groq primero (más rápido y confiable)
   if (process.env.GROQ_API_KEY) {
