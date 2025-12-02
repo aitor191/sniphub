@@ -1,21 +1,8 @@
-const { validationResult } = require('express-validator');
 const { findByEmail, findByUsername, createUser } = require('../models/userModel');
 const { hashPassword, comparePassword } = require('../utils/password');
 const { signToken } = require('../utils/jwt');
 
-function validateRequest(req, res) {
-  const errors = validationResult(req);
-  if (!errors.isEmpty()) {
-    res.status(400).json({
-      errors: errors.array().map(e => ({ field: e.path, msg: e.msg }))
-    });
-    return false;
-  }
-  return true;
-}
-
 async function register(req, res) {
-  if (!validateRequest(req, res)) return;
 
   const { username, email, password, full_name, avatar_url } = req.body;
 
@@ -35,8 +22,6 @@ async function register(req, res) {
 }
 
 async function login(req, res) {
-  if (!validateRequest(req, res)) return;
-
   const { email, password } = req.body;
 
   const user = await findByEmail(email);

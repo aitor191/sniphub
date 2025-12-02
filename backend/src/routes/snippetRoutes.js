@@ -1,5 +1,6 @@
 const express = require('express');
 const { body, param } = require('express-validator');
+const validateRequest = require('../middlewares/validateRequest');
 const { verifyToken } = require('../middlewares/verifyToken');
 const {
   createSnippetController,
@@ -28,6 +29,7 @@ router.post(
     body('is_favorite').optional().isBoolean(),
     body('tags').optional() // puede ser array/objeto; se serializa en controlador
   ],
+  validateRequest,
   createSnippetController
 );
 
@@ -38,6 +40,7 @@ router.get('/', listMySnippetsController);
 router.get(
   '/:id',
   [param('id').isInt().withMessage('id debe ser entero')],
+  validateRequest,
   getMySnippetByIdController
 );
 
@@ -55,6 +58,7 @@ router.put(
     body('is_favorite').optional().isBoolean(),
     body('tags').optional()
   ],
+  validateRequest,
   updateMySnippetController
 );
 
@@ -65,6 +69,7 @@ router.patch(
     param('id').isInt().withMessage('id debe ser entero'),
     body('is_favorite').isBoolean().withMessage('is_favorite debe ser boolean')
   ],
+  validateRequest,
   toggleFavoriteController
 );
 
@@ -72,6 +77,7 @@ router.patch(
 router.delete(
   '/:id',
   [param('id').isInt().withMessage('id debe ser entero')],
+  validateRequest,
   deleteMySnippetController
 );
 

@@ -1,4 +1,3 @@
-const { validationResult } = require('express-validator');
 const {
   createSnippet,
   getSnippetsByUser,
@@ -13,24 +12,9 @@ const {
 } = require('../models/snippetModel');
 
 /**
- * Helper de validación para respuestas 400 con detalles
- */
-function validateRequest(req, res) {
-  const errors = validationResult(req);
-  if (!errors.isEmpty()) {
-    res.status(400).json({ errors: errors.array().map(e => ({ field: e.path, msg: e.msg })) });
-    return false;
-  }
-  return true;
-}
-
-/**
  * POST /api/snippets - crear snippet para el usuario autenticado
  */
 async function createSnippetController(req, res) {
-  if (!validateRequest(req, res)) 
-    return;
-
   const user_id = req.user.id;
   const { title, description, code, language, category_id, is_public, is_favorite, tags } = req.body;
 
@@ -79,8 +63,6 @@ async function getMySnippetByIdController(req, res) {
  * PUT /api/snippets/:id - actualizar un snippet propio
  */
 async function updateMySnippetController(req, res) {
-  if (!validateRequest(req, res)) return;
-
   const user_id = req.user.id;
   const id = Number(req.params.id);
 

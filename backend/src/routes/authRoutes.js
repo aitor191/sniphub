@@ -5,6 +5,7 @@ const { verifyToken } = require('../middlewares/verifyToken');
 const { limitAuthLogin, limitAuthRegister } = require('../middlewares/rateLimit');
 const { bruteGuardLogin } = require('../middlewares/bruteGuard');
 const { bruteGuardDbLogin } = require('../middlewares/bruteGuardDb');
+const validateRequest = require('../middlewares/validateRequest');
 
 const router = express.Router();
 
@@ -18,6 +19,7 @@ router.post(
     body('full_name').optional().isLength({ max: 100 }),
     body('avatar_url').optional().isURL().withMessage('avatar_url debe ser URL')
   ],
+  validateRequest,
   register
 );
 
@@ -30,6 +32,7 @@ router.post(
     body('email').isEmail().withMessage('email inválido').normalizeEmail(),
     body('password').notEmpty().withMessage('password requerido')
   ],
+  validateRequest,
   login
 );
 

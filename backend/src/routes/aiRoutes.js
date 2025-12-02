@@ -2,6 +2,7 @@ const express = require('express');
 const { body } = require('express-validator');
 const { explainCode } = require('../controllers/aiController');
 const { verifyToken } = require('../middlewares/verifyToken');
+const validateRequest = require('../middlewares/validateRequest');
 const rateLimit = require('express-rate-limit');
 const { ipKeyGenerator } = require('express-rate-limit');
 
@@ -23,6 +24,7 @@ router.post(
   verifyToken,
   aiLimiter,
   [body('code').isString().withMessage('code es obligatorio')],
+  validateRequest,
   explainCode
 );
 
