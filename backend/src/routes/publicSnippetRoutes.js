@@ -23,7 +23,7 @@ router.get(
 // GET /api/public/snippets/:id
 router.get(
   '/snippets/:id',
-  [param('id').isInt().withMessage('id debe ser entero')],
+  [param('id').isInt().withMessage('El ID debe ser un número entero')],
   getPublicSnippetByIdController
 );
 

@@ -20,11 +20,11 @@ router.use(verifyToken);
 router.post(
   '/',
   [
-    body('title').trim().isLength({ min: 1, max: 200 }).withMessage('title es requerido (1-200)'),
-    body('code').isLength({ min: 1 }).withMessage('code es requerido'),
-    body('language').trim().isLength({ min: 1, max: 50 }).withMessage('language es requerido'),
+    body('title').trim().isLength({ min: 1, max: 200 }).withMessage('Require un titulo entre 1 y 200 caracteres'),
+    body('code').isLength({ min: 1 }).withMessage('Introduce el snippet de código'),
+    body('language').trim().isLength({ min: 1, max: 50 }).withMessage('Selecciona el lenguaje'),
     body('description').optional().isString(),
-    body('category_id').optional().isInt().withMessage('category_id debe ser entero'),
+    body('category_id').optional().isInt().withMessage('El ID de la categoría debe ser un número entero'),
     body('is_public').optional().isBoolean(),
     body('is_favorite').optional().isBoolean(),
     body('tags').optional() // puede ser array/objeto; se serializa en controlador
@@ -39,7 +39,7 @@ router.get('/', listMySnippetsController);
 // GET /api/snippets/:id - obtener uno propio
 router.get(
   '/:id',
-  [param('id').isInt().withMessage('id debe ser entero')],
+  [param('id').isInt().withMessage('El ID debe ser un número entero')],
   validateRequest,
   getMySnippetByIdController
 );
@@ -48,7 +48,7 @@ router.get(
 router.put(
   '/:id',
   [
-    param('id').isInt().withMessage('id debe ser entero'),
+    param('id').isInt().withMessage('El ID debe ser un número entero'),
     body('title').optional().isLength({ min: 1, max: 200 }),
     body('code').optional().isLength({ min: 1 }),
     body('language').optional().isLength({ min: 1, max: 50 }),
@@ -66,8 +66,8 @@ router.put(
 router.patch(
   '/:id/favorite',
   [
-    param('id').isInt().withMessage('id debe ser entero'),
-    body('is_favorite').isBoolean().withMessage('is_favorite debe ser boolean')
+    param('id').isInt().withMessage('El ID debe ser un número entero'),
+    body('is_favorite').isBoolean().withMessage('Favorito debe ser un booleano')
   ],
   validateRequest,
   toggleFavoriteController
@@ -76,7 +76,7 @@ router.patch(
 // DELETE /api/snippets/:id - eliminar propio
 router.delete(
   '/:id',
-  [param('id').isInt().withMessage('id debe ser entero')],
+  [param('id').isInt().withMessage('id debe s er entero')],
   validateRequest,
   deleteMySnippetController
 );

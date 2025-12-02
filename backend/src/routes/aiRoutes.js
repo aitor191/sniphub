@@ -23,7 +23,7 @@ router.post(
   '/explain',
   verifyToken,
   aiLimiter,
-  [body('code').isString().withMessage('code es obligatorio')],
+  [body('code').isString().withMessage('Necesitas introducir el código a explicar')],
   validateRequest,
   explainCode
 );

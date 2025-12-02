@@ -13,11 +13,11 @@ router.post(
   '/register',
   limitAuthRegister, 
   [
-    body('username').trim().isLength({ min: 3, max: 50 }).withMessage('username 3-50 chars'),
-    body('email').isEmail().withMessage('email inválido').normalizeEmail(),
-    body('password').isLength({ min: 6 }).withMessage('password mínimo 6 chars'),
+    body('username').trim().isLength({ min: 3, max: 50 }).withMessage('El nombre ususario debe tener entre 3 y 50 caracteres'),
+    body('email').isEmail().withMessage('Email inválido').normalizeEmail(),
+    body('password').isLength({ min: 6 }).withMessage('Mínimo 6 caracteres'),
     body('full_name').optional().isLength({ max: 100 }),
-    body('avatar_url').optional().isURL().withMessage('avatar_url debe ser URL')
+    body('avatar_url').optional().isURL().withMessage('Debes introducir una URL')
   ],
   validateRequest,
   register
@@ -29,8 +29,8 @@ router.post(
   bruteGuardLogin, 
   bruteGuardDbLogin, 
   [
-    body('email').isEmail().withMessage('email inválido').normalizeEmail(),
-    body('password').notEmpty().withMessage('password requerido')
+    body('email').isEmail().withMessage('Email inválido').normalizeEmail(),
+    body('password').notEmpty().withMessage('Password requerido')
   ],
   validateRequest,
   login
