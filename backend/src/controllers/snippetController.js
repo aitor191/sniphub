@@ -35,17 +35,6 @@ async function createSnippetController(req, res) {
 }
 
 /**
- * GET /api/snippets - listar snippets del usuario
- */
-async function listMySnippetsController(req, res) {
-  const user_id = req.user.id;
-  const rows = await getSnippetsByUser(user_id);
-  // Parseamos tags si vienen como JSON
-  const data = rows.map(r => ({ ...r, tags: r.tags ? JSON.parse(r.tags) : null }));
-  return res.json({ items: data });
-}
-
-/**
  * GET /api/snippets/:id - obtener un snippet del usuario
  */
 async function getMySnippetByIdController(req, res) {
