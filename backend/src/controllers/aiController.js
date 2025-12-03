@@ -22,7 +22,7 @@ async function callGroqApi(prompt) {
     messages: [
       {
         role: 'system',
-        content: 'Explica código en español de forma concisa.'
+        content: 'Explica este código en español de forma concisa.'
       },
       {
         role: 'user',
