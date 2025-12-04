@@ -24,7 +24,7 @@ Backend REST API para SnipHub - Gestor de snippets de código con inteligencia a
 1. **Instalar dependencias**
    npm install
 2. **Configurar variables de entorno**
-   cp .env
+   cp .env.example .env
    # Editar .env con tus credenciales
 3. **Crear base de datos**
    CREATE DATABASE sniphub_db;
@@ -33,7 +33,7 @@ Backend REST API para SnipHub - Gestor de snippets de código con inteligencia a
    # O en modo desarrollo:
    npm run dev
       
-   El servidor estará disponible en `http://localhost:4000`a
+   El servidor estará disponible en `http://localhost:4000`
 
 ## 🔌 Endpoints Principales
 
