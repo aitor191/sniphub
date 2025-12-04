@@ -80,25 +80,27 @@ async function deleteSnippet(id, user_id) {
 /**
  * Filtros
  */
-async function countSnippetsByUserWithFilters(user_id, { language, is_favorite, category_id }) {
+async function countSnippetsByUserWithFilters(user_id, { language, is_favorite, category_id, q }) {
   const where = ['user_id = ?'];
   const params = [user_id];
 
   if (language) { where.push('language = ?'); params.push(language); }
   if (typeof is_favorite === 'boolean') { where.push('is_favorite = ?'); params.push(is_favorite ? 1 : 0); }
   if (category_id) { where.push('category_id = ?'); params.push(Number(category_id)); }
+  if (q) { where.push('(title LIKE ? OR description LIKE ?)'); params.push(`%${q}%`, `%${q}%`); }
 
   const rows = await query(`SELECT COUNT(*) AS total FROM snippets WHERE ${where.join(' AND ')}`, params);
   return Number(rows[0]?.total || 0);
 }
 
-async function getSnippetsByUserPaged(user_id, { language, is_favorite, category_id, limit = 10, offset = 0 }) {
+async function getSnippetsByUserPaged(user_id, { language, is_favorite, category_id, q, limit = 10, offset = 0 }) {
   const where = ['user_id = ?'];
   const params = [user_id];
 
   if (language) { where.push('language = ?'); params.push(language); }
   if (typeof is_favorite === 'boolean') { where.push('is_favorite = ?'); params.push(is_favorite ? 1 : 0); }
   if (category_id) { where.push('category_id = ?'); params.push(Number(category_id)); }
+  if (q) { where.push('(title LIKE ? OR description LIKE ?)'); params.push(`%${q}%`, `%${q}%`); }
 
   params.push(Number(limit));
   params.push(Number(offset));
