@@ -65,7 +65,7 @@ npm run test:coverage # Con reporte de cobertura
 
 ## 🔐 Variables de Entorno
 
-Ver [.env](./.env) para la lista completa.
+Ver [.env.example](./.env.example) para la lista completa.
 
 ## 📚 Más Información
 
