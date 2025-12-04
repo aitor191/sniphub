@@ -1,4 +1,6 @@
 const axios = require('axios');
+const crypto = require('crypto');
+const { getExplanationByHash, saveExplanation } = require('../models/codeExplanationModel');
 
 /**
  * Llama a Groq API (gratuita, rápida y sin tarjeta de crédito)
@@ -90,7 +92,7 @@ function explainCodeLocal(code) {
 }
 
 /**
- * Ruta: POST /api/ai/explain - Explica código usando múltiples servicios
+ * Ruta: POST /api/ai/explain - Explica código usando múltiples servicios con caché
  */
 async function explainCode(req, res) {
   const { code } = req.body;
@@ -99,51 +101,80 @@ async function explainCode(req, res) {
     return res.status(400).json({ error: "Debes enviar el código a explicar en el campo 'code'." });
   }
 
-  // Limitar código a 2000 caracteres (ajustable)
+  // 1. Generar hash del código (normalizado: trim y lowercase para mejor caché)
+  const normalizedCode = code.trim();
+  const codeHash = crypto.createHash('sha256').update(normalizedCode).digest('hex');
+  
+  // 2. Buscar en caché
+  try {
+    const cached = await getExplanationByHash(codeHash);
+    if (cached) {
+      return res.json({ 
+        explanation: cached.explanation,
+        provider: cached.provider,
+        cached: true
+      });
+    }
+  } catch (error) {
+    console.log('>> Error buscando en caché:', error.message);
+    // Continuar con la generación si falla la búsqueda
+  }
+
+  // 3. Si no hay caché, generar explicación
   const MAX_CODE_LENGTH = 2000;
-  const truncatedCode = code.length > MAX_CODE_LENGTH 
-    ? code.substring(0, MAX_CODE_LENGTH) + '\n// ... (código truncado)'
-    : code;
+  const truncatedCode = normalizedCode.length > MAX_CODE_LENGTH 
+    ? normalizedCode.substring(0, MAX_CODE_LENGTH) + '\n// ... (código truncado)'
+    : normalizedCode;
 
   const prompt = `Explica este código en español:\n\n${truncatedCode}`;
+  let explanation = null;
+  let provider = 'local';
 
   // Intenta con Groq primero (más rápido y confiable)
   if (process.env.GROQ_API_KEY) {
     try {
       console.log('>> Intentando con Groq API...');
-      const output = await callGroqApi(prompt);
-      return res.json({ 
-        explanation: output,
-        provider: 'groq'
-      });
+      explanation = await callGroqApi(prompt);
+      provider = 'groq';
     } catch (err) {
       console.log('>> Groq falló, intentando Hugging Face...', err.message);
     }
   }
 
   // Fallback a Hugging Face
-  if (process.env.HUGGING_FACE_API_KEY) {
+  if (!explanation && process.env.HUGGING_FACE_API_KEY) {
     try {
       console.log('>> Intentando con Hugging Face...');
-      const output = await callHuggingFaceApi(prompt);
-      return res.json({ 
-        explanation: output,
-        provider: 'huggingface'
-      });
+      explanation = await callHuggingFaceApi(prompt);
+      provider = 'huggingface';
     } catch (err) {
       console.log('>> Hugging Face falló, usando explicación local...', err.message);
     }
   }
 
   // Último recurso: explicación local inteligente
-  console.log('>> Usando explicación local (fallback)');
-  const explanation = explainCodeLocal(code);
+  if (!explanation) {
+    console.log('>> Usando explicación local (fallback)');
+    explanation = explainCodeLocal(normalizedCode);
+    provider = 'local';
+  }
+
+  // 4. Guardar en caché (solo si no es local, para ahorrar espacio en BD)
+  if (provider !== 'local') {
+    try {
+      await saveExplanation(codeHash, explanation, provider);
+      console.log('>> Explicación guardada en caché');
+    } catch (error) {
+      // Si falla guardar en caché, no es crítico - la explicación ya se generó
+      console.log('>> Error guardando en caché:', error.message);
+    }
+  }
+
   return res.json({ 
     explanation,
-    provider: 'local',
-    note: 'Usando explicación local. Configura GROQ_API_KEY o HUGGING_FACE_API_KEY para usar IA real.'
+    provider,
+    cached: false
   });
 }
-
 
 module.exports = { explainCode };

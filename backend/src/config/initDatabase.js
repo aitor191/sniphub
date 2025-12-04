@@ -91,6 +91,20 @@ const initDatabase = async () => {
     `);
     console.log('✅ Tabla auth_attempts creada');
 
+     // Tabla para cachear explicaciones de IA
+     await query(`
+      CREATE TABLE IF NOT EXISTS code_explanations (
+        id INT AUTO_INCREMENT PRIMARY KEY,
+        code_hash VARCHAR(64) UNIQUE NOT NULL,
+        explanation TEXT NOT NULL,
+        provider VARCHAR(20),
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+        INDEX idx_code_hash (code_hash)
+      ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
+    `);
+    console.log('✅ Tabla code_explanations creada');
+
     // Insertar categorías por defecto
     const defaultCategories = [
       { name: 'JavaScript', description: 'Código JavaScript/Node.js', color: '#F7DF1E', icon: 'js' },
