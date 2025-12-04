@@ -1,5 +1,5 @@
 const express = require('express');
-const { body, param } = require('express-validator');
+const { body, param, query } = require('express-validator');
 const validateRequest = require('../middlewares/validateRequest');
 const { verifyToken } = require('../middlewares/verifyToken');
 const {
@@ -34,7 +34,12 @@ router.post(
 );
 
 // GET /api/snippets - listar del usuario
-router.get('/', listMySnippetsController);
+router.get(
+  '/',
+  [query('q').optional().isString().trim()],
+  validateRequest,
+  listMySnippetsController
+);
 
 // GET /api/snippets/:id - obtener uno propio
 router.get(
