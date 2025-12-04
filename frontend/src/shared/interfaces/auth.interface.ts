@@ -16,6 +16,11 @@ export interface LoginRequest {
     token: string;
     user: User;
   }
+
+  export interface RegisterResponse{
+    message: string;
+    user: User;
+  }
   
   export interface User {
     id: number;

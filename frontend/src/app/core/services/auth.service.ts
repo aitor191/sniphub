@@ -3,7 +3,7 @@ import { Router } from '@angular/router';
 import { Observable, BehaviorSubject } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import { ApiService } from './api.service';
-import { LoginRequest, RegisterRequest, AuthResponse, User } from '../../../shared/interfaces/auth.interface';
+import { LoginRequest, RegisterRequest, AuthResponse, RegisterResponse,User } from '../../../shared/interfaces/auth.interface';
 
 @Injectable({
   providedIn: 'root'
@@ -27,9 +27,13 @@ export class AuthService {
     );
   }
 
-  register(data: RegisterRequest): Observable<AuthResponse> {
-    return this.api.post<AuthResponse>('/auth/register', data).pipe(
+  register(data: RegisterRequest): Observable<RegisterResponse> {
+    return this.api.post<RegisterResponse>('/auth/register', data).pipe(
       tap(response => {
+        // Guardar el usuario (sin token, ya que el registro no devuelve token)
+        // El usuario deberá hacer login después del registro
+        this.currentUserSubject.next(response.user);
+        localStorage.setItem('user', JSON.stringify(response.user));
       })
     );
   }
