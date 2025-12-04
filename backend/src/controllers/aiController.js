@@ -101,7 +101,7 @@ async function explainCode(req, res) {
     return res.status(400).json({ error: "Debes enviar el código a explicar en el campo 'code'." });
   }
 
-  // 1. Generar hash del código (normalizado: trim y lowercase para mejor caché)
+  // 1. Generar hash del código (normalizado: trim para mejor caché)
   const normalizedCode = code.trim();
   const codeHash = crypto.createHash('sha256').update(normalizedCode).digest('hex');
   
