@@ -102,10 +102,11 @@ async function listMySnippetsController(req, res) {
   const language = req.query.language || undefined;
   const is_favorite = parseBool(req.query.is_favorite);
   const category_id = req.query.category_id ? Number(req.query.category_id) : undefined;
+  const q = req.query.q?.trim() || undefined;
 
   const offset = (page - 1) * limit;
-  const total = await countSnippetsByUserWithFilters(user_id, { language, is_favorite, category_id });
-  const rows = await getSnippetsByUserPaged(user_id, { language, is_favorite, category_id, limit, offset });
+  const total = await countSnippetsByUserWithFilters(user_id, { language, is_favorite, category_id, q });
+  const rows = await getSnippetsByUserPaged(user_id, { language, is_favorite, category_id, q, limit,  offset });
   const items = rows.map(r => ({ ...r, tags: r.tags ? JSON.parse(r.tags) : null }));
 
   return res.json({ items, page, limit, total, hasNext: page * limit < total });
