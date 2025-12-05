@@ -47,6 +47,7 @@ export class ListComponent implements OnInit {
   }
 
   loadSnippets(): void {
+    console.log('🔄 loadSnippets() llamado');
     this.isLoading = true;
     this.errorMessage = '';
 
@@ -58,21 +59,36 @@ export class ListComponent implements OnInit {
       is_favorite: this.showFavoritesOnly || undefined
     };
 
+    console.log('📤 Enviando petición con filtros:', filters);
+
     this.snippetService.getMySnippets(filters).pipe(
       finalize(() => {
+        console.log('✅ finalize() ejecutado');
         this.isLoading = false;
         this.cdr.detectChanges();
       })
     ).subscribe({
       next: (response: SnippetsResponse) => {
-        this.snippets = response.items;
-        this.total = response.total;
-        this.hasNext = response.hasNext;
-        this.currentPage = response.page;
+        console.log('✅ next() ejecutado - Respuesta recibida:', response);
+        console.log('�� Items recibidos:', response.items);
+        console.log('�� Total:', response.total);
+        
+        this.snippets = (response.items || []).map(item => ({
+          ...item,
+          is_public: Boolean(item.is_public),
+          is_favorite: Boolean(item.is_favorite)
+        }));
+        this.total = response.total || 0;
+        this.hasNext = response.hasNext || false;
+        this.currentPage = response.page || 1;
+        
+        console.log('✨ Snippets procesados:', this.snippets);
+        console.log('📈 Total después de procesar:', this.total);
         this.cdr.detectChanges();
       },
       error: (error) => {
-        console.error('Error al cargar snippets:', error);
+        console.error('❌ Error al cargar snippets:', error);
+        console.error('❌ Error completo:', JSON.stringify(error, null, 2));
         this.errorMessage = error.error?.error || 'Error al cargar los snippets. Intenta de nuevo.';
         this.cdr.detectChanges();
       }

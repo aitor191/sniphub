@@ -2,6 +2,11 @@ const { verifyTokenString } = require('../utils/jwt');
 const { findByIdPublic } = require('../models/userModel');
 
 async function verifyToken(req, res, next) {
+  // Permitir peticiones OPTIONS (preflight de CORS) sin autenticación
+  if (req.method === 'OPTIONS') {
+    return next();
+  }
+
   try {
     const header = req.headers.authorization || '';
     const token = header.startsWith('Bearer ') ? header.slice(7) : null;
