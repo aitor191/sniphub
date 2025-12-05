@@ -145,4 +145,10 @@ export class ListComponent implements OnInit {
     
     return pages;
   }
+
+  get showingRange(): string {
+    const start = (this.currentPage - 1) * this.limit + 1;
+    const end = Math.min(this.currentPage * this.limit, this.total);
+    return `${start} - ${end} de ${this.total} snippets`;
+  }
 }

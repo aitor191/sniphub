@@ -16,6 +16,11 @@ export const routes: Routes = [
         loadComponent: () => import('./dashboard/dashboard.component').then(m => m.DashboardComponent),
         canActivate: [authGuard]
     },
+    {
+        path: 'snippets',
+        loadChildren: () => import('./snippets/snippets.routes').then(m => m.snippetsRoutes),
+        canActivate: [authGuard]
+    },
     /*
     {
         path: 'public',

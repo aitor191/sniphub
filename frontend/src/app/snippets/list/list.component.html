@@ -140,6 +140,6 @@
     </div>
   
     <div class="pagination-info" *ngIf="!isLoading && total > 0">
-      Mostrando {{ (currentPage - 1) * limit + 1 }} - {{ Math.min(currentPage * limit, total) }} de {{ total }} snippets
+      Mostrando {{ showingRange }}
     </div>
   </div>
