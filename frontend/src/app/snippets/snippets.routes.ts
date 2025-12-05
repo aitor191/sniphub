@@ -1,7 +1,7 @@
 import { Routes } from '@angular/router';
 
 export const snippetsRoutes: Routes = [
-  {
+  /*{
     path: '',
     loadComponent: () => import('./list/list.component').then(m => m.ListComponent)
   },
@@ -16,5 +16,5 @@ export const snippetsRoutes: Routes = [
   {
     path: ':id',
     loadComponent: () => import('./detail/detail.component').then(m => m.DetailComponent)
-  }
+  }*/
 ];

@@ -3,18 +3,18 @@ import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angula
 import { Router, RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { AuthService } from '../../core/services/auth.service';
-import { LoginRequest } from '../../../shared/interfaces/auth.interface';
+import { RegisterRequest } from '../../../shared/interfaces/auth.interface';
 import { finalize } from 'rxjs/operators';
 
 @Component({
-  selector: 'app-login',
+  selector: 'app-register',
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule, RouterLink],
-  templateUrl: './login.component.html',
-  styleUrl: './login.component.scss'
+  templateUrl: './register.component.html',
+  styleUrl: './register.component.scss'
 })
-export class LoginComponent {
-  loginForm: FormGroup;
+export class RegisterComponent {
+  registerForm: FormGroup;
   isLoading = false;
   errorMessage = '';
   successMessage = '';
@@ -25,15 +25,16 @@ export class LoginComponent {
     private router: Router,
     private cdr: ChangeDetectorRef
   ) {
-    this.loginForm = this.fb.group({
+    this.registerForm = this.fb.group({
+      username: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(50)]],
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required, Validators.minLength(6)]]
     });
   }
 
   onSubmit(): void {
-    if (this.loginForm.invalid) {
-      this.markFormGroupTouched(this.loginForm);
+    if (this.registerForm.invalid) {
+      this.markFormGroupTouched(this.registerForm);
       return;
     }
 
@@ -41,47 +42,54 @@ export class LoginComponent {
     this.errorMessage = '';
     this.successMessage = '';
 
-    const credentials: LoginRequest = this.loginForm.value;
+    const formValue = this.registerForm.value;
 
-    this.authService.login(credentials).pipe(
+    const data: RegisterRequest = {
+      username: formValue.username,
+      email: formValue.email,
+      password: formValue.password,
+    }; 
+
+    this.authService.register(data).pipe(
       finalize(() => {
         this.isLoading = false;
         this.cdr.detectChanges(); // Forzar detección de cambios
       })
     ).subscribe({
       next: (response) => {
-        console.log('Login exitoso:', response);
+        console.log('Registro exitoso:', response);
+        this.successMessage = '¡Registro exitoso! Redirigiendo al login...';
         this.cdr.detectChanges();
-        this.router.navigateByUrl('/dashboard');
+        setTimeout(() => {
+          this.router.navigate(['/auth/login'], {
+            queryParams: { registered: 'true' }
+          });
+        }, 1500);
       },
       error: (error) => {
-        console.error('Error completo:', error);
+        console.error('Error en registro:', error);
         console.error('Error status:', error.status);
         console.error('Error body:', error.error);
         
-        // Resetear isLoading inmediatamente
+        // Asegurar que isLoading se resetee inmediatamente
         this.isLoading = false;
         
-        // Manejar diferentes tipos de errores
-        if (error.status === 400) {
-          // Error de validación del backend
+        if (error.status === 409) {
+          this.errorMessage = error.error?.error || 'El email o nombre de usuario ya está en uso';
+        } else if (error.status === 400) {
+          // Manejar errores de validación
           if (error.error?.errors && Array.isArray(error.error.errors)) {
             const validationErrors = error.error.errors.map((e: any) => e.message).join(', ');
             this.errorMessage = `Errores de validación: ${validationErrors}`;
           } else {
             this.errorMessage = error.error?.error || 'Error de validación. Revisa los datos ingresados.';
           }
-        } else if (error.status === 401) {
-          this.errorMessage = error.error?.error || 'Credenciales inválidas';
-        } else if (error.status === 403) {
-          this.errorMessage = error.error?.error || 'Usuario inactivo';
         } else if (error.status === 0) {
           this.errorMessage = 'No se pudo conectar al servidor. Verifica que el backend esté corriendo.';
         } else {
-          this.errorMessage = error.error?.error || 'Error al iniciar sesión. Intenta de nuevo.';
-        }
-        
-        // Forzar detección de cambios
+          this.errorMessage = error.error?.error || 'Error al registrarse. Intenta de nuevo.';
+        }        
+        // Forzar detección de cambios después de establecer el mensaje de error
         this.cdr.detectChanges();
       }
     });
@@ -94,11 +102,15 @@ export class LoginComponent {
     });
   }
 
+  get username() {
+    return this.registerForm.get('username');
+  }
+
   get email() {
-    return this.loginForm.get('email');
+    return this.registerForm.get('email');
   }
 
   get password() {
-    return this.loginForm.get('password');
+    return this.registerForm.get('password');
   }
 }

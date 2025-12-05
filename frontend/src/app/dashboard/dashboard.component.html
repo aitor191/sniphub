@@ -1,0 +1,32 @@
+<div class="dashboard-container">
+    <header class="dashboard-header">
+      <h1>SnipHub Dashboard</h1>
+      <div class="user-info">
+        <span *ngIf="user">Bienvenido, {{ user.username }}</span>
+        <button class="btn btn-secondary" (click)="logout()">Cerrar sesión</button>
+      </div>
+    </header>
+  
+    <main class="dashboard-content">
+      <div class="welcome-card">
+        <h2>¡Bienvenido a SnipHub!</h2>
+        <p *ngIf="user">Has iniciado sesión como <strong>{{ user.email }}</strong></p>
+        <p>Esta es tu página principal. Aquí podrás gestionar tus snippets de código.</p>
+      </div>
+  
+      <div class="features-grid">
+        <div class="feature-card">
+          <h3>📝 Mis Snippets</h3>
+          <p>Gestiona tus snippets de código personalizados</p>
+        </div>
+        <div class="feature-card">
+          <h3>🔍 Explorar</h3>
+          <p>Descubre snippets públicos de la comunidad</p>
+        </div>
+        <div class="feature-card">
+          <h3>👤 Perfil</h3>
+          <p>Gestiona tu información personal</p>
+        </div>
+      </div>
+    </main>
+  </div>

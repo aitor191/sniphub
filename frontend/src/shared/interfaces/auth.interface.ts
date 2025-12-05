@@ -7,8 +7,6 @@ export interface LoginRequest {
     username: string;
     email: string;
     password: string;
-    full_name?: string;
-    avatar_url?: string;
   }
   
   export interface AuthResponse {
@@ -26,6 +24,4 @@ export interface LoginRequest {
     id: number;
     username: string;
     email: string;
-    full_name?: string;
-    avatar_url?: string;
   }

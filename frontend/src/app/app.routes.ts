@@ -10,12 +10,13 @@ export const routes: Routes = [
     {
         path: 'auth',
         loadChildren: () => import('./auth/auth.routes').then(m => m.authRoutes)
-    },/*
+    },
     {
         path: 'dashboard',
-        loadChildren: () => import('./snippets/snippets.routes').then(m => m.snippetsRoutes),
+        loadComponent: () => import('./dashboard/dashboard.component').then(m => m.DashboardComponent),
         canActivate: [authGuard]
     },
+    /*
     {
         path: 'public',
         loadChildren: () => import('./public/public.routes').then(m => m.publicRoutes)
@@ -24,7 +25,8 @@ export const routes: Routes = [
         path: 'profile',
         loadChildren: () => import('./profile/profile.routes').then(m => m.profileRoutes),
         canActivate: [authGuard]
-    },*/
+    },
+    */
     {
         path: '**',
         redirectTo: '/auth/login'

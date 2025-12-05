@@ -16,8 +16,6 @@ router.post(
     body('username').trim().isLength({ min: 3, max: 50 }).withMessage('El nombre ususario debe tener entre 3 y 50 caracteres'),
     body('email').isEmail().withMessage('Email inválido').normalizeEmail(),
     body('password').isLength({ min: 6 }).withMessage('Mínimo 6 caracteres'),
-    body('full_name').optional().isLength({ max: 100 }),
-    body('avatar_url').optional().isURL().withMessage('Debes introducir una URL')
   ],
   validateRequest,
   register

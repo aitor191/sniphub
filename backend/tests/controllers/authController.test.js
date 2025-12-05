@@ -25,9 +25,7 @@ describe('Auth Controller', () => {
       req.body = {
         username: 'testuser',
         email: 'test@test.com',
-        password: 'password123',
-        full_name: 'Test User',
-        avatar_url: 'https://example.com/avatar.jpg'
+        password: 'password123'
       };
 
       findByEmail.mockResolvedValue(null);
@@ -37,8 +35,6 @@ describe('Auth Controller', () => {
         id: 1,
         username: 'testuser',
         email: 'test@test.com',
-        full_name: 'Test User',
-        avatar_url: 'https://example.com/avatar.jpg'
       });
 
       await register(req, res);
@@ -104,9 +100,7 @@ describe('Auth Controller', () => {
         username: 'testuser',
         email: 'test@test.com',
         password: 'hashed_password',
-        is_active: 1,
-        full_name: 'Test User',
-        avatar_url: null
+        is_active: 1
       };
 
       findByEmail.mockResolvedValue(mockUser);

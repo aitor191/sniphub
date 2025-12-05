@@ -4,7 +4,7 @@ const { signToken } = require('../utils/jwt');
 
 async function register(req, res) {
 
-  const { username, email, password, full_name, avatar_url } = req.body;
+  const { username, email, password } = req.body;
 
   const existsEmail = await findByEmail(email);
   if (existsEmail) return res.status(409).json({ error: 'El email ya está registrado' });
@@ -13,11 +13,17 @@ async function register(req, res) {
   if (existsUser) return res.status(409).json({ error: 'El nombre de usuario ya está en uso' });
 
   const passwordHash = await hashPassword(password);
-  const user = await createUser({ username, email, password: passwordHash, full_name, avatar_url });
+
+
+  const user = await createUser({
+    username, 
+    email, 
+    password: passwordHash
+  });
 
   return res.status(201).json({
     message: 'Usuario registrado con éxito',
-    user: { id: user.id, username: user.username, email: user.email, full_name: user.full_name, avatar_url: user.avatar_url }
+    user: { id: user.id, username: user.username, email: user.email }
   });
 }
 
@@ -37,7 +43,7 @@ async function login(req, res) {
   return res.json({
     message: 'Login exitoso',
     token,
-    user: { id: user.id, username: user.username, email: user.email, full_name: user.full_name, avatar_url: user.avatar_url }
+    user: { id: user.id, username: user.username, email: user.email }
   });
 }
 

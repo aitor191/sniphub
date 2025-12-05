@@ -12,18 +12,18 @@ async function findByUsername(username) {
 
 async function findByIdPublic(id) {
   const rows = await query(
-    'SELECT id, username, email, full_name, avatar_url, is_active, created_at, updated_at FROM users WHERE id = ? LIMIT 1',
+    'SELECT id, username, email, is_active, created_at, updated_at FROM users WHERE id = ? LIMIT 1',
     [id]
   );
   return rows[0] || null;
 }
 
-async function createUser({ username, email, password, full_name = null, avatar_url = null }) {
+async function createUser({ username, email, password }) {
   const result = await query(
-    'INSERT INTO users (username, email, password, full_name, avatar_url) VALUES (?, ?, ?, ?, ?)',
-    [username, email, password, full_name, avatar_url]
+    'INSERT INTO users (username, email, password) VALUES (?, ?, ?)',
+    [username, email, password]
   );
-  return { id: result.insertId, username, email, full_name, avatar_url };
+  return { id: result.insertId, username, email };
 }
 
 module.exports = { findByEmail, findByUsername, findByIdPublic, createUser };
