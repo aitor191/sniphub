@@ -1,0 +1,145 @@
+<div class="snippets-container">
+    <header class="snippets-header">
+      <h1>Mis Snippets</h1>
+      <a routerLink="/snippets/new" class="btn btn-primary">
+        ➕ Nuevo Snippet
+      </a>
+    </header>
+  
+    <!-- Filtros y búsqueda -->
+    <div class="filters-section">
+      <div class="search-box">
+        <input 
+          type="text" 
+          [(ngModel)]="searchQuery"
+          (keyup.enter)="onSearch()"
+          placeholder="Buscar por título o descripción..."
+          class="search-input"
+        />
+        <button (click)="onSearch()" class="btn btn-secondary">🔍 Buscar</button>
+      </div>
+  
+      <div class="filters">
+        <select 
+          [(ngModel)]="selectedLanguage" 
+          (change)="onFilterChange()"
+          class="filter-select"
+        >
+          <option value="">Todos los lenguajes</option>
+          <option *ngFor="let lang of languages" [value]="lang">{{ lang }}</option>
+        </select>
+  
+        <label class="checkbox-label">
+          <input 
+            type="checkbox" 
+            [(ngModel)]="showFavoritesOnly"
+            (change)="onFilterChange()"
+          />
+          Solo favoritos ⭐
+        </label>
+      </div>
+    </div>
+  
+    <!-- Mensaje de error -->
+    <div class="error-message" *ngIf="errorMessage">
+      {{ errorMessage }}
+    </div>
+  
+    <!-- Estado de carga -->
+    <div class="loading" *ngIf="isLoading">
+      <p>Cargando snippets...</p>
+    </div>
+  
+    <!-- Lista de snippets -->
+    <div class="snippets-grid" *ngIf="!isLoading && snippets.length > 0">
+      <div class="snippet-card" *ngFor="let snippet of snippets">
+        <div class="snippet-header">
+          <h3>
+            <a [routerLink]="['/snippets', snippet.id]">{{ snippet.title }}</a>
+          </h3>
+          <div class="snippet-actions">
+            <button 
+              (click)="toggleFavorite(snippet)"
+              [class.favorite]="snippet.is_favorite"
+              class="btn-icon"
+              title="Marcar como favorito"
+            >
+              {{ snippet.is_favorite ? '⭐' : '☆' }}
+            </button>
+            <a 
+              [routerLink]="['/snippets', 'edit', snippet.id]"
+              class="btn-icon"
+              title="Editar"
+            >
+              ✏️
+            </a>
+            <button 
+              (click)="deleteSnippet(snippet)"
+              class="btn-icon btn-danger"
+              title="Eliminar"
+            >
+              🗑️
+            </button>
+          </div>
+        </div>
+  
+        <p class="snippet-description" *ngIf="snippet.description">
+          {{ snippet.description }}
+        </p>
+  
+        <div class="snippet-meta">
+          <span class="badge badge-language">{{ snippet.language }}</span>
+          <span class="badge badge-public" *ngIf="snippet.is_public">🌐 Público</span>
+          <span class="snippet-date">
+            {{ snippet.updated_at | date:'short' }}
+          </span>
+        </div>
+  
+        <div class="snippet-code-preview">
+          <pre><code>{{ snippet.code.substring(0, 150) }}{{ snippet.code.length > 150 ? '...' : '' }}</code></pre>
+        </div>
+      </div>
+    </div>
+  
+    <!-- Mensaje cuando no hay snippets -->
+    <div class="empty-state" *ngIf="!isLoading && snippets.length === 0">
+      <p>No tienes snippets aún.</p>
+      <a routerLink="/snippets/new" class="btn btn-primary">
+        Crear tu primer snippet
+      </a>
+    </div>
+  
+    <!-- Paginación -->
+    <div class="pagination" *ngIf="!isLoading && totalPages > 1">
+      <button 
+        (click)="onPageChange(currentPage - 1)"
+        [disabled]="currentPage === 1"
+        class="btn btn-secondary"
+      >
+        ← Anterior
+      </button>
+      
+      <div class="page-numbers">
+        <button 
+          *ngFor="let page of pages"
+          (click)="onPageChange(page)"
+          [class.active]="page === currentPage"
+          class="btn-page"
+        >
+          {{ page }}
+        </button>
+      </div>
+      
+      <button 
+        (click)="onPageChange(currentPage + 1)"
+        [disabled]="!hasNext"
+        class="btn btn-secondary"
+      >
+        Siguiente →
+      </button>
+    </div>
+  
+    <div class="pagination-info" *ngIf="!isLoading && total > 0">
+      Mostrando {{ (currentPage - 1) * limit + 1 }} - {{ Math.min(currentPage * limit, total) }} de {{ total }} snippets
+    </div>
+  </div>
