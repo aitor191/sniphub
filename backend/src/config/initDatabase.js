@@ -19,19 +19,6 @@ const initDatabase = async () => {
     `);
     console.log('✅ Tabla users creada');
 
-    // Tabla de categorías
-    await query(`
-      CREATE TABLE IF NOT EXISTS categories (
-        id INT AUTO_INCREMENT PRIMARY KEY,
-        name VARCHAR(50) UNIQUE NOT NULL,
-        description TEXT,
-        color VARCHAR(7) DEFAULT '#3B82F6',
-        icon VARCHAR(50),
-        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-      )
-    `);
-    console.log('✅ Tabla categories creada');
-
     // Tabla de snippets
     await query(`
       CREATE TABLE IF NOT EXISTS snippets (
@@ -40,14 +27,12 @@ const initDatabase = async () => {
         description TEXT,
         code TEXT NOT NULL,
         language VARCHAR(50) NOT NULL,
-        category_id INT,
         user_id INT NOT NULL,
         is_public BOOLEAN DEFAULT FALSE,
         is_favorite BOOLEAN DEFAULT FALSE,
         tags JSON,
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-        FOREIGN KEY (category_id) REFERENCES categories(id) ON DELETE SET NULL,
         FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
       )
     `);
@@ -56,8 +41,7 @@ const initDatabase = async () => {
     // Indices para futura escabilidad de la app
     await query(`CREATE INDEX IF NOT EXISTS idx_snippets_user ON snippets (user_id, updated_at)`);
     await query(`CREATE INDEX IF NOT EXISTS idx_snippets_user_fav ON snippets (user_id, is_favorite)`);
-    await query(`CREATE INDEX IF NOT EXISTS idx_snippets_user_lang ON snippets (user_id, language)`);
-    await query(`CREATE INDEX IF NOT EXISTS idx_snippets_user_cat ON snippets (user_id, category_id)`);
+    await query(`CREATE INDEX IF NOT EXISTS idx_snippets_user_lang ON snippets (user_id, language)`);    
     await query(`CREATE INDEX IF NOT EXISTS idx_snippets_public ON snippets (is_public, updated_at)`);
     await query(`CREATE INDEX IF NOT EXISTS idx_snippets_public_lang ON snippets (is_public, language)`);
 
@@ -102,24 +86,6 @@ const initDatabase = async () => {
       ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
     `);
     console.log('✅ Tabla code_explanations creada');
-
-    // Insertar categorías por defecto
-    const defaultCategories = [
-      { name: 'JavaScript', description: 'Código JavaScript/Node.js', color: '#F7DF1E', icon: 'js' },
-      { name: 'Python', description: 'Código Python', color: '#3776AB', icon: 'python' },
-      { name: 'HTML/CSS', description: 'HTML y CSS', color: '#E34F26', icon: 'html' },
-      { name: 'React', description: 'Componentes React', color: '#61DAFB', icon: 'react' },
-      { name: 'SQL', description: 'Consultas SQL', color: '#336791', icon: 'database' },
-      { name: 'Otros', description: 'Otros lenguajes', color: '#6B7280', icon: 'code' }
-    ];
-
-    for (const category of defaultCategories) {
-      await query(`
-        INSERT IGNORE INTO categories (name, description, color, icon) 
-        VALUES (?, ?, ?, ?)
-      `, [category.name, category.description, category.color, category.icon]);
-    }
-    console.log('✅ Categorías por defecto insertadas');
 
     console.log('🎉 Base de datos inicializada correctamente');
 

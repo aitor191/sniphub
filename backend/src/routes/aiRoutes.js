@@ -4,6 +4,7 @@ const { explainCode } = require('../controllers/aiController');
 const { verifyToken } = require('../middlewares/verifyToken');
 const validateRequest = require('../middlewares/validateRequest');
 const rateLimit = require('express-rate-limit');
+const { ipKeyGenerator } = require('express-rate-limit');
 
 const router = express.Router();
 
@@ -14,7 +15,7 @@ const aiLimiter = rateLimit({
   standardHeaders: true,
   legacyHeaders: false,
   message: { error: "Límite de uso de IA alcanzado. Intenta más tarde." },
-  keyGenerator: req => req.user?.id || req.ip || req.socket.remoteAddress // limita por usuario autenticado
+  keyGenerator: (req) => req.user?.id ? String(req.user.id) : ipKeyGenerator(req)  // limita por usuario autenticado o por IP
 });
 
 // Ruta única: explicar código (protegida con JWT y limitador)

@@ -3,11 +3,11 @@ const { query } = require('../config/database');
 /**
  * Crea un nuevo snippet para un usuario
  */
-async function createSnippet({ title, description = null, code, language, category_id = null, user_id, is_public = false, is_favorite = false, tags = null }) {
+async function createSnippet({ title, description = null, code, language, user_id, is_public = false, is_favorite = false, tags = null }) {
   const result = await query(
-    `INSERT INTO snippets (title, description, code, language, category_id, user_id, is_public, is_favorite, tags)
-     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
-    [title, description, code, language, category_id, user_id, is_public ? 1 : 0, is_favorite ? 1 : 0, tags]
+    `INSERT INTO snippets (title, description, code, language, user_id, is_public, is_favorite, tags)
+     VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
+    [title, description, code, language, user_id, is_public ? 1 : 0, is_favorite ? 1 : 0, tags]
   );
   return { id: result.insertId };
 }
@@ -17,7 +17,7 @@ async function createSnippet({ title, description = null, code, language, catego
  */
 async function getSnippetsByUser(user_id) {
   return await query(
-    `SELECT id, title, description, code, language, category_id, user_id, is_public, is_favorite, tags, created_at, updated_at
+    `SELECT id, title, description, code, language, user_id, is_public, is_favorite, tags, created_at, updated_at
      FROM snippets
      WHERE user_id = ?
      ORDER BY updated_at DESC`,
@@ -30,7 +30,7 @@ async function getSnippetsByUser(user_id) {
  */
 async function getSnippetById(id) {
   const rows = await query(
-    `SELECT id, title, description, code, language, category_id, user_id, is_public, is_favorite, tags, created_at, updated_at
+    `SELECT id, title, description, code, language, user_id, is_public, is_favorite, tags, created_at, updated_at
      FROM snippets
      WHERE id = ?
      LIMIT 1`,
@@ -43,7 +43,7 @@ async function getSnippetById(id) {
  * Actualiza un snippet existente, solo campos permitidos
  */
 async function updateSnippet(id, user_id, fields) {
-  const allowed = ['title', 'description', 'code', 'language', 'category_id', 'is_public', 'is_favorite', 'tags'];
+  const allowed = ['title', 'description', 'code', 'language', 'is_public', 'is_favorite', 'tags'];
   const set = [];
   const values = [];
 
@@ -80,33 +80,31 @@ async function deleteSnippet(id, user_id) {
 /**
  * Filtros
  */
-async function countSnippetsByUserWithFilters(user_id, { language, is_favorite, category_id, q }) {
+async function countSnippetsByUserWithFilters(user_id, { language, is_favorite, q }) {
   const where = ['user_id = ?'];
   const params = [user_id];
 
   if (language) { where.push('language = ?'); params.push(language); }
   if (typeof is_favorite === 'boolean') { where.push('is_favorite = ?'); params.push(is_favorite ? 1 : 0); }
-  if (category_id) { where.push('category_id = ?'); params.push(Number(category_id)); }
   if (q) { where.push('(title LIKE ? OR description LIKE ?)'); params.push(`%${q}%`, `%${q}%`); }
 
   const rows = await query(`SELECT COUNT(*) AS total FROM snippets WHERE ${where.join(' AND ')}`, params);
   return Number(rows[0]?.total || 0);
 }
 
-async function getSnippetsByUserPaged(user_id, { language, is_favorite, category_id, q, limit = 10, offset = 0 }) {
+async function getSnippetsByUserPaged(user_id, { language, is_favorite, q, limit = 10, offset = 0 }) {
   const where = ['user_id = ?'];
   const params = [user_id];
 
   if (language) { where.push('language = ?'); params.push(language); }
   if (typeof is_favorite === 'boolean') { where.push('is_favorite = ?'); params.push(is_favorite ? 1 : 0); }
-  if (category_id) { where.push('category_id = ?'); params.push(Number(category_id)); }
   if (q) { where.push('(title LIKE ? OR description LIKE ?)'); params.push(`%${q}%`, `%${q}%`); }
 
   params.push(Number(limit));
   params.push(Number(offset));
 
   return await query(
-    `SELECT id, title, description, code, language, category_id, user_id, is_public, is_favorite, tags, created_at, updated_at
+    `SELECT id, title, description, code, language, user_id, is_public, is_favorite, tags, created_at, updated_at
      FROM snippets
      WHERE ${where.join(' AND ')}
      ORDER BY updated_at DESC
@@ -123,30 +121,28 @@ async function toggleFavorite(id, user_id, is_favorite) {
   return { affectedRows: result.affectedRows };
 }
 
-async function countPublicSnippets({ language, category_id, q }) {
+async function countPublicSnippets({ language, q }) {
   const where = ['is_public = 1'];
   const params = [];
 
   if (language) { where.push('language = ?'); params.push(language); }
-  if (category_id) { where.push('category_id = ?'); params.push(Number(category_id)); }
   if (q) { where.push('(title LIKE ? OR description LIKE ?)'); params.push(`%${q}%`, `%${q}%`); }
 
   const rows = await query(`SELECT COUNT(*) AS total FROM snippets WHERE ${where.join(' AND ')}`, params);
   return Number(rows[0]?.total || 0);
 }
 
-async function getPublicSnippets({ language, category_id, q, limit = 12, offset = 0 }) {
+async function getPublicSnippets({ language, q, limit = 12, offset = 0 }) {
   const where = ['is_public = 1'];
   const params = [];
 
   if (language) { where.push('language = ?'); params.push(language); }
-  if (category_id) { where.push('category_id = ?'); params.push(Number(category_id)); }
   if (q) { where.push('(title LIKE ? OR description LIKE ?)'); params.push(`%${q}%`, `%${q}%`); }
 
   params.push(Number(limit), Number(offset));
 
   return await query(
-    `SELECT id, title, description, code, language, category_id, user_id, is_public, is_favorite, tags, created_at, updated_at
+    `SELECT id, title, description, code, language, user_id, is_public, is_favorite, tags, created_at, updated_at
      FROM snippets
      WHERE ${where.join(' AND ')}
      ORDER BY updated_at DESC

@@ -4,7 +4,6 @@ export interface Snippet {
     description?: string;
     code: string;
     language: string;
-    category_id?: number;
     user_id: number;
     is_public: boolean;
     is_favorite: boolean;
@@ -18,7 +17,6 @@ export interface Snippet {
     description?: string;
     code: string;
     language: string;
-    category_id?: number;
     is_public?: boolean;
     is_favorite?: boolean;
     tags?: any;

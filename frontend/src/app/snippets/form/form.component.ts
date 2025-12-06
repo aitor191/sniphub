@@ -40,7 +40,6 @@ export class FormComponent implements OnInit {
       description: [''],
       code: ['', [Validators.required]],
       language: ['', [Validators.required]],
-      category_id: [null],
       is_public: [false],
       is_favorite: [false],
       tags: ['']
@@ -74,7 +73,6 @@ export class FormComponent implements OnInit {
           description: snippet.description || '',
           code: snippet.code,
           language: snippet.language,
-          category_id: snippet.category_id || null,
           is_public: snippet.is_public,
           is_favorite: snippet.is_favorite,
           tags: Array.isArray(snippet.tags) 
@@ -114,7 +112,6 @@ export class FormComponent implements OnInit {
       description: formValue.description?.trim() || undefined,
       code: formValue.code,
       language: formValue.language,
-      category_id: formValue.category_id || undefined,
       is_public: formValue.is_public || false,
       is_favorite: formValue.is_favorite || false,
       tags: tags && tags.length > 0 ? tags : undefined

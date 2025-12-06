@@ -24,7 +24,6 @@ router.post(
     body('code').isLength({ min: 1 }).withMessage('Introduce el código para crear el snippet'),
     body('language').trim().isLength({ min: 1, max: 50 }).withMessage('Escoge un lenguaje de programación'),
     body('description').optional().isString(),
-    body('category_id').optional().isInt().withMessage('El ID de la categoría debe ser un número entero'),
     body('is_public').optional().isBoolean(),
     body('is_favorite').optional().isBoolean(),
     body('tags').optional() // puede ser array/objeto; se serializa en controlador
@@ -58,7 +57,6 @@ router.put(
     body('code').optional().isLength({ min: 1 }),
     body('language').optional().isLength({ min: 1, max: 50 }),
     body('description').optional().isString(),
-    body('category_id').optional().isInt(),
     body('is_public').optional().isBoolean(),
     body('is_favorite').optional().isBoolean(),
     body('tags').optional()

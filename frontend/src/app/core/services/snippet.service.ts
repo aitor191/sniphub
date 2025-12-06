@@ -8,7 +8,6 @@ export interface SnippetFilters {
   limit?: number;
   language?: string;
   is_favorite?: boolean;
-  category_id?: number;
   q?: string;
 }
 
@@ -68,7 +67,6 @@ export class SnippetService {
     if (filters.limit) params.append('limit', filters.limit.toString());
     if (filters.language) params.append('language', filters.language);
     if (filters.is_favorite !== undefined) params.append('is_favorite', filters.is_favorite.toString());
-    if (filters.category_id) params.append('category_id', filters.category_id.toString());
     if (filters.q) params.append('q', filters.q);
 
     const queryString = params.toString();

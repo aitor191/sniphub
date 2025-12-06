@@ -300,7 +300,6 @@ describe('Snippet Controller', () => {
             expect(countSnippetsByUserWithFilters).toHaveBeenCalledWith(1, {
                 language: undefined,
                 is_favorite: undefined,
-                category_id: undefined
             });
             expect(res.json).toHaveBeenCalledWith(
                 expect.objectContaining({
@@ -349,22 +348,6 @@ describe('Snippet Controller', () => {
                 1,
                 expect.objectContaining({
                     language: 'javascript'
-                })
-            );
-        });
-
-        test('debería aplicar filtro de categoría', async () => {
-            req.query = { category_id: '5' };
-            
-            countSnippetsByUserWithFilters.mockResolvedValue(3);
-            getSnippetsByUserPaged.mockResolvedValue([]);
-
-            await listMySnippetsController(req, res);
-
-            expect(countSnippetsByUserWithFilters).toHaveBeenCalledWith(
-                1,
-                expect.objectContaining({
-                    category_id: 5
                 })
             );
         });
@@ -503,7 +486,6 @@ describe('Snippet Controller', () => {
 
             expect(countPublicSnippets).toHaveBeenCalledWith({
                 language: undefined,
-                category_id: undefined,
                 q: undefined
             });
             expect(res.json).toHaveBeenCalledWith(
@@ -535,10 +517,10 @@ describe('Snippet Controller', () => {
             );
         });
 
-        test('debería aplicar filtro de lenguaje y categoría', async () => {
+        test('debería aplicar filtro de lenguaje', async () => {
             const { listPublicSnippetsController } = require('../../src/controllers/snippetController');
 
-            req.query = { language: 'python', category_id: '3' };
+            req.query = { language: 'python' };
 
             countPublicSnippets.mockResolvedValue(8);
             getPublicSnippets.mockResolvedValue([]);
@@ -547,8 +529,7 @@ describe('Snippet Controller', () => {
 
             expect(countPublicSnippets).toHaveBeenCalledWith(
                 expect.objectContaining({
-                    language: 'python',
-                    category_id: 3
+                    language: 'python'
                 })
             );
         });
