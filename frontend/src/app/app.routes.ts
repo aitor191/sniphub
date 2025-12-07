@@ -21,17 +21,16 @@ export const routes: Routes = [
         loadChildren: () => import('./snippets/snippets.routes').then(m => m.snippetsRoutes),
         canActivate: [authGuard]
     },
-    /*
     {
         path: 'public',
         loadChildren: () => import('./public/public.routes').then(m => m.publicRoutes)
-    },
+    }/*,
     {
         path: 'profile',
         loadChildren: () => import('./profile/profile.routes').then(m => m.profileRoutes),
         canActivate: [authGuard]
-    },
-    */
+    }*/,
+    
     {
         path: '**',
         redirectTo: '/auth/login'
