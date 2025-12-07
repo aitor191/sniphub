@@ -6,7 +6,6 @@ Backend REST API para SnipHub - Gestor de snippets de código con inteligencia a
 
 - ✅ Autenticación JWT segura
 - ✅ CRUD completo de snippets
-- ✅ Sistema de categorías
 - ✅ Snippets públicos y privados
 - ✅ Explicación de código con IA (Groq/Hugging Face)
 - ✅ Sistema de caché inteligente para explicaciones

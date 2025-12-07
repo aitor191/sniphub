@@ -53,7 +53,6 @@ router.get('/tables', async (req, res) => {
       WHERE TABLE_SCHEMA = ?
     `, [process.env.DB_NAME || 'sniphub_db']);
 
-    const categories = await query('SELECT COUNT(*) as count FROM categories');
     const users = await query('SELECT COUNT(*) as count FROM users');
     const snippets = await query('SELECT COUNT(*) as count FROM snippets');
 
@@ -64,7 +63,6 @@ router.get('/tables', async (req, res) => {
         rows: t.TABLE_ROWS
       })),
       counts: {
-        categories: categories[0].count,
         users: users[0].count,
         snippets: snippets[0].count
       }
