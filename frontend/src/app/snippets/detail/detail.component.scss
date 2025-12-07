@@ -1,285 +1,292 @@
 .detail-container {
-    max-width: 1200px;
-    margin: 0 auto;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+
+  .header-actions {
+    margin-bottom: 2rem;
+  }
+
+  .loading {
+    text-align: center;
+    padding: 3rem;
+    color: var(--text-secondary);
+  }
+
+  .error-message {
+    background: #fee;
+    color: #c33;
+    padding: 1rem;
+    border-radius: 8px;
+    margin-bottom: 1rem;
+    border: 1px solid #fcc;
+  }
+
+  .snippet-detail {
+    background: var(--bg-primary);
+    border-radius: 12px;
     padding: 2rem;
-  
-    .header-actions {
+    box-shadow: 0 2px 8px var(--shadow);
+
+    .snippet-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
       margin-bottom: 2rem;
-    }
-  
-    .loading {
-      text-align: center;
-      padding: 3rem;
-      color: #666;
-    }
-  
-    .error-message {
-      background: #fee;
-      color: #c33;
-      padding: 1rem;
-      border-radius: 8px;
-      margin-bottom: 1rem;
-      border: 1px solid #fcc;
-    }
-  
-    .snippet-detail {
-      background: white;
-      border-radius: 12px;
-      padding: 2rem;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  
-      .snippet-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: flex-start;
-        margin-bottom: 2rem;
-        padding-bottom: 1.5rem;
-        border-bottom: 2px solid #eee;
-  
-        .title-section {
-          flex: 1;
-  
-          h1 {
-            margin: 0 0 1rem 0;
-            color: #333;
-            font-size: 2rem;
-          }
-  
-          .snippet-meta {
-            display: flex;
-            gap: 0.5rem;
-            flex-wrap: wrap;
-            align-items: center;
-  
-            .badge {
-              padding: 0.25rem 0.75rem;
-              border-radius: 12px;
-              font-size: 0.875rem;
-              font-weight: 500;
-  
-              &.badge-language {
-                background: #e3f2fd;
-                color: #1976d2;
-              }
-  
-              &.badge-public {
-                background: #e8f5e9;
-                color: #388e3c;
-              }
-  
-              &.badge-favorite {
-                background: #fff3e0;
-                color: #f57c00;
-              }
-            }
-  
-            .snippet-date {
-              color: #666;
-              font-size: 0.875rem;
-            }
-          }
+      padding-bottom: 1.5rem;
+      border-bottom: 2px solid var(--border-color);
+
+      .title-section {
+        flex: 1;
+
+        h1 {
+          margin: 0 0 1rem 0;
+          color: var(--text-primary);
+          font-size: 2rem;
         }
-  
-        .action-buttons {
-          display: flex;
-          gap: 0.5rem;
-          align-items: center;
-        }
-      }
-  
-      .snippet-description {
-        margin-bottom: 2rem;
-  
-        h3 {
-          margin: 0 0 0.5rem 0;
-          color: #555;
-          font-size: 1.25rem;
-        }
-  
-        p {
-          color: #666;
-          line-height: 1.6;
-        }
-      }
-  
-      .snippet-tags {
-        margin-bottom: 2rem;
-  
-        h3 {
-          margin: 0 0 0.5rem 0;
-          color: #555;
-          font-size: 1.25rem;
-        }
-  
-        .tags-list {
+
+        .snippet-meta {
           display: flex;
           gap: 0.5rem;
           flex-wrap: wrap;
-  
-          .tag {
-            background: #f5f5f5;
+          align-items: center;
+
+          .badge {
             padding: 0.25rem 0.75rem;
             border-radius: 12px;
             font-size: 0.875rem;
-            color: #666;
+            font-weight: 500;
+
+            &.badge-language {
+              background: var(--code-bg);
+              color: var(--text-primary);
+              border: 1px solid var(--code-border);
+            }
+
+            &.badge-public {
+              background: var(--code-bg);
+              color: var(--text-primary);
+              border: 1px solid var(--code-border);
+            }
+
+            &.badge-favorite {
+              background: var(--code-bg);
+              color: var(--text-primary);
+              border: 1px solid var(--code-border);
+            }
+          }
+
+          .snippet-date {
+            color: var(--text-tertiary);
+            font-size: 0.875rem;
           }
         }
       }
-  
-      .snippet-code-section {
-        margin-bottom: 2rem;
-  
-        .code-header {
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
-          margin-bottom: 1rem;
-  
-          h3 {
-            margin: 0;
-            color: #555;
-            font-size: 1.25rem;
-          }
-  
-          .code-actions {
-            display: flex;
-            gap: 0.5rem;
-          }
-        }
-  
-        .code-container {
-          background: #f8f9fa;
-          border: 1px solid #e9ecef;
-          border-radius: 8px;
-          overflow-x: auto;
-  
-          pre {
-            margin: 0;
-            padding: 1.5rem;
-            overflow-x: auto;
-  
-            code {
-              font-family: 'Courier New', monospace;
-              font-size: 0.9rem;
-              line-height: 1.6;
-              color: #333;
-              white-space: pre;
-            }
-          }
+
+      .action-buttons {
+        display: flex;
+        gap: 0.5rem;
+        align-items: center;
+      }
+    }
+
+    .snippet-description {
+      margin-bottom: 2rem;
+
+      h3 {
+        margin: 0 0 0.5rem 0;
+        color: var(--text-primary);
+        font-size: 1.25rem;
+      }
+
+      p {
+        color: var(--text-secondary);
+        line-height: 1.6;
+      }
+    }
+
+    .snippet-tags {
+      margin-bottom: 2rem;
+
+      h3 {
+        margin: 0 0 0.5rem 0;
+        color: var(--text-primary);
+        font-size: 1.25rem;
+      }
+
+      .tags-list {
+        display: flex;
+        gap: 0.5rem;
+        flex-wrap: wrap;
+
+        .tag {
+          background: var(--bg-secondary);
+          padding: 0.25rem 0.75rem;
+          border-radius: 12px;
+          font-size: 0.875rem;
+          color: var(--text-secondary);
+          border: 1px solid var(--border-color);
         }
       }
-  
-      .explanation-section {
-        margin-top: 2rem;
-        padding-top: 2rem;
-        border-top: 2px solid #eee;
-  
-        .explanation-header {
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
-          margin-bottom: 1rem;
-  
-          h3 {
-            margin: 0;
-            color: #555;
-            font-size: 1.25rem;
-          }
-  
-          .explanation-badge {
-            display: flex;
-            gap: 0.5rem;
-  
-            .badge {
-              padding: 0.25rem 0.75rem;
-              border-radius: 12px;
-              font-size: 0.875rem;
-  
-              &.badge-cached {
-                background: #e8f5e9;
-                color: #388e3c;
-              }
-  
-              &.badge-provider {
-                background: #e3f2fd;
-                color: #1976d2;
-              }
-            }
-          }
+    }
+
+    .snippet-code-section {
+      margin-bottom: 2rem;
+
+      .code-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1rem;
+
+        h3 {
+          margin: 0;
+          color: var(--text-primary);
+          font-size: 1.25rem;
         }
-  
-        .explanation-content {
-          background: #f8f9fa;
+
+        .code-actions {
+          display: flex;
+          gap: 0.5rem;
+        }
+      }
+
+      .code-container {
+        background: var(--code-bg);
+        border: 1px solid var(--code-border);
+        border-radius: 8px;
+        overflow-x: auto;
+
+        pre {
+          margin: 0;
           padding: 1.5rem;
-          border-radius: 8px;
-          border-left: 4px solid #1976d2;
-          line-height: 1.6;
-          color: #333;
-  
-          // Estilos para markdown básico
-          p {
-            margin: 0 0 1rem 0;
-  
-            &:last-child {
-              margin-bottom: 0;
-            }
-          }
-  
-          strong {
-            font-weight: 600;
+          overflow-x: auto;
+
+          code {
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            line-height: 1.6;
+            color: var(--text-primary);
+            white-space: pre;
           }
         }
       }
     }
+
+    .explanation-section {
+      margin-top: 2rem;
+      padding-top: 2rem;
+      border-top: 2px solid var(--border-color);
+
+      .explanation-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1rem;
+
+        h3 {
+          margin: 0;
+          color: var(--text-primary);
+          font-size: 1.25rem;
+        }
+
+        .explanation-badge {
+          display: flex;
+          gap: 0.5rem;
+
+          .badge {
+            padding: 0.25rem 0.75rem;
+            border-radius: 12px;
+            font-size: 0.875rem;
+
+            &.badge-cached {
+              background: var(--code-bg);
+              color: var(--text-primary);
+              border: 1px solid var(--code-border);
+            }
+
+            &.badge-provider {
+              background: var(--code-bg);
+              color: var(--text-primary);
+              border: 1px solid var(--code-border);
+            }
+          }
+        }
+      }
+
+      .explanation-content {
+        background: var(--code-bg);
+        padding: 1.5rem;
+        border-radius: 8px;
+        border-left: 4px solid #1976d2;
+        line-height: 1.6;
+        color: var(--text-primary);
+        border: 1px solid var(--code-border);
+
+        // Estilos para markdown básico
+        p {
+          margin: 0 0 1rem 0;
+
+          &:last-child {
+            margin-bottom: 0;
+          }
+        }
+
+        strong {
+          font-weight: 600;
+        }
+      }
+    }
   }
-  
-  // Botones comunes
-  .btn {
-    padding: 0.5rem 1rem;
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
-    font-size: 0.875rem;
-    font-weight: 500;
-    text-decoration: none;
-    display: inline-block;
-    transition: all 0.2s;
-  
-    &.btn-secondary {
-      background: #6c757d;
-      color: white;
-  
-      &:hover {
-        background: #5a6268;
-      }
-    }
-  
-    &.btn-primary {
-      background: #007bff;
-      color: white;
-  
-      &:hover {
-        background: #0056b3;
-      }
-  
-      &:disabled {
-        background: #ccc;
-        cursor: not-allowed;
-      }
-    }
-  
-    &.btn-danger {
-      background: #dc3545;
-      color: white;
-  
-      &:hover {
-        background: #c82333;
-      }
-    }
-  
-    &.btn-icon {
-      background: transparent;
-      padding: 0.5rem;
-      font-size: 1.25rem;
+}
+
+// Botones comunes
+.btn {
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.875rem;
+  font-weight: 500;
+  text-decoration: none;
+  display: inline-block;
+  transition: all 0.2s;
+
+  &.btn-secondary {
+    background: #6c757d;
+    color: white;
+
+    &:hover {
+      background: #5a6268;
     }
   }
+
+  &.btn-primary {
+    background: #007bff;
+    color: white;
+
+    &:hover {
+      background: #0056b3;
+    }
+
+    &:disabled {
+      background: #ccc;
+      cursor: not-allowed;
+    }
+  }
+
+  &.btn-danger {
+    background: #dc3545;
+    color: white;
+
+    &:hover {
+      background: #c82333;
+    }
+  }
+
+  &.btn-icon {
+    background: transparent;
+    padding: 0.5rem;
+    font-size: 1.25rem;
+  }
+}
