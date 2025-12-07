@@ -78,8 +78,22 @@ export class ListComponent implements OnInit {
       },
       error: (error) => {
         console.error('❌ Error al cargar snippets:', error);
-        console.error('❌ Error completo:', JSON.stringify(error, null, 2));
-        this.errorMessage = error.error?.error || 'Error al cargar los snippets. Intenta de nuevo.';
+        
+        // Manejo específico de errores
+        if (error.status === 0) {
+          this.errorMessage = 'No se pudo conectar al servidor. Verifica que el servidor esté en funcionamiento.';
+        } else if (error.status === 401) {
+          this.errorMessage = 'No estás autenticado. Por favor, inicia sesión.';
+        } else if (error.status === 403) {
+          this.errorMessage = 'No tienes permiso para ver estos snippets.';
+        } else if (error.status === 404) {
+          this.errorMessage = 'No se encontraron snippets.';
+        } else if (error.status >= 500) {
+          this.errorMessage = 'Error del servidor. Intenta de nuevo más tarde.';
+        } else {
+          this.errorMessage = error.error?.error || 'Error al cargar los snippets. Intenta de nuevo.';
+        }
+        
         this.cdr.detectChanges();
       }
     });
