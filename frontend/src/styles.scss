@@ -1,5 +1,21 @@
-/* Variables de tema claro */
-:root,
+/* Variables por defecto (tema claro) */
+:root {
+  --bg-primary: #ffffff;
+  --bg-secondary: #f8f9fa;
+  --bg-tertiary: #e9ecef;
+  --text-primary: #333333;
+  --text-secondary: #666666;
+  --text-tertiary: #999999;
+  --border-color: #e9ecef;
+  --shadow: rgba(0, 0, 0, 0.1);
+  --shadow-hover: rgba(0, 0, 0, 0.15);
+  --gradient-primary: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  --gradient-card: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+  --code-bg: #f8f9fa;
+  --code-border: #e9ecef;
+}
+
+/* Variables de tema claro (explícito) */
 .light-theme {
   --bg-primary: #ffffff;
   --bg-secondary: #f8f9fa;
