@@ -1,4 +1,4 @@
-const { findByEmail, findByUsername, createUser, updateUser } = require('../models/userModel');
+const { findByEmail, findByUsername, createUser, updateUser, findByIdPublic } = require('../models/userModel');
 const { hashPassword, comparePassword } = require('../utils/password');
 const { signToken } = require('../utils/jwt');
 
@@ -82,7 +82,11 @@ async function updateProfile(req, res) {
   }
   
   // Obtener usuario actualizado
-  const updatedUser = await findByEmail(email);
+  const updatedUser = await findByIdPublic(user_id);
+  
+  if (!updatedUser) {
+    return res.status(404).json({ error: 'Usuario no encontrado' });
+  }
   
   return res.json({
     message: 'Perfil actualizado correctamente',
