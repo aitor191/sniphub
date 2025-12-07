@@ -1,0 +1,106 @@
+<div class="public-snippets-container">
+    <header class="public-header">
+      <h1>🌐 Snippets Públicos</h1>
+      <p class="subtitle">Descubre código compartido por la comunidad</p>
+    </header>
+  
+    <!-- Filtros y búsqueda -->
+    <div class="filters-section">
+      <div class="search-box">
+        <input 
+          type="text" 
+          [(ngModel)]="searchQuery"
+          (keyup.enter)="onSearch()"
+          placeholder="Buscar por título o descripción..."
+          class="search-input"
+        />
+        <button (click)="onSearch()" class="btn btn-secondary">🔍 Buscar</button>
+      </div>
+  
+      <div class="filters">
+        <select 
+          [(ngModel)]="selectedLanguage" 
+          (change)="onFilterChange()"
+          class="filter-select"
+        >
+          <option value="">Todos los lenguajes</option>
+          <option *ngFor="let lang of languages" [value]="lang">{{ lang }}</option>
+        </select>
+      </div>
+    </div>
+  
+    <!-- Mensaje de error -->
+    <div class="error-message" *ngIf="errorMessage">
+      {{ errorMessage }}
+    </div>
+  
+    <!-- Estado de carga -->
+    <div class="loading" *ngIf="isLoading">
+      <p>Cargando snippets públicos...</p>
+    </div>
+  
+    <!-- Lista de snippets -->
+    <div class="snippets-grid" *ngIf="!isLoading && snippets.length > 0">
+      <div class="snippet-card" *ngFor="let snippet of snippets" [routerLink]="['/public', snippet.id]">
+        <div class="snippet-header">
+          <h3>{{ snippet.title }}</h3>
+          <div class="snippet-badges">
+            <span class="badge badge-language">{{ snippet.language }}</span>
+          </div>
+        </div>
+  
+        <p class="snippet-description" *ngIf="snippet.description">
+          {{ snippet.description }}
+        </p>
+  
+        <div class="snippet-meta">
+          <span class="snippet-date">
+            {{ snippet.updated_at | date:'short' }}
+          </span>
+        </div>
+  
+        <div class="snippet-code-preview">
+          <pre><code>{{ snippet.code.substring(0, 150) }}{{ snippet.code.length > 150 ? '...' : '' }}</code></pre>
+        </div>
+      </div>
+    </div>
+  
+    <!-- Mensaje cuando no hay snippets -->
+    <div class="empty-state" *ngIf="!isLoading && snippets.length === 0">
+      <p>No hay snippets públicos disponibles.</p>
+    </div>
+  
+    <!-- Paginación -->
+    <div class="pagination" *ngIf="!isLoading && totalPages > 1">
+      <button 
+        (click)="onPageChange(currentPage - 1)"
+        [disabled]="currentPage === 1"
+        class="btn btn-secondary"
+      >
+        ← Anterior
+      </button>
+      
+      <div class="page-numbers">
+        <button 
+          *ngFor="let page of pages"
+          (click)="onPageChange(page)"
+          [class.active]="page === currentPage"
+          class="btn-page"
+        >
+          {{ page }}
+        </button>
+      </div>
+      
+      <button 
+        (click)="onPageChange(currentPage + 1)"
+        [disabled]="!hasNext"
+        class="btn btn-secondary"
+      >
+        Siguiente →
+      </button>
+    </div>
+  
+    <div class="pagination-info" *ngIf="!isLoading && total > 0">
+      Mostrando {{ showingRange }}
+    </div>
+  </div>
