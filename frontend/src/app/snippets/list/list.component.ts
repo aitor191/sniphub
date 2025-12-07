@@ -1,6 +1,6 @@
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Router, RouterLink } from '@angular/router';
+import { Router, RouterLink, ActivatedRoute } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { SnippetService } from '../../core/services/snippet.service';
 import { Snippet, SnippetsResponse } from '../../../shared/interfaces/snippet.interface';
@@ -17,32 +17,45 @@ export class ListComponent implements OnInit {
   snippets: Snippet[] = [];
   isLoading = false;
   errorMessage = '';
-  
+
   // Paginación
   currentPage = 1;
   limit = 12;
   total = 0;
   hasNext = false;
-  
+
   // Filtros
   searchQuery = '';
   selectedLanguage = '';
   showFavoritesOnly = false;
-  
+
   // Lenguajes disponibles
   languages = [
-    'JavaScript', 'TypeScript', 'Python', 'Java', 'C++', 'C#', 
-    'PHP', 'Ruby', 'Go', 'Rust', 'Swift', 'Kotlin', 'HTML', 
+    'JavaScript', 'TypeScript', 'Python', 'Java', 'C++', 'C#',
+    'PHP', 'Ruby', 'Go', 'Rust', 'Swift', 'Kotlin', 'HTML',
     'CSS', 'SQL', 'Shell', 'JSON', 'YAML', 'Markdown', 'Other'
   ];
 
   constructor(
     private snippetService: SnippetService,
     private router: Router,
+    private route: ActivatedRoute,
     private cdr: ChangeDetectorRef
-  ) {}
+  ) { }
 
   ngOnInit(): void {
+    this.route.queryParams.subscribe(params => {
+      if (params['is_favorite'] === 'true' || params['is_favorite'] === true) {
+        this.showFavoritesOnly = true;
+      }
+      if (params['language']) {
+        this.selectedLanguage = params['language'];
+      }
+      if (params['q']) {
+        this.searchQuery = params['q'];
+      }
+    });
+
     this.loadSnippets();
   }
 
@@ -73,12 +86,12 @@ export class ListComponent implements OnInit {
         this.total = response.total || 0;
         this.hasNext = response.hasNext || false;
         this.currentPage = response.page || 1;
-        
+
         this.cdr.detectChanges();
       },
       error: (error) => {
         console.error('❌ Error al cargar snippets:', error);
-        
+
         // Manejo específico de errores
         if (error.status === 0) {
           this.errorMessage = 'No se pudo conectar al servidor. Verifica que el servidor esté en funcionamiento.';
@@ -93,7 +106,7 @@ export class ListComponent implements OnInit {
         } else {
           this.errorMessage = error.error?.error || 'Error al cargar los snippets. Intenta de nuevo.';
         }
-        
+
         this.cdr.detectChanges();
       }
     });
@@ -117,7 +130,7 @@ export class ListComponent implements OnInit {
 
   toggleFavorite(snippet: Snippet): void {
     const newFavoriteState = !snippet.is_favorite;
-    
+
     this.snippetService.toggleFavorite(snippet.id, newFavoriteState).subscribe({
       next: () => {
         snippet.is_favorite = newFavoriteState;
@@ -154,15 +167,15 @@ export class ListComponent implements OnInit {
     const pages: number[] = [];
     const total = this.totalPages;
     const current = this.currentPage;
-    
+
     // Mostrar máximo 5 páginas
     let start = Math.max(1, current - 2);
     let end = Math.min(total, current + 2);
-    
+
     for (let i = start; i <= end; i++) {
       pages.push(i);
     }
-    
+
     return pages;
   }
 
