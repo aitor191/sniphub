@@ -1,0 +1,56 @@
+<div class="public-detail-container">
+    <div class="header-actions">
+      <a routerLink="/public" class="btn btn-secondary">← Volver a snippets públicos</a>
+    </div>
+  
+    <div class="loading" *ngIf="isLoading">
+      <p>Cargando snippet...</p>
+    </div>
+  
+    <div class="error-message" *ngIf="errorMessage && !isLoading">
+      {{ errorMessage }}
+    </div>
+  
+    <div class="snippet-detail" *ngIf="snippet && !isLoading">
+      <div class="snippet-header">
+        <div class="title-section">
+          <h1>{{ snippet.title }}</h1>
+          <div class="snippet-meta">
+            <span class="badge badge-language">{{ snippet.language }}</span>
+            <span class="badge badge-public">🌐 Público</span>
+            <span class="snippet-date">
+              {{ snippet.updated_at | date:'short' }}
+            </span>
+          </div>
+        </div>
+      </div>
+  
+      <div class="snippet-description" *ngIf="snippet.description">
+        <h3>Descripción</h3>
+        <p>{{ snippet.description }}</p>
+      </div>
+  
+      <div class="snippet-tags" *ngIf="snippet.tags && snippet.tags.length > 0">
+        <h3>Tags</h3>
+        <div class="tags-list">
+          <span class="tag" *ngFor="let tag of snippet.tags">{{ tag }}</span>
+        </div>
+      </div>
+  
+      <div class="snippet-code-section">
+        <div class="code-header">
+          <h3>Código</h3>
+          <button 
+            (click)="copyCode()"
+            class="btn btn-secondary btn-copy"
+          >
+            📋 Copiar código
+          </button>
+        </div>
+        
+        <div class="code-container">
+          <pre><code [class]="'language-' + snippet.language.toLowerCase()">{{ snippet.code }}</code></pre>
+        </div>
+      </div>
+    </div>
+  </div>
