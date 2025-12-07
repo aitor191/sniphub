@@ -5,11 +5,12 @@ import { SnippetService } from '../../core/services/snippet.service';
 import { AiService, ExplainCodeResponse } from '../../core/services/ai.services';
 import { Snippet } from '../../../shared/interfaces/snippet.interface';
 import { finalize } from 'rxjs/operators';
+import { MarkdownPipe } from '../../../shared/pipes/markdown.pipe';
 
 @Component({
   selector: 'app-snippet-detail',
   standalone: true,
-  imports: [CommonModule, RouterLink],
+  imports: [CommonModule, RouterLink, MarkdownPipe],
   templateUrl: './detail.component.html',
   styleUrl: './detail.component.scss'
 })
