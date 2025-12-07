@@ -65,4 +65,20 @@ export class AuthService {
   getProfile(): Observable<{ user: User }> {
     return this.api.get<{ user: User }>('/auth/profile');
   }
+
+  updateProfile(data: { username?: string; email?: string }): Observable<{ message: string; user: User }> {
+    return this.api.put<{ message: string; user: User }>('/auth/profile', data).pipe(
+      tap(response => {
+        localStorage.setItem('user', JSON.stringify(response.user));
+        this.currentUserSubject.next(response.user);
+      })
+    );
+  }
+
+  changePassword(currentPassword: string, newPassword: string): Observable<{ message: string }> {
+    return this.api.patch<{ message: string }>('/auth/profile/password', {
+      currentPassword,
+      newPassword
+    });
+  }
 }
