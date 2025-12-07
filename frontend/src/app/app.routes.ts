@@ -24,13 +24,12 @@ export const routes: Routes = [
     {
         path: 'public',
         loadChildren: () => import('./public/public.routes').then(m => m.publicRoutes)
-    }/*,
+    },
     {
         path: 'profile',
         loadChildren: () => import('./profile/profile.routes').then(m => m.profileRoutes),
         canActivate: [authGuard]
-    }*/,
-    
+    },
     {
         path: '**',
         redirectTo: '/auth/login'
