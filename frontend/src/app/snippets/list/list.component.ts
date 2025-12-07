@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { Router, RouterLink, ActivatedRoute } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { SnippetService } from '../../core/services/snippet.service';
+import { SearchHistoryService, SearchHistoryItem } from '../../core/services/search-history.service';
 import { Snippet, SnippetsResponse } from '../../../shared/interfaces/snippet.interface';
 import { finalize } from 'rxjs/operators';
 
@@ -29,6 +30,10 @@ export class ListComponent implements OnInit {
   selectedLanguage = '';
   showFavoritesOnly = false;
 
+  // Historial de búsquedas
+  searchHistory: SearchHistoryItem[] = [];
+  showHistory = false;
+
   // Lenguajes disponibles
   languages = [
     'JavaScript', 'TypeScript', 'Python', 'Java', 'C++', 'C#',
@@ -38,12 +43,15 @@ export class ListComponent implements OnInit {
 
   constructor(
     private snippetService: SnippetService,
+    private searchHistoryService: SearchHistoryService,
     private router: Router,
     private route: ActivatedRoute,
     private cdr: ChangeDetectorRef
   ) { }
 
   ngOnInit(): void {
+    this.loadSearchHistory();
+    
     this.route.queryParams.subscribe(params => {
       if (params['is_favorite'] === 'true' || params['is_favorite'] === true) {
         this.showFavoritesOnly = true;
@@ -59,9 +67,14 @@ export class ListComponent implements OnInit {
     this.loadSnippets();
   }
 
+  loadSearchHistory(): void {
+    this.searchHistory = this.searchHistoryService.getHistory();
+  }
+
   loadSnippets(): void {
     this.isLoading = true;
     this.errorMessage = '';
+    this.showHistory = false;
 
     const filters = {
       page: this.currentPage,
@@ -113,8 +126,43 @@ export class ListComponent implements OnInit {
   }
 
   onSearch(): void {
+    if (this.searchQuery.trim()) {
+      this.searchHistoryService.addSearch(this.searchQuery);
+      this.loadSearchHistory();
+    }
     this.currentPage = 1;
     this.loadSnippets();
+  }
+
+  onSearchFocus(): void {
+    if (this.searchHistory.length > 0) {
+      this.showHistory = true;
+    }
+  }
+
+  onSearchBlur(): void {
+    setTimeout(() => {
+      this.showHistory = false;
+    }, 200);
+  }
+
+  selectHistoryItem(item: SearchHistoryItem): void {
+    this.searchQuery = item.query;
+    this.showHistory = false;
+    this.onSearch();
+  }
+
+  removeHistoryItem(event: Event, item: SearchHistoryItem): void {
+    event.stopPropagation();
+    this.searchHistoryService.removeSearch(item.query);
+    this.loadSearchHistory();
+  }
+
+  clearHistory(): void {
+    if (confirm('¿Estás seguro de que quieres limpiar todo el historial de búsquedas?')) {
+      this.searchHistoryService.clearHistory();
+      this.loadSearchHistory();
+    }
   }
 
   onFilterChange(): void {
