@@ -5,6 +5,13 @@
       <p class="welcome-text" *ngIf="user">Bienvenido, <strong>{{ user.username }}</strong></p>
     </div>
     <div class="header-actions">
+      <button 
+        (click)="toggleTheme()" 
+        class="btn btn-theme-toggle"
+        [title]="isDarkTheme ? 'Cambiar a tema claro' : 'Cambiar a tema oscuro'"
+      >
+        {{ isDarkTheme ? '☀️' : '🌙' }}
+      </button>
       <button class="btn btn-secondary" (click)="logout()">Cerrar sesión</button>
     </div>
   </header>

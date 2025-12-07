@@ -2,6 +2,7 @@ import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../core/services/auth.service';
+import { ThemeService } from '../core/services/theme.service';
 import { User } from '../../shared/interfaces/auth.interface';
 import { SnippetService } from '../core/services/snippet.service';
 import { Snippet } from '../../shared/interfaces/snippet.interface';
@@ -21,10 +22,12 @@ export class DashboardComponent implements OnInit {
   favoriteSnippets = 0;
   publicSnippets = 0;
   recentSnippets: Snippet[] = [];
+  isDarkTheme = false;
 
   constructor(
     private authService: AuthService,
     private snippetService: SnippetService,
+    private themeService: ThemeService,
     private router: Router,
     private cdr: ChangeDetectorRef
   ) { }
@@ -37,11 +40,20 @@ export class DashboardComponent implements OnInit {
       return;
     }
     
+    this.themeService.currentTheme$.subscribe(theme => {
+      this.isDarkTheme = theme === 'dark';
+      this.cdr.detectChanges();
+    });
+    
     this.loadDashboardData();
   }
 
   logout(): void {
     this.authService.logout();
+  }
+
+  toggleTheme(): void {
+    this.themeService.toggleTheme();
   }
 
   loadDashboardData(): void {
