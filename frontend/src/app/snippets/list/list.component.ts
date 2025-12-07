@@ -47,7 +47,6 @@ export class ListComponent implements OnInit {
   }
 
   loadSnippets(): void {
-    console.log('🔄 loadSnippets() llamado');
     this.isLoading = true;
     this.errorMessage = '';
 
@@ -59,20 +58,13 @@ export class ListComponent implements OnInit {
       is_favorite: this.showFavoritesOnly || undefined
     };
 
-    console.log('📤 Enviando petición con filtros:', filters);
-
     this.snippetService.getMySnippets(filters).pipe(
       finalize(() => {
-        console.log('✅ finalize() ejecutado');
         this.isLoading = false;
         this.cdr.detectChanges();
       })
     ).subscribe({
       next: (response: SnippetsResponse) => {
-        console.log('✅ next() ejecutado - Respuesta recibida:', response);
-        console.log('�� Items recibidos:', response.items);
-        console.log('�� Total:', response.total);
-        
         this.snippets = (response.items || []).map(item => ({
           ...item,
           is_public: Boolean(item.is_public),
@@ -82,8 +74,6 @@ export class ListComponent implements OnInit {
         this.hasNext = response.hasNext || false;
         this.currentPage = response.page || 1;
         
-        console.log('✨ Snippets procesados:', this.snippets);
-        console.log('📈 Total después de procesar:', this.total);
         this.cdr.detectChanges();
       },
       error: (error) => {
