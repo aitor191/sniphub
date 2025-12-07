@@ -1,0 +1,120 @@
+<div class="detail-container">
+    <!-- Botón volver -->
+    <div class="header-actions">
+      <a routerLink="/snippets" class="btn btn-secondary">← Volver a la lista</a>
+    </div>
+  
+    <!-- Estado de carga -->
+    <div class="loading" *ngIf="isLoading">
+      <p>Cargando snippet...</p>
+    </div>
+  
+    <!-- Mensaje de error -->
+    <div class="error-message" *ngIf="errorMessage && !isLoading">
+      {{ errorMessage }}
+    </div>
+  
+    <!-- Contenido del snippet -->
+    <div class="snippet-detail" *ngIf="snippet && !isLoading">
+      <!-- Header del snippet -->
+      <div class="snippet-header">
+        <div class="title-section">
+          <h1>{{ snippet.title }}</h1>
+          <div class="snippet-meta">
+            <span class="badge badge-language">{{ snippet.language }}</span>
+            <span class="badge badge-public" *ngIf="snippet.is_public">🌐 Público</span>
+            <span class="badge badge-favorite" *ngIf="snippet.is_favorite">⭐ Favorito</span>
+            <span class="snippet-date">
+              {{ snippet.updated_at | date:'short' }}
+            </span>
+          </div>
+        </div>
+  
+        <div class="action-buttons">
+          <button 
+            (click)="toggleFavorite()"
+            [class.favorite]="snippet.is_favorite"
+            class="btn btn-icon"
+            title="Marcar como favorito"
+          >
+            {{ snippet.is_favorite ? '⭐' : '☆' }}
+          </button>
+          <a 
+            [routerLink]="['/snippets', 'edit', snippet.id]"
+            class="btn btn-secondary"
+          >
+            ✏️ Editar
+          </a>
+          <button 
+            (click)="deleteSnippet()"
+            class="btn btn-danger"
+          >
+            🗑️ Eliminar
+          </button>
+        </div>
+      </div>
+  
+      <!-- Descripción -->
+      <div class="snippet-description" *ngIf="snippet.description">
+        <h3>Descripción</h3>
+        <p>{{ snippet.description }}</p>
+      </div>
+  
+      <!-- Tags -->
+      <div class="snippet-tags" *ngIf="snippet.tags && snippet.tags.length > 0">
+        <h3>Tags</h3>
+        <div class="tags-list">
+          <span class="tag" *ngFor="let tag of snippet.tags">{{ tag }}</span>
+        </div>
+      </div>
+  
+      <!-- Código -->
+      <div class="snippet-code-section">
+        <div class="code-header">
+          <h3>Código</h3>
+          <div class="code-actions">
+            <button 
+              (click)="copyCode()"
+              class="btn btn-secondary btn-copy"
+            >
+              📋 Copiar código
+            </button>
+            <button 
+              (click)="explainCode()"
+              [disabled]="isLoadingExplanation"
+              class="btn btn-primary"
+            >
+              🤖 Explicar con IA
+            </button>
+          </div>
+        </div>
+        
+        <div class="code-container">
+          <pre><code [class]="'language-' + snippet.language.toLowerCase()">{{ snippet.code }}</code></pre>
+        </div>
+      </div>
+  
+      <!-- Explicación de IA -->
+      <div class="explanation-section" *ngIf="showExplanation">
+        <div class="explanation-header">
+          <h3>🤖 Explicación del código</h3>
+          <div class="explanation-badge" *ngIf="explanationProvider">
+            <span *ngIf="isExplanationCached" class="badge badge-cached">💾 Desde caché</span>
+            <span class="badge badge-provider">Proveedor: {{ explanationProvider }}</span>
+          </div>
+        </div>
+  
+        <div class="loading" *ngIf="isLoadingExplanation">
+          <p>Generando explicación...</p>
+        </div>
+  
+        <div class="explanation-content" *ngIf="explanation && !isLoadingExplanation">
+          <div [innerHTML]="explanation | markdown"></div>
+        </div>
+  
+        <div class="error-message" *ngIf="errorMessage && !isLoadingExplanation">
+          {{ errorMessage }}
+        </div>
+      </div>
+    </div>
+  </div>
