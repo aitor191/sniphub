@@ -70,7 +70,7 @@
     font-size: 14px;
     font-family: inherit;
     transition: border-color 0.2s;
-    background: var(--bg-primary);
+    background: hsl(var(--card));
     color: var(--text-primary);
 
     &:focus {
@@ -88,13 +88,17 @@
       font-size: 13px;
       line-height: 1.5;
       resize: vertical;
-      background: var(--code-bg);
-      border-color: var(--code-border);
+      background: hsl(var(--card)); 
+      border-color: var(--border-color);
+      color: var(--text-primary);
     }
   }
 
   textarea.form-control {
     resize: vertical;
+    background: hsl(var(--card));
+    border-color: var(--border-color);
+    color: var(--text-primary);
   }
 
   .error-text {
