@@ -307,8 +307,9 @@
 
 .search-box {
   display: flex;
-  gap: 1rem;
-  margin-bottom: 1rem;
+  gap: 10px;
+  margin-bottom: 15px;
+  position: relative;
 
   .search-input-wrapper {
     flex: 1;
@@ -316,23 +317,24 @@
   }
 
   .search-input {
+    flex: 1;
+    padding: 10px;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    font-size: 16px;
+    background: var(--bg-primary);
+    color: var(--text-primary);
     width: 100%;
-    padding: 0.75rem 1rem;
-    background: hsl(var(--input));
-    border: 1px solid hsl(var(--border));
-    border-radius: calc(var(--radius) - 2px);
-    color: hsl(var(--foreground));
-    font-size: 1rem;
-    transition: all 0.2s;
+    transition: border-color 0.2s;
 
     &:focus {
       outline: none;
-      border-color: hsl(var(--ring));
-      box-shadow: 0 0 0 2px hsl(var(--ring) / 0.2);
+      border-color: var(--ring);
+      box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.2);
     }
 
     &::placeholder {
-      color: hsl(var(--muted-foreground));
+      color: var(--text-secondary);
     }
   }
 
@@ -342,10 +344,10 @@
     left: 0;
     right: 0;
     margin-top: 4px;
-    background: hsl(var(--popover));
-    border: 1px solid hsl(var(--border));
-    border-radius: calc(var(--radius) - 2px);
-    box-shadow: 0 4px 12px hsl(var(--foreground) / 0.1);
+    background: var(--bg-primary);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    box-shadow: 0 4px 12px var(--shadow);
     z-index: 1000;
     max-height: 300px;
     overflow-y: auto;
@@ -355,16 +357,16 @@
       justify-content: space-between;
       align-items: center;
       padding: 10px 15px;
-      border-bottom: 1px solid hsl(var(--border));
+      border-bottom: 1px solid var(--border-color);
       font-size: 12px;
       font-weight: 600;
-      color: hsl(var(--muted-foreground));
-      background: hsl(var(--muted));
+      color: var(--text-secondary);
+      background: var(--bg-secondary);
 
       .btn-clear-history {
         background: none;
         border: none;
-        color: hsl(var(--muted-foreground));
+        color: var(--text-secondary);
         cursor: pointer;
         font-size: 11px;
         padding: 4px 8px;
@@ -372,7 +374,7 @@
         transition: background 0.2s;
 
         &:hover {
-          background: hsl(var(--accent));
+          background: var(--bg-tertiary);
         }
       }
     }
@@ -385,26 +387,26 @@
         padding: 10px 15px;
         cursor: pointer;
         transition: background 0.2s;
-        border-bottom: 1px solid hsl(var(--border));
+        border-bottom: 1px solid var(--border-color);
 
         &:last-child {
           border-bottom: none;
         }
 
         &:hover {
-          background: hsl(var(--accent));
+          background: var(--bg-secondary);
         }
 
         .history-query {
           flex: 1;
-          color: hsl(var(--foreground));
+          color: var(--text-primary);
           font-size: 14px;
         }
 
         .btn-remove-item {
           background: none;
           border: none;
-          color: hsl(var(--muted-foreground));
+          color: var(--text-secondary);
           cursor: pointer;
           font-size: 18px;
           padding: 4px 8px;
@@ -412,7 +414,7 @@
           transition: color 0.2s;
 
           &:hover {
-            color: hsl(var(--foreground));
+            color: var(--text-primary);
           }
         }
       }
@@ -420,20 +422,27 @@
   }
 
   .btn {
-    padding: 0.75rem 1.5rem;
+    padding: 10px 20px;
     border: none;
-    border-radius: calc(var(--radius) - 2px);
-    font-size: 1rem;
+    border-radius: 4px;
     cursor: pointer;
-    transition: all 0.2s;
+    font-size: 14px;
+    text-decoration: none;
+    display: inline-block;
+    transition: background 0.2s;
     white-space: nowrap;
 
     &.btn-secondary {
-      background: hsl(var(--secondary));
-      color: hsl(var(--secondary-foreground));
+      background: #6c757d;
+      color: white;
 
-      &:hover {
-        background: hsl(var(--secondary) / 0.9);
+      &:hover:not(:disabled) {
+        background: #545b62;
+      }
+
+      &:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
       }
     }
   }
