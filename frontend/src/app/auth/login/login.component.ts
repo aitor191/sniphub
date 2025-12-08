@@ -50,7 +50,6 @@ export class LoginComponent {
       })
     ).subscribe({
       next: (response) => {
-        console.log('Login exitoso:', response);
         this.cdr.detectChanges();
         this.router.navigateByUrl('/dashboard');
       },

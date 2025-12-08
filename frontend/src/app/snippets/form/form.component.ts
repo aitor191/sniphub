@@ -126,7 +126,6 @@ export class FormComponent implements OnInit {
         })
       ).subscribe({
         next: (response) => {
-          console.log('Snippet actualizado:', response);
           this.successMessage = 'Snippet actualizado correctamente';
           this.cdr.detectChanges();
           setTimeout(() => {
@@ -148,7 +147,6 @@ export class FormComponent implements OnInit {
         })
       ).subscribe({
         next: (response) => {
-          console.log('Snippet creado:', response);
           this.successMessage = 'Snippet creado correctamente';
           this.cdr.detectChanges();
           setTimeout(() => {

@@ -57,7 +57,6 @@ export class RegisterComponent {
       })
     ).subscribe({
       next: (response) => {
-        console.log('Registro exitoso:', response);
         this.successMessage = '¡Registro exitoso! Redirigiendo al login...';
         this.cdr.detectChanges();
         setTimeout(() => {

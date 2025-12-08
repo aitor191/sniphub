@@ -11,11 +11,6 @@ export const errorInterceptor: HttpInterceptorFn = (req, next) => {
       const url = req.url;
       const isAuthRequest = url.includes('/auth/login') || url.includes('/auth/register');
       
-      // Log temporal para depurar
-      if (error.status === 401) {
-        console.log('Error 401 detectado. URL:', url, 'isAuthRequest:', isAuthRequest);
-      }
-      
       if (error.status === 401 && !isAuthRequest) {
         localStorage.removeItem('token');
         localStorage.removeItem('user');
