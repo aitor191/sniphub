@@ -1,116 +1,132 @@
-<div class="dashboard-container">
-  <header class="dashboard-header">
-    <div class="header-content">
-      <h1>SnipHub Dashboard</h1>
-      <p class="welcome-text" *ngIf="user">Bienvenido, <strong>{{ user.username }}</strong></p>
+<div class="app-layout">
+  <!-- Overlay para móviles -->
+  <div class="sidebar-overlay" *ngIf="isMenuOpen" (click)="toggleMenu()"></div>
+
+  <!-- Sidebar -->
+  <aside class="sidebar" [class.open]="isMenuOpen">
+    <div class="sidebar-header">
+      <div class="logo">
+        <span class="logo-icon">&lt;/&gt;</span>
+        <span class="logo-text">SnipHub</span>
+      </div>
+      <button class="sidebar-close" (click)="toggleMenu()" *ngIf="isMenuOpen">
+        ✕
+      </button>
     </div>
-    <div class="header-actions">
+
+    <nav class="sidebar-nav">
+      <div class="nav-section">
+        <h3 class="nav-section-title">Navegación</h3>
+        <a routerLink="/snippets/new" class="nav-button nav-button-primary" (click)="closeMenuOnMobile()">
+          <span class="nav-icon">+</span>
+          <span>Nuevo Snippet</span>
+        </a>
+        <a routerLink="/snippets" class="nav-link" routerLinkActive="active" [routerLinkActiveOptions]="{exact: false}" (click)="closeMenuOnMobile()">
+          <span>📋 Todos los snippets</span>
+        </a>
+        <a routerLink="/snippets" [queryParams]="{is_favorite: true}" class="nav-link" routerLinkActive="active" (click)="closeMenuOnMobile()">
+          <span>✩ Favoritos</span>
+        </a>
+        <a routerLink="/public" class="nav-link" routerLinkActive="active" (click)="closeMenuOnMobile()">
+          <span>🌐 Snippets Públicos</span>
+        </a>
+        <a routerLink="/profile" class="nav-link" routerLinkActive="active" (click)="closeMenuOnMobile()">
+          <span>👤 Mi Perfil</span>
+        </a>
+      </div>
+    </nav>
+
+    <div class="sidebar-footer">
       <button 
         (click)="toggleTheme()" 
-        class="btn btn-theme-toggle"
+        class="theme-toggle"
         [title]="isDarkTheme ? 'Cambiar a tema claro' : 'Cambiar a tema oscuro'"
       >
-        {{ isDarkTheme ? '☀️' : '🌙' }}
+        <span class="theme-icon">{{ isDarkTheme ? '☀️' : '🌙' }}</span>
+        <span>Modo {{ isDarkTheme ? 'Claro' : 'Oscuro' }}</span>
       </button>
-      <button class="btn btn-secondary" (click)="logout()">Cerrar sesión</button>
+      <div class="user-info" *ngIf="user">
+        <span class="user-email">{{ user.email }}</span>
+      </div>
+      <button class="logout-link" (click)="logout()">
+        <span class="logout-icon">[→]</span>
+        <span>Cerrar sesión</span>
+      </button>
     </div>
-  </header>
+  </aside>
 
-  <main class="dashboard-content">
-    <!-- Estadísticas -->
-    <section class="stats-section">
-      <h2>📊 Estadísticas</h2>
-      <div class="stats-grid">
-        <div class="stat-card">
-          <div class="stat-icon">📝</div>
-          <div class="stat-info">
-            <div class="stat-value">{{ totalSnippets }}</div>
-            <div class="stat-label">Total Snippets</div>
-          </div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-icon">⭐</div>
-          <div class="stat-info">
-            <div class="stat-value">{{ favoriteSnippets }}</div>
-            <div class="stat-label">Favoritos</div>
-          </div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-icon">🌐</div>
-          <div class="stat-info">
-            <div class="stat-value">{{ publicSnippets }}</div>
-            <div class="stat-label">Públicos</div>
-          </div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-icon">🔒</div>
-          <div class="stat-info">
-            <div class="stat-value">{{ totalSnippets - publicSnippets }}</div>
-            <div class="stat-label">Privados</div>
-          </div>
+  <!-- Main Content -->
+  <main class="main-content">
+    <div class="content-header">
+      <div class="header-top">
+        <button class="menu-toggle" (click)="toggleMenu()" aria-label="Toggle menu">
+          <span class="hamburger-line"></span>
+          <span class="hamburger-line"></span>
+          <span class="hamburger-line"></span>
+        </button>
+        <div>
+          <h1 class="page-title">Tus Snippets</h1>
+          <p class="page-subtitle">Gestiona y organiza tu colección de código</p>
         </div>
       </div>
-    </section>
+    </div>
 
-    <!-- Accesos rápidos -->
-    <section class="quick-actions-section">
-      <h2>⚡ Accesos Rápidos</h2>
-      <div class="actions-grid">
-        <a routerLink="/snippets/new" class="action-card action-primary">
-          <div class="action-icon">➕</div>
-          <h3>Nuevo Snippet</h3>
-          <p>Crea un nuevo snippet de código</p>
-        </a>
-        <a routerLink="/snippets" class="action-card">
-          <div class="action-icon">📋</div>
-          <h3>Mis Snippets</h3>
-          <p>Ver todos tus snippets</p>
-        </a>
-        <a routerLink="/snippets" [queryParams]="{is_favorite: true}" class="action-card">
-          <div class="action-icon">⭐</div>
-          <h3>Favoritos</h3>
-          <p>Ver snippets favoritos</p>
-        </a>
+    <!-- Search and Filters -->
+    <div class="search-filters">
+      <div class="search-box">
+        <input 
+          type="text" 
+          placeholder="🔍 Buscar snippets..."
+          class="search-input"
+        />
       </div>
-    </section>
+      <div class="filter-buttons">
+        <button class="filter-btn active">Todas</button>
+        <button class="filter-btn">Validaciones</button>
+      </div>
+    </div>
 
-    <!-- Snippets recientes -->
-    <section class="recent-section">
-      <div class="section-header">
-        <h2>🕒 Snippets Recientes</h2>
-        <a routerLink="/snippets" class="view-all-link">Ver todos →</a>
-      </div>
-      
-      <div class="loading" *ngIf="isLoading">
-        <p>Cargando...</p>
-      </div>
-
-      <div class="recent-snippets-grid" *ngIf="!isLoading && recentSnippets.length > 0">
-        <div class="recent-snippet-card" *ngFor="let snippet of recentSnippets" [routerLink]="['/snippets', snippet.id]">
-          <div class="snippet-header-mini">
-            <h3>{{ snippet.title }}</h3>
-            <div class="snippet-badges">
-              <span class="badge badge-language">{{ snippet.language }}</span>
-              <span class="badge badge-favorite" *ngIf="snippet.is_favorite">⭐</span>
-              <span class="badge badge-public" *ngIf="snippet.is_public">🌐</span>
-            </div>
-          </div>
-          <p class="snippet-description-mini" *ngIf="snippet.description">
-            {{ snippet.description.length > 100 ? (snippet.description | slice:0:100) + '...' : snippet.description }}
-          </p>
-          <div class="snippet-code-preview">
-            <code>{{ snippet.code.substring(0, 80) }}{{ snippet.code.length > 80 ? '...' : '' }}</code>
-          </div>
-          <div class="snippet-footer">
-            <span class="snippet-date">{{ snippet.updated_at | date:'short' }}</span>
-          </div>
+    <!-- Snippets Grid -->
+    <div class="snippets-grid" *ngIf="!isLoading && recentSnippets.length > 0">
+      <div class="snippet-card" *ngFor="let snippet of recentSnippets" [routerLink]="['/snippets', snippet.id]">
+        <div class="snippet-card-header">
+          <h3 class="snippet-title">{{ snippet.title }}</h3>
+          <button 
+            class="favorite-btn"
+            [class.active]="snippet.is_favorite"
+            (click)="$event.stopPropagation()"
+            title="Favorito"
+          >
+            ⭐
+          </button>
+        </div>
+        <p class="snippet-description">{{ snippet.description || 'Sin descripción' }}</p>
+        <div class="snippet-tags">
+          <span 
+            class="tag" 
+            [class.tag-javascript]="snippet.language === 'javascript'"
+            [class.tag-other]="snippet.language !== 'javascript'"
+          >
+            {{ snippet.language }}
+          </span>
+        </div>
+        <div class="snippet-preview">
+          <code>{{ snippet.code.substring(0, 100) }}{{ snippet.code.length > 100 ? '...' : '' }}</code>
+        </div>
+        <div class="snippet-actions">
+          <button class="action-btn" (click)="$event.stopPropagation(); editSnippet(snippet)">Editar</button>
+          <button class="action-btn action-btn-danger" (click)="$event.stopPropagation(); deleteSnippet(snippet)">Eliminar</button>
         </div>
       </div>
+    </div>
 
-      <div class="empty-state" *ngIf="!isLoading && recentSnippets.length === 0">
-        <p>No tienes snippets aún.</p>
-        <a routerLink="/snippets/new" class="btn btn-primary">Crear tu primer snippet</a>
-      </div>
-    </section>
+    <div class="empty-state" *ngIf="!isLoading && recentSnippets.length === 0">
+      <p>No tienes snippets aún.</p>
+      <a routerLink="/snippets/new" class="btn btn-primary">Crear tu primer snippet</a>
+    </div>
+
+    <div class="loading" *ngIf="isLoading">
+      <p>Cargando...</p>
+    </div>
   </main>
 </div>

@@ -1,6 +1,6 @@
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Router, RouterLink } from '@angular/router';
+import { Router, RouterLink, RouterLinkActive } from '@angular/router';
 import { AuthService } from '../core/services/auth.service';
 import { ThemeService } from '../core/services/theme.service';
 import { User } from '../../shared/interfaces/auth.interface';
@@ -11,7 +11,7 @@ import { finalize } from 'rxjs/operators';
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [CommonModule, RouterLink],
+  imports: [CommonModule, RouterLink, RouterLinkActive],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.scss'
 })
@@ -23,6 +23,7 @@ export class DashboardComponent implements OnInit {
   publicSnippets = 0;
   recentSnippets: Snippet[] = [];
   isDarkTheme = false;
+  isMenuOpen = false;
 
   constructor(
     private authService: AuthService,
@@ -56,6 +57,17 @@ export class DashboardComponent implements OnInit {
     this.themeService.toggleTheme();
   }
 
+  toggleMenu(): void {
+    this.isMenuOpen = !this.isMenuOpen;
+  }
+
+  closeMenuOnMobile(): void {
+    // Cerrar el menú en dispositivos móviles al hacer clic en un enlace
+    if (window.innerWidth <= 768) {
+      this.isMenuOpen = false;
+    }
+  }
+
   loadDashboardData(): void {
     this.isLoading = true;
   
@@ -84,5 +96,22 @@ export class DashboardComponent implements OnInit {
         console.error('Error al cargar datos del dashboard:', error);
       }
     });
+  }
+
+  editSnippet(snippet: Snippet): void {
+    this.router.navigate(['/snippets', 'edit', snippet.id]);
+  }
+
+  deleteSnippet(snippet: Snippet): void {
+    if (confirm(`¿Estás seguro de eliminar "${snippet.title}"?`)) {
+      this.snippetService.deleteSnippet(snippet.id).subscribe({
+        next: () => {
+          this.loadDashboardData();
+        },
+        error: (error) => {
+          console.error('Error al eliminar snippet:', error);
+        }
+      });
+    }
   }
 }

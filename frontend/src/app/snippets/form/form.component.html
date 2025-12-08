@@ -1,7 +1,7 @@
 <div class="form-container">
     <header class="form-header">
       <h1>{{ isEditMode ? 'Editar Snippet' : 'Nuevo Snippet' }}</h1>
-      <a routerLink="/snippets" class="btn btn-secondary">← Volver</a>
+      <a routerLink="/dashboard" class="btn btn-secondary">← Volver al Dashboard</a>
     </header>
   
     <!-- Mensajes -->
@@ -127,7 +127,7 @@
       <div class="form-actions">
         <button 
           type="button" 
-          routerLink="/snippets"
+          routerLink="/dashboard"
           class="btn btn-secondary"
           [disabled]="isLoading"
         >
