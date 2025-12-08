@@ -52,7 +52,8 @@
 .sidebar-nav {
   flex: 1;
   padding: 1.5rem;
-  overflow: visible;
+  overflow-x: hidden;
+  overflow-y: auto;
 }
 
 .nav-section {
@@ -71,6 +72,8 @@
   align-items: center;
   gap: 0.75rem;
   width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
   padding: 0.75rem 1rem;
   border: none;
   border-radius: calc(var(--radius) - 2px);
@@ -106,12 +109,28 @@
 
 .nav-link {
   display: block;
+  align-items: center;
+  gap: 0.75rem;
   padding: 0.75rem 1rem;
   color: hsl(var(--sidebar-foreground));
   text-decoration: none;
   border-radius: calc(var(--radius) - 2px);
   transition: all 0.2s;
   margin-bottom: 0.25rem;
+
+  .nav-link-icon{
+    font-size: 1.25rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.25rem;
+    flex-shrink: 0;
+  }
+
+  .nav-link-icon-star{
+    color: hsl(45 93% 47%);
+    filter: drop-shadow(0 0 2px hsl(45 93% 47% / 0.5));
+  }
 
   &:hover {
     background: hsl(var(--sidebar-accent));
@@ -175,7 +194,7 @@
   background: transparent;
   border: none;
   border-radius: calc(var(--radius) - 2px);
-  color: hsl(var(--sidebar-foreground));
+  color: hsl(0 84% 60%);
   cursor: pointer;
   transition: all 0.2s;
   text-decoration: none;
@@ -185,11 +204,16 @@
 
   .logout-icon {
     font-size: 1rem;
+    color: hsl(0 84% 60%);
   }
 
   &:hover {
     background: hsl(var(--sidebar-accent));
-    color: hsl(var(--sidebar-accent-foreground));
+    color: hsl(0 84% 65%);
+    
+    .logout-icon{
+      color: hsl(0 84% 65%);
+    }
   }
 }
 

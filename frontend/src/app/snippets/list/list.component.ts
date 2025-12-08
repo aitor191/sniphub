@@ -232,4 +232,11 @@ export class ListComponent implements OnInit {
     const end = Math.min(this.currentPage * this.limit, this.total);
     return `${start} - ${end} de ${this.total} snippets`;
   }
+
+  get pageTitle(): string {
+    if (this.showFavoritesOnly) {
+      return '⭐ Mis Favoritos';
+    }
+    return 'Mis Snippets';
+  }
 }

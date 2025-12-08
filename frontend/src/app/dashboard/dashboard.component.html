@@ -22,16 +22,20 @@
           <span>Nuevo Snippet</span>
         </a>
         <a routerLink="/snippets" class="nav-link" routerLinkActive="active" [routerLinkActiveOptions]="{exact: false}" (click)="closeMenuOnMobile()">
-          <span>📋 Todos los snippets</span>
+          <span class="nav-link-icon">📋</span>
+          <span> Todos los snippets</span>
         </a>
         <a routerLink="/snippets" [queryParams]="{is_favorite: true}" class="nav-link" routerLinkActive="active" (click)="closeMenuOnMobile()">
-          <span>✩ Favoritos</span>
+          <span class="nav-link-icon">⭐</span>
+          <span> Favoritos</span>
         </a>
         <a routerLink="/public" class="nav-link" routerLinkActive="active" (click)="closeMenuOnMobile()">
-          <span>🌐 Snippets Públicos</span>
+          <span class="nav-link-icon">🌐</span>
+          <span> Snippets Públicos</span>
         </a>
         <a routerLink="/profile" class="nav-link" routerLinkActive="active" (click)="closeMenuOnMobile()">
-          <span>👤 Mi Perfil</span>
+          <span class="nav-link-icon">👤</span>
+          <span> Mi Perfil</span>
         </a>
       </div>
     </nav>
