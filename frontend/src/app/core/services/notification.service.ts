@@ -26,14 +26,17 @@ export class NotificationService {
       duration
     };
 
-    const current = this.notifications$.value;
-    this.notifications$.next([...current, notification]);
+    // Usar setTimeout para evitar el error NG0100 
+    setTimeout(() => {
+      const current = this.notifications$.value;
+      this.notifications$.next([...current, notification]);
 
-    if (duration > 0) {
-      setTimeout(() => {
-        this.remove(notification.id);
-      }, duration);
-    }
+      if (duration > 0) {
+        setTimeout(() => {
+          this.remove(notification.id);
+        }, duration);
+      }
+    }, 0);
   }
 
   success(message: string, duration?: number): void {

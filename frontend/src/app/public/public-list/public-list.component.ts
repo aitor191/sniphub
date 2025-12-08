@@ -190,7 +190,9 @@ export class PublicListComponent implements OnInit, OnDestroy {
       if (confirmed) {
         this.searchHistoryService.clearHistory();
         this.loadSearchHistory();
-        this.notificationService.success('Historial limpiado correctamente');
+        setTimeout(() => {
+          this.notificationService.success('Historial limpiado correctamente');
+        }, 0);
       }
     });
   }
@@ -199,10 +201,15 @@ export class PublicListComponent implements OnInit, OnDestroy {
     if (!snippet?.code) return;
 
     navigator.clipboard.writeText(snippet.code).then(() => {
-      this.notificationService.success('Código copiado al portapapeles');
+      // Usar setTimeout para consistencia y evitar errores de detección de cambios
+      setTimeout(() => {
+        this.notificationService.success('Código copiado al portapapeles');
+      }, 0);
     }).catch(err => {
       console.error('Error al copiar:', err);
-      this.notificationService.error('Error al copiar el código');
+      setTimeout(() => {
+        this.notificationService.error('Error al copiar el código');
+      }, 0);
     });
   }
 

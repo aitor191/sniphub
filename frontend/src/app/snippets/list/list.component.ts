@@ -202,7 +202,9 @@ export class ListComponent implements OnInit, OnDestroy {
       if (confirmed) {
         this.searchHistoryService.clearHistory();
         this.loadSearchHistory();
-        this.notificationService.success('Historial limpiado correctamente');
+        setTimeout(() => {
+          this.notificationService.success('Historial limpiado correctamente');
+        }, 0);
       }
     });
   }
@@ -224,14 +226,19 @@ export class ListComponent implements OnInit, OnDestroy {
     this.snippetService.toggleFavorite(snippet.id, newFavoriteState).subscribe({
       next: () => {
         snippet.is_favorite = newFavoriteState;
-        this.notificationService.success(
-          newFavoriteState ? 'Agregado a favoritos' : 'Eliminado de favoritos'
-        );
+        // Usar setTimeout para evitar errores de detección de cambios
+        setTimeout(() => {
+          this.notificationService.success(
+            newFavoriteState ? 'Agregado a favoritos' : 'Eliminado de favoritos'
+          );
+        }, 0);
         this.cdr.detectChanges();
       },
       error: (error) => {
         console.error('Error al actualizar favorito:', error);
-        this.notificationService.error('Error al actualizar el favorito. Intenta de nuevo.');
+        setTimeout(() => {
+          this.notificationService.error('Error al actualizar el favorito. Intenta de nuevo.');
+        }, 0);
       }
     });
   }
@@ -246,12 +253,17 @@ export class ListComponent implements OnInit, OnDestroy {
       if (confirmed) {
         this.snippetService.deleteSnippet(snippet.id).subscribe({
           next: () => {
-            this.notificationService.success('Snippet eliminado correctamente');
+            // Usar setTimeout para evitar el error NG0100
+            setTimeout(() => {
+              this.notificationService.success('Snippet eliminado correctamente');
+            }, 0);
             this.loadSnippets();
           },
           error: (error) => {
             console.error('Error al eliminar snippet:', error);
-            this.notificationService.error('Error al eliminar el snippet. Intenta de nuevo.');
+            setTimeout(() => {
+              this.notificationService.error('Error al eliminar el snippet. Intenta de nuevo.');
+            }, 0);
           }
         });
       }
@@ -262,10 +274,15 @@ export class ListComponent implements OnInit, OnDestroy {
     if (!snippet?.code) return;
 
     navigator.clipboard.writeText(snippet.code).then(() => {
-      this.notificationService.success('Código copiado al portapapeles');
+      // Usar setTimeout para consistencia y evitar errores de detección de cambios
+      setTimeout(() => {
+        this.notificationService.success('Código copiado al portapapeles');
+      }, 0);
     }).catch(err => {
       console.error('Error al copiar:', err);
-      this.notificationService.error('Error al copiar el código');
+      setTimeout(() => {
+        this.notificationService.error('Error al copiar el código');
+      }, 0);
     });
   }
 

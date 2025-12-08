@@ -206,6 +206,41 @@
         flex: 1;
       }
 
+      .snippet-actions {
+        display: flex;
+        gap: 8px;
+        position: absolute;
+        top: 0;
+        right: 0;
+        z-index: 10;
+    
+        .btn-icon {
+          background: var(--bg-secondary);
+          border: 1px solid var(--border-color);
+          cursor: pointer;
+          font-size: 16px;
+          padding: 6px 10px;
+          border-radius: 6px;
+          transition: all 0.2s;
+          color: var(--text-primary);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          min-width: 36px;
+          height: 36px;
+    
+          &:hover {
+            background: var(--bg-tertiary);
+            border-color: hsl(var(--primary));
+            transform: scale(1.05);
+          }
+    
+          &:active {
+            transform: scale(0.95);
+          }
+        }
+      }
+
       .snippet-badges {
         display: flex;
         gap: 0.5rem;

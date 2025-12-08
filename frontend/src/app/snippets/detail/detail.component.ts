@@ -126,12 +126,17 @@ export class DetailComponent implements OnInit {
       if (confirmed) {
         this.snippetService.deleteSnippet(this.snippet!.id).subscribe({
           next: () => {
-            this.notificationService.success('Snippet eliminado correctamente');
+            // Usar setTimeout para evitar el error NG0100
+            setTimeout(() => {
+              this.notificationService.success('Snippet eliminado correctamente');
+            }, 0);
             this.router.navigate(['/snippets']);
           },
           error: (error) => {
             console.error('Error al eliminar snippet:', error);
-            this.notificationService.error('Error al eliminar el snippet. Intenta de nuevo.');
+            setTimeout(() => {
+              this.notificationService.error('Error al eliminar el snippet. Intenta de nuevo.');
+            }, 0);
           }
         });
       }
@@ -146,14 +151,19 @@ export class DetailComponent implements OnInit {
     this.snippetService.toggleFavorite(this.snippet.id, newFavoriteState).subscribe({
       next: () => {
         this.snippet!.is_favorite = newFavoriteState;
-        this.notificationService.success(
-          newFavoriteState ? 'Agregado a favoritos' : 'Eliminado de favoritos'
-        );
+        // Usar setTimeout para evitar errores de detección de cambios
+        setTimeout(() => {
+          this.notificationService.success(
+            newFavoriteState ? 'Agregado a favoritos' : 'Eliminado de favoritos'
+          );
+        }, 0);
         this.cdr.detectChanges();
       },
       error: (error) => {
         console.error('Error al actualizar favorito:', error);
-        this.notificationService.error('Error al actualizar el favorito. Intenta de nuevo.');
+        setTimeout(() => {
+          this.notificationService.error('Error al actualizar el favorito. Intenta de nuevo.');
+        }, 0);
       }
     });
   }
@@ -162,10 +172,15 @@ export class DetailComponent implements OnInit {
     if (!this.snippet?.code) return;
 
     navigator.clipboard.writeText(this.snippet.code).then(() => {
-      this.notificationService.success('Código copiado al portapapeles');
+      // Usar setTimeout para consistencia y evitar errores de detección de cambios
+      setTimeout(() => {
+        this.notificationService.success('Código copiado al portapapeles');
+      }, 0);
     }).catch(err => {
       console.error('Error al copiar:', err);
-      this.notificationService.error('Error al copiar el código');
+      setTimeout(() => {
+        this.notificationService.error('Error al copiar el código');
+      }, 0);
     });
   }
 }
