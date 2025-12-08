@@ -18,7 +18,8 @@
   }
 
   .header-right {
-    //Mantener para balancear el header
+    // Mantener para balancear el header con justify-content: space-between
+    display: block;
   }
 
   h1 {
