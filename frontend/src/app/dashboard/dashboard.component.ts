@@ -1,8 +1,10 @@
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterLink, RouterLinkActive } from '@angular/router';
+import { FormsModule } from '@angular/forms';
 import { AuthService } from '../core/services/auth.service';
 import { ThemeService } from '../core/services/theme.service';
+import { SearchHistoryService, SearchHistoryItem } from '../core/services/search-history.service';
 import { User } from '../../shared/interfaces/auth.interface';
 import { SnippetService } from '../core/services/snippet.service';
 import { Snippet } from '../../shared/interfaces/snippet.interface';
@@ -11,7 +13,7 @@ import { finalize } from 'rxjs/operators';
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [CommonModule, RouterLink, RouterLinkActive],
+  imports: [CommonModule, RouterLink, RouterLinkActive, FormsModule],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.scss'
 })
@@ -24,11 +26,17 @@ export class DashboardComponent implements OnInit {
   recentSnippets: Snippet[] = [];
   isDarkTheme = false;
   isMenuOpen = false;
+  
+  // Búsqueda
+  searchQuery = '';
+  searchHistory: SearchHistoryItem[] = [];
+  showHistory = false;
 
   constructor(
     private authService: AuthService,
     private snippetService: SnippetService,
     private themeService: ThemeService,
+    private searchHistoryService: SearchHistoryService,
     private router: Router,
     private cdr: ChangeDetectorRef
   ) { }
@@ -46,6 +54,7 @@ export class DashboardComponent implements OnInit {
       this.cdr.detectChanges();
     });
     
+    this.loadSearchHistory();
     this.loadDashboardData();
   }
 
@@ -112,6 +121,50 @@ export class DashboardComponent implements OnInit {
           console.error('Error al eliminar snippet:', error);
         }
       });
+    }
+  }
+
+  onSearch(): void {
+    if (this.searchQuery.trim()) {
+      this.searchHistoryService.addSearch(this.searchQuery);
+      this.loadSearchHistory();
+      // Navegar a la página de snippets con el query de búsqueda
+      this.router.navigate(['/snippets'], { queryParams: { q: this.searchQuery } });
+    }
+  }
+
+  loadSearchHistory(): void {
+    this.searchHistory = this.searchHistoryService.getHistory();
+  }
+
+  onSearchFocus(): void {
+    if (this.searchHistory.length > 0) {
+      this.showHistory = true;
+    }
+  }
+
+  onSearchBlur(): void {
+    setTimeout(() => {
+      this.showHistory = false;
+    }, 200);
+  }
+
+  selectHistoryItem(item: SearchHistoryItem): void {
+    this.searchQuery = item.query;
+    this.showHistory = false;
+    this.onSearch();
+  }
+
+  removeHistoryItem(event: Event, item: SearchHistoryItem): void {
+    event.stopPropagation();
+    this.searchHistoryService.removeSearch(item.query);
+    this.loadSearchHistory();
+  }
+
+  clearHistory(): void {
+    if (confirm('¿Estás seguro de que quieres limpiar todo el historial de búsquedas?')) {
+      this.searchHistoryService.clearHistory();
+      this.loadSearchHistory();
     }
   }
 }

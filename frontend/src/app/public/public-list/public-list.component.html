@@ -12,13 +12,48 @@
     <!-- Filtros y búsqueda -->
     <div class="filters-section">
       <div class="search-box">
-        <input 
-          type="text" 
-          [(ngModel)]="searchQuery"
-          (keyup.enter)="onSearch()"
-          placeholder="Buscar por título o descripción..."
-          class="search-input"
-        />
+        <div class="search-input-wrapper">
+          <input 
+            type="text" 
+            [(ngModel)]="searchQuery"
+            (keyup.enter)="onSearch()"
+            (focus)="onSearchFocus()"
+            (blur)="onSearchBlur()"
+            placeholder="Buscar por título o descripción..."
+            class="search-input"
+          />
+          <!-- Historial de búsquedas -->
+          <div class="search-history" *ngIf="showHistory && searchHistory.length > 0">
+            <div class="history-header">
+              <span>Búsquedas recientes</span>
+              <button 
+                type="button"
+                (click)="clearHistory()"
+                class="btn-clear-history"
+                title="Limpiar historial"
+              >
+                🗑️ Limpiar
+              </button>
+            </div>
+            <div class="history-items">
+              <div 
+                *ngFor="let item of searchHistory" 
+                class="history-item"
+                (click)="selectHistoryItem(item)"
+              >
+                <span class="history-query">🔍 {{ item.query }}</span>
+                <button 
+                  type="button"
+                  (click)="removeHistoryItem($event, item)"
+                  class="btn-remove-item"
+                  title="Eliminar"
+                >
+                  ✕
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
         <button (click)="onSearch()" class="btn btn-secondary">🔍 Buscar</button>
       </div>
   
