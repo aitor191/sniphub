@@ -17,6 +17,7 @@ export class PublicDetailComponent implements OnInit {
   snippet: Snippet | null = null;
   isLoading = false;
   errorMessage = '';
+  copied = false;
 
   constructor(
     private snippetService: SnippetService,
@@ -71,10 +72,21 @@ export class PublicDetailComponent implements OnInit {
     if (!this.snippet?.code) return;
 
     navigator.clipboard.writeText(this.snippet.code).then(() => {
-      this.notificationService.success('Código copiado al portapapeles');
+      // Feedback inmediato
+      this.copied = true;
+      setTimeout(() => {
+        this.copied = false;
+      }, 1500);
+
+      // Toast asíncrono
+      setTimeout(() => {
+        this.notificationService.success('Código copiado al portapapeles');
+      }, 0);
     }).catch(err => {
       console.error('Error al copiar:', err);
-      this.notificationService.error('Error al copiar el código');
+      setTimeout(() => {
+        this.notificationService.error('Error al copiar el código');
+      }, 0);
     });
   }
 }

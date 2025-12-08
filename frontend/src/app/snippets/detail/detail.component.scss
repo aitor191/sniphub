@@ -148,6 +148,12 @@
         .code-actions {
           display: flex;
           gap: 0.5rem;
+
+          .btn-copy.copied {
+            background: hsl(var(--bg-secondary));
+            color: hsl(var(--primary));
+            border-color: hsl(var(--primary));
+          }
         }
       }
 

@@ -100,9 +100,10 @@
             <button 
               (click)="copyCode(snippet)"
               class="btn-icon"
-              title="Copiar código"
+              [class.copied]="copiedId === snippet.id"
+              [title]="copiedId === snippet.id ? 'Copiado' : 'Copiar código'"
             >
-              📋
+              {{ copiedId === snippet.id ? '✓' : '📋' }}
             </button>
             <button 
               (click)="toggleFavorite(snippet)"

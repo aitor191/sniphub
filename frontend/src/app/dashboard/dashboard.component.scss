@@ -614,6 +614,12 @@
       color: hsl(var(--destructive-foreground));
     }
   }
+
+  &.copied {
+    background: hsl(var(--bg-secondary));
+    color: hsl(var(--primary));
+    border-color: hsl(var(--primary));
+  }
 }
 
 .empty-state {

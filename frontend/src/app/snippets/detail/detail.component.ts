@@ -25,6 +25,7 @@ export class DetailComponent implements OnInit {
   explanationProvider: string | null = null;
   isExplanationCached = false;
   showExplanation = false;
+  copied = false;
 
   constructor(
     private snippetService: SnippetService,
@@ -172,6 +173,12 @@ export class DetailComponent implements OnInit {
     if (!this.snippet?.code) return;
 
     navigator.clipboard.writeText(this.snippet.code).then(() => {
+      // Feedback inmediato en el botón
+      this.copied = true;
+      setTimeout(() => {
+        this.copied = false;
+      }, 1500);
+
       // Usar setTimeout para consistencia y evitar errores de detección de cambios
       setTimeout(() => {
         this.notificationService.success('Código copiado al portapapeles');

@@ -242,6 +242,11 @@
         &.favorite {
           color: #ffc107;
         }
+
+        &.copied {
+          color: hsl(var(--primary));
+          background: var(--bg-tertiary);
+        }
       }
     }
   }

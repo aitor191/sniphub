@@ -40,6 +40,7 @@ export class ListComponent implements OnInit, OnDestroy {
   // Para debounce de búsqueda
   private searchSubject = new Subject<string>();
   private subscriptions = new Subscription();
+  copiedId: number | null = null;
 
   // Lenguajes disponibles
   languages = [
@@ -274,6 +275,12 @@ export class ListComponent implements OnInit, OnDestroy {
     if (!snippet?.code) return;
 
     navigator.clipboard.writeText(snippet.code).then(() => {
+      // Feedback inmediato en el botón
+      this.copiedId = snippet.id;
+      setTimeout(() => {
+        this.copiedId = null;
+      }, 1500);
+
       // Usar setTimeout para consistencia y evitar errores de detección de cambios
       setTimeout(() => {
         this.notificationService.success('Código copiado al portapapeles');

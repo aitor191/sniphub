@@ -84,17 +84,18 @@
       <div class="snippet-card" *ngFor="let snippet of snippets" [routerLink]="['/public', snippet.id]">
         <div class="snippet-header">
           <h3>{{ snippet.title }}</h3>
+          <div class="snippet-badges">
+            <span class="badge badge-language">{{ snippet.language }}</span>
+          </div>
           <div class="snippet-actions">
             <button 
               (click)="$event.stopPropagation(); copyCode(snippet)"
-              class="btn-icon"
-              title="Copiar código"
+                class="btn-icon"
+                [class.copied]="copiedId === snippet.id"
+                [title]="copiedId === snippet.id ? 'Copiado' : 'Copiar código'"
             >
-              📋
+                {{ copiedId === snippet.id ? '✓' : '📋' }}
             </button>
-          </div>
-          <div class="snippet-badges">
-            <span class="badge badge-language">{{ snippet.language }}</span>
           </div>
         </div>
   

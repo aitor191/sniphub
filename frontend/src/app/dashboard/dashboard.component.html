@@ -171,7 +171,14 @@
           <code>{{ snippet.code.substring(0, 100) }}{{ snippet.code.length > 100 ? '...' : '' }}</code>
         </div>
         <div class="snippet-actions">
-          <button class="action-btn" (click)="$event.stopPropagation(); copyCode(snippet)" title="Copiar código">📋 Copiar</button>
+          <button
+            class="action-btn"
+            [class.copied]="copiedId === snippet.id"
+            (click)="$event.stopPropagation(); copyCode(snippet)"
+            [title]="copiedId === snippet.id ? 'Copiado' : 'Copiar código'"
+          >
+            {{ copiedId === snippet.id ? '✓ Copiado' : '📋 Copiar' }}
+          </button>
           <button class="action-btn" (click)="$event.stopPropagation(); editSnippet(snippet)">Editar</button>
           <button class="action-btn action-btn-danger" (click)="$event.stopPropagation(); deleteSnippet(snippet)">Eliminar</button>
         </div>

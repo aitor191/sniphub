@@ -76,8 +76,9 @@
             <button 
               (click)="copyCode()"
               class="btn btn-secondary btn-copy"
+              [class.copied]="copied"
             >
-              📋 Copiar código
+              {{ copied ? '✓ Copiado' : '📋 Copiar código' }}
             </button>
             <button 
               (click)="explainCode()"

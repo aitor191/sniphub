@@ -125,6 +125,12 @@
           color: var(--text-primary);
           font-size: 1.25rem;
         }
+
+        .btn-copy.copied {
+          background: hsl(var(--bg-secondary));
+          color: hsl(var(--primary));
+          border-color: hsl(var(--primary));
+        }
       }
 
       .code-container {
