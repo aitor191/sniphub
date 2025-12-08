@@ -31,6 +31,7 @@
                 (click)="clearHistory()"
                 class="btn-clear-history"
                 title="Limpiar historial"
+                aria-label="Limpiar historial de búsquedas"
               >
                 🗑️ Limpiar
               </button>
@@ -47,6 +48,7 @@
                   (click)="removeHistoryItem($event, item)"
                   class="btn-remove-item"
                   title="Eliminar"
+                  aria-label="Eliminar búsqueda del historial"
                 >
                   ✕
                 </button>
@@ -93,6 +95,7 @@
                 class="btn-icon"
                 [class.copied]="copiedId === snippet.id"
                 [title]="copiedId === snippet.id ? 'Copiado' : 'Copiar código'"
+                [attr.aria-label]="copiedId === snippet.id ? 'Copiado' : 'Copiar código'"
             >
                 {{ copiedId === snippet.id ? '✓' : '📋' }}
             </button>

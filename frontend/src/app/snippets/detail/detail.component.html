@@ -36,6 +36,7 @@
             [class.favorite]="snippet.is_favorite"
             class="btn btn-icon"
             title="Marcar como favorito"
+            [attr.aria-label]="snippet.is_favorite ? 'Quitar de favoritos' : 'Marcar como favorito'"
           >
             {{ snippet.is_favorite ? '⭐' : '☆' }}
           </button>
@@ -48,6 +49,7 @@
           <button 
             (click)="deleteSnippet()"
             class="btn btn-danger"
+            aria-label="Eliminar snippet"
           >
             🗑️ Eliminar
           </button>

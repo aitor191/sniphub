@@ -32,6 +32,7 @@
                 (click)="clearHistory()"
                 class="btn-clear-history"
                 title="Limpiar historial"
+                aria-label="Limpiar historial de búsquedas"
               >
                 🗑️ Limpiar
               </button>
@@ -48,6 +49,7 @@
                   (click)="removeHistoryItem($event, item)"
                   class="btn-remove-item"
                   title="Eliminar"
+                  aria-label="Eliminar búsqueda del historial"
                 >
                   ✕
                 </button>
@@ -102,6 +104,7 @@
               class="btn-icon"
               [class.copied]="copiedId === snippet.id"
               [title]="copiedId === snippet.id ? 'Copiado' : 'Copiar código'"
+              [attr.aria-label]="copiedId === snippet.id ? 'Copiado' : 'Copiar código'"
             >
               {{ copiedId === snippet.id ? '✓' : '📋' }}
             </button>
@@ -110,6 +113,7 @@
               [class.favorite]="snippet.is_favorite"
               class="btn-icon"
               title="Marcar como favorito"
+              [attr.aria-label]="snippet.is_favorite ? 'Quitar de favoritos' : 'Marcar como favorito'"
             >
               {{ snippet.is_favorite ? '⭐' : '☆' }}
             </button>
@@ -117,6 +121,7 @@
               [routerLink]="['/snippets', 'edit', snippet.id]"
               class="btn-icon"
               title="Editar"
+              aria-label="Editar snippet"
             >
               ✏️
             </a>
@@ -124,6 +129,7 @@
               (click)="deleteSnippet(snippet)"
               class="btn-icon btn-danger"
               title="Eliminar"
+              aria-label="Eliminar snippet"
             >
               🗑️
             </button>

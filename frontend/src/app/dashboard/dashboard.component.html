@@ -9,7 +9,7 @@
         <span class="logo-icon">&lt;/&gt;</span>
         <span class="logo-text">SnipHub</span>
       </div>
-      <button class="sidebar-close" (click)="toggleMenu()" *ngIf="isMenuOpen">
+      <button class="sidebar-close" (click)="toggleMenu()" *ngIf="isMenuOpen" aria-label="Cerrar menú">
         ✕
       </button>
     </div>
@@ -98,6 +98,7 @@
                 (click)="clearHistory()"
                 class="btn-clear-history"
                 title="Limpiar historial"
+                aria-label="Limpiar historial de búsquedas"
               >
                 🗑️ Limpiar
               </button>
@@ -114,6 +115,7 @@
                   (click)="removeHistoryItem($event, item)"
                   class="btn-remove-item"
                   title="Eliminar"
+                  aria-label="Eliminar búsqueda del historial"
                 >
                   ✕
                 </button>
@@ -153,6 +155,7 @@
             [class.active]="snippet.is_favorite"
             (click)="$event.stopPropagation()"
             title="Favorito"
+            [attr.aria-label]="snippet.is_favorite ? 'Quitar de favoritos' : 'Marcar como favorito'"
           >
             ⭐
           </button>
@@ -176,11 +179,12 @@
             [class.copied]="copiedId === snippet.id"
             (click)="$event.stopPropagation(); copyCode(snippet)"
             [title]="copiedId === snippet.id ? 'Copiado' : 'Copiar código'"
+            [attr.aria-label]="copiedId === snippet.id ? 'Copiado' : 'Copiar código'"
           >
             {{ copiedId === snippet.id ? '✓ Copiado' : '📋 Copiar' }}
           </button>
-          <button class="action-btn" (click)="$event.stopPropagation(); editSnippet(snippet)">Editar</button>
-          <button class="action-btn action-btn-danger" (click)="$event.stopPropagation(); deleteSnippet(snippet)">Eliminar</button>
+          <button class="action-btn" (click)="$event.stopPropagation(); editSnippet(snippet)" aria-label="Editar snippet">Editar</button>
+          <button class="action-btn action-btn-danger" (click)="$event.stopPropagation(); deleteSnippet(snippet)" aria-label="Eliminar snippet">Eliminar</button>
         </div>
       </div>
     </div>
