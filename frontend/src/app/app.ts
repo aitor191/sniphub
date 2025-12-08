@@ -1,10 +1,13 @@
 import { Component, signal, OnInit } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { ThemeService } from './core/services/theme.service';
+import { ToastComponent } from '../shared/components/toast/toast.component';
+import { DialogComponent } from '../shared/components/dialog/dialog.components';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet],
+  standalone: true,
+  imports: [RouterOutlet, ToastComponent, DialogComponent],
   templateUrl: './app.html',
   styleUrl: './app.scss'
 })

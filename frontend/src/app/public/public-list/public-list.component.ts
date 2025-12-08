@@ -1,11 +1,14 @@
-import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, ActivatedRoute, RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { SnippetService } from '../../core/services/snippet.service';
 import { SearchHistoryService, SearchHistoryItem } from '../../core/services/search-history.service';
+import { NotificationService } from '../../core/services/notification.service';
+import { DialogService } from '../../core/services/dialog.service';
 import { Snippet, SnippetsResponse } from '../../../shared/interfaces/snippet.interface';
-import { finalize } from 'rxjs/operators';
+import { Subject, Subscription } from 'rxjs';
+import { debounceTime, distinctUntilChanged, finalize } from 'rxjs/operators';
 
 @Component({
   selector: 'app-public-list',
@@ -14,7 +17,7 @@ import { finalize } from 'rxjs/operators';
   templateUrl: './public-list.component.html',
   styleUrl: './public-list.component.scss'
 })
-export class PublicListComponent implements OnInit {
+export class PublicListComponent implements OnInit, OnDestroy {
   snippets: Snippet[] = [];
   isLoading = false;
   errorMessage = '';
@@ -32,6 +35,10 @@ export class PublicListComponent implements OnInit {
   // Historial de búsquedas
   searchHistory: SearchHistoryItem[] = [];
   showHistory = false;
+
+  // Para debounce de búsqueda
+  private searchSubject = new Subject<string>();
+  private subscriptions = new Subscription();
   
   // Lenguajes disponibles
   languages = [
@@ -43,6 +50,8 @@ export class PublicListComponent implements OnInit {
   constructor(
     private snippetService: SnippetService,
     private searchHistoryService: SearchHistoryService,
+    private notificationService: NotificationService,
+    private dialogService: DialogService,
     private router: Router,
     private route: ActivatedRoute,
     private cdr: ChangeDetectorRef
@@ -52,7 +61,7 @@ export class PublicListComponent implements OnInit {
     this.loadSearchHistory();
     
     // Leer query params de la URL
-    this.route.queryParams.subscribe(params => {
+    const paramsSub = this.route.queryParams.subscribe(params => {
       if (params['language']) {
         this.selectedLanguage = params['language'];
       }
@@ -63,8 +72,29 @@ export class PublicListComponent implements OnInit {
         this.currentPage = parseInt(params['page'], 10);
       }
     });
+    this.subscriptions.add(paramsSub);
     
     this.loadSnippets();
+
+    // Configurar debounce para búsqueda
+    const searchSub = this.searchSubject.pipe(
+      debounceTime(400),
+      distinctUntilChanged()
+    ).subscribe(query => {
+      this.searchQuery = query;
+      if (query.trim()) {
+        this.searchHistoryService.addSearch(query);
+        this.loadSearchHistory();
+      }
+      this.currentPage = 1;
+      this.loadSnippets();
+    });
+    this.subscriptions.add(searchSub);
+  }
+
+  ngOnDestroy(): void {
+    this.subscriptions.unsubscribe();
+    this.searchSubject.complete();
   }
 
   loadSnippets(): void {
@@ -109,6 +139,10 @@ export class PublicListComponent implements OnInit {
     });
   }
 
+  onSearchInput(value: string): void {
+    this.searchSubject.next(value);
+  }
+
   onSearch(): void {
     if (this.searchQuery.trim()) {
       this.searchHistoryService.addSearch(this.searchQuery);
@@ -147,10 +181,29 @@ export class PublicListComponent implements OnInit {
   }
 
   clearHistory(): void {
-    if (confirm('¿Estás seguro de que quieres limpiar todo el historial de búsquedas?')) {
-      this.searchHistoryService.clearHistory();
-      this.loadSearchHistory();
-    }
+    this.dialogService.confirm({
+      title: 'Limpiar Historial',
+      message: '¿Estás seguro de que quieres limpiar todo el historial de búsquedas?',
+      confirmText: 'Limpiar',
+      cancelText: 'Cancelar'
+    }).then(confirmed => {
+      if (confirmed) {
+        this.searchHistoryService.clearHistory();
+        this.loadSearchHistory();
+        this.notificationService.success('Historial limpiado correctamente');
+      }
+    });
+  }
+
+  copyCode(snippet: Snippet): void {
+    if (!snippet?.code) return;
+
+    navigator.clipboard.writeText(snippet.code).then(() => {
+      this.notificationService.success('Código copiado al portapapeles');
+    }).catch(err => {
+      console.error('Error al copiar:', err);
+      this.notificationService.error('Error al copiar el código');
+    });
   }
 
   onFilterChange(): void {

@@ -3,6 +3,8 @@ import { CommonModule } from '@angular/common';
 import { Router, ActivatedRoute, RouterLink } from '@angular/router';
 import { SnippetService } from '../../core/services/snippet.service';
 import { AiService, ExplainCodeResponse } from '../../core/services/ai.services';
+import { NotificationService } from '../../core/services/notification.service';
+import { DialogService } from '../../core/services/dialog.service';
 import { Snippet } from '../../../shared/interfaces/snippet.interface';
 import { finalize } from 'rxjs/operators';
 import { MarkdownPipe } from '../../../shared/pipes/markdown.pipe';
@@ -27,6 +29,8 @@ export class DetailComponent implements OnInit {
   constructor(
     private snippetService: SnippetService,
     private aiService: AiService,
+    private notificationService: NotificationService,
+    private dialogService: DialogService,
     private route: ActivatedRoute,
     private router: Router,
     private cdr: ChangeDetectorRef
@@ -113,17 +117,23 @@ export class DetailComponent implements OnInit {
   deleteSnippet(): void {
     if (!this.snippet) return;
 
-    if (!confirm(`¿Estás seguro de que quieres eliminar "${this.snippet.title}"?`)) {
-      return;
-    }
-
-    this.snippetService.deleteSnippet(this.snippet.id).subscribe({
-      next: () => {
-        this.router.navigate(['/snippets']);
-      },
-      error: (error) => {
-        console.error('Error al eliminar snippet:', error);
-        alert('Error al eliminar el snippet. Intenta de nuevo.');
+    this.dialogService.confirm({
+      title: 'Eliminar Snippet',
+      message: `¿Estás seguro de que quieres eliminar "${this.snippet.title}"?`,
+      confirmText: 'Eliminar',
+      cancelText: 'Cancelar'
+    }).then(confirmed => {
+      if (confirmed) {
+        this.snippetService.deleteSnippet(this.snippet!.id).subscribe({
+          next: () => {
+            this.notificationService.success('Snippet eliminado correctamente');
+            this.router.navigate(['/snippets']);
+          },
+          error: (error) => {
+            console.error('Error al eliminar snippet:', error);
+            this.notificationService.error('Error al eliminar el snippet. Intenta de nuevo.');
+          }
+        });
       }
     });
   }
@@ -136,11 +146,14 @@ export class DetailComponent implements OnInit {
     this.snippetService.toggleFavorite(this.snippet.id, newFavoriteState).subscribe({
       next: () => {
         this.snippet!.is_favorite = newFavoriteState;
+        this.notificationService.success(
+          newFavoriteState ? 'Agregado a favoritos' : 'Eliminado de favoritos'
+        );
         this.cdr.detectChanges();
       },
       error: (error) => {
         console.error('Error al actualizar favorito:', error);
-        alert('Error al actualizar el favorito. Intenta de nuevo.');
+        this.notificationService.error('Error al actualizar el favorito. Intenta de nuevo.');
       }
     });
   }
@@ -149,17 +162,10 @@ export class DetailComponent implements OnInit {
     if (!this.snippet?.code) return;
 
     navigator.clipboard.writeText(this.snippet.code).then(() => {
-      // Feedback visual opcional
-      const button = document.querySelector('.btn-copy') as HTMLElement;
-      if (button) {
-        const originalText = button.textContent;
-        button.textContent = '✓ Copiado';
-        setTimeout(() => {
-          button.textContent = originalText;
-        }, 2000);
-      }
+      this.notificationService.success('Código copiado al portapapeles');
     }).catch(err => {
       console.error('Error al copiar:', err);
+      this.notificationService.error('Error al copiar el código');
     });
   }
 }

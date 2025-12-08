@@ -2,6 +2,7 @@ import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, ActivatedRoute, RouterLink } from '@angular/router';
 import { SnippetService } from '../../core/services/snippet.service';
+import { NotificationService } from '../../core/services/notification.service';
 import { Snippet } from '../../../shared/interfaces/snippet.interface';
 import { finalize } from 'rxjs/operators';
 
@@ -19,6 +20,7 @@ export class PublicDetailComponent implements OnInit {
 
   constructor(
     private snippetService: SnippetService,
+    private notificationService: NotificationService,
     private route: ActivatedRoute,
     private router: Router,
     private cdr: ChangeDetectorRef
@@ -69,16 +71,10 @@ export class PublicDetailComponent implements OnInit {
     if (!this.snippet?.code) return;
 
     navigator.clipboard.writeText(this.snippet.code).then(() => {
-      const button = document.querySelector('.btn-copy') as HTMLElement;
-      if (button) {
-        const originalText = button.textContent;
-        button.textContent = '✓ Copiado';
-        setTimeout(() => {
-          button.textContent = originalText;
-        }, 2000);
-      }
+      this.notificationService.success('Código copiado al portapapeles');
     }).catch(err => {
       console.error('Error al copiar:', err);
+      this.notificationService.error('Error al copiar el código');
     });
   }
 }

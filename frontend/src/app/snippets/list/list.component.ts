@@ -1,11 +1,14 @@
-import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterLink, ActivatedRoute } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { SnippetService } from '../../core/services/snippet.service';
 import { SearchHistoryService, SearchHistoryItem } from '../../core/services/search-history.service';
+import { NotificationService } from '../../core/services/notification.service';
+import { DialogService } from '../../core/services/dialog.service';
 import { Snippet, SnippetsResponse } from '../../../shared/interfaces/snippet.interface';
-import { finalize } from 'rxjs/operators';
+import { Subject, Subscription } from 'rxjs';
+import { debounceTime, distinctUntilChanged, finalize } from 'rxjs/operators';
 
 @Component({
   selector: 'app-snippet-list',
@@ -14,7 +17,7 @@ import { finalize } from 'rxjs/operators';
   templateUrl: './list.component.html',
   styleUrl: './list.component.scss'
 })
-export class ListComponent implements OnInit {
+export class ListComponent implements OnInit, OnDestroy {
   snippets: Snippet[] = [];
   isLoading = false;
   errorMessage = '';
@@ -34,6 +37,10 @@ export class ListComponent implements OnInit {
   searchHistory: SearchHistoryItem[] = [];
   showHistory = false;
 
+  // Para debounce de búsqueda
+  private searchSubject = new Subject<string>();
+  private subscriptions = new Subscription();
+
   // Lenguajes disponibles
   languages = [
     'JavaScript', 'TypeScript', 'Python', 'Java', 'C++', 'C#',
@@ -44,6 +51,8 @@ export class ListComponent implements OnInit {
   constructor(
     private snippetService: SnippetService,
     private searchHistoryService: SearchHistoryService,
+    private notificationService: NotificationService,
+    private dialogService: DialogService,
     private router: Router,
     private route: ActivatedRoute,
     private cdr: ChangeDetectorRef
@@ -52,7 +61,7 @@ export class ListComponent implements OnInit {
   ngOnInit(): void {
     this.loadSearchHistory();
     
-    this.route.queryParams.subscribe(params => {
+    const paramsSub = this.route.queryParams.subscribe(params => {
       if (params['is_favorite'] === 'true' || params['is_favorite'] === true) {
         this.showFavoritesOnly = true;
       }
@@ -63,8 +72,29 @@ export class ListComponent implements OnInit {
         this.searchQuery = params['q'];
       }
     });
+    this.subscriptions.add(paramsSub);
 
     this.loadSnippets();
+
+    // Configurar debounce para búsqueda
+    const searchSub = this.searchSubject.pipe(
+      debounceTime(400),
+      distinctUntilChanged()
+    ).subscribe(query => {
+      this.searchQuery = query;
+      if (query.trim()) {
+        this.searchHistoryService.addSearch(query);
+        this.loadSearchHistory();
+      }
+      this.currentPage = 1;
+      this.loadSnippets();
+    });
+    this.subscriptions.add(searchSub);
+  }
+
+  ngOnDestroy(): void {
+    this.subscriptions.unsubscribe();
+    this.searchSubject.complete();
   }
 
   loadSearchHistory(): void {
@@ -125,6 +155,10 @@ export class ListComponent implements OnInit {
     });
   }
 
+  onSearchInput(value: string): void {
+    this.searchSubject.next(value);
+  }
+
   onSearch(): void {
     if (this.searchQuery.trim()) {
       this.searchHistoryService.addSearch(this.searchQuery);
@@ -159,10 +193,18 @@ export class ListComponent implements OnInit {
   }
 
   clearHistory(): void {
-    if (confirm('¿Estás seguro de que quieres limpiar todo el historial de búsquedas?')) {
-      this.searchHistoryService.clearHistory();
-      this.loadSearchHistory();
-    }
+    this.dialogService.confirm({
+      title: 'Limpiar Historial',
+      message: '¿Estás seguro de que quieres limpiar todo el historial de búsquedas?',
+      confirmText: 'Limpiar',
+      cancelText: 'Cancelar'
+    }).then(confirmed => {
+      if (confirmed) {
+        this.searchHistoryService.clearHistory();
+        this.loadSearchHistory();
+        this.notificationService.success('Historial limpiado correctamente');
+      }
+    });
   }
 
   onFilterChange(): void {
@@ -182,28 +224,48 @@ export class ListComponent implements OnInit {
     this.snippetService.toggleFavorite(snippet.id, newFavoriteState).subscribe({
       next: () => {
         snippet.is_favorite = newFavoriteState;
+        this.notificationService.success(
+          newFavoriteState ? 'Agregado a favoritos' : 'Eliminado de favoritos'
+        );
         this.cdr.detectChanges();
       },
       error: (error) => {
         console.error('Error al actualizar favorito:', error);
-        alert('Error al actualizar el favorito. Intenta de nuevo.');
+        this.notificationService.error('Error al actualizar el favorito. Intenta de nuevo.');
       }
     });
   }
 
   deleteSnippet(snippet: Snippet): void {
-    if (!confirm(`¿Estás seguro de que quieres eliminar "${snippet.title}"?`)) {
-      return;
-    }
-
-    this.snippetService.deleteSnippet(snippet.id).subscribe({
-      next: () => {
-        this.loadSnippets();
-      },
-      error: (error) => {
-        console.error('Error al eliminar snippet:', error);
-        alert('Error al eliminar el snippet. Intenta de nuevo.');
+    this.dialogService.confirm({
+      title: 'Eliminar Snippet',
+      message: `¿Estás seguro de que quieres eliminar "${snippet.title}"?`,
+      confirmText: 'Eliminar',
+      cancelText: 'Cancelar'
+    }).then(confirmed => {
+      if (confirmed) {
+        this.snippetService.deleteSnippet(snippet.id).subscribe({
+          next: () => {
+            this.notificationService.success('Snippet eliminado correctamente');
+            this.loadSnippets();
+          },
+          error: (error) => {
+            console.error('Error al eliminar snippet:', error);
+            this.notificationService.error('Error al eliminar el snippet. Intenta de nuevo.');
+          }
+        });
       }
+    });
+  }
+
+  copyCode(snippet: Snippet): void {
+    if (!snippet?.code) return;
+
+    navigator.clipboard.writeText(snippet.code).then(() => {
+      this.notificationService.success('Código copiado al portapapeles');
+    }).catch(err => {
+      console.error('Error al copiar:', err);
+      this.notificationService.error('Error al copiar el código');
     });
   }
 

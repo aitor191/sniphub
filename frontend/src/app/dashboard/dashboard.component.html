@@ -82,6 +82,7 @@
           <input 
             type="text" 
             [(ngModel)]="searchQuery"
+            (input)="onSearchInput($any($event.target).value)"
             (keyup.enter)="onSearch()"
             (focus)="onSearchFocus()"
             (blur)="onSearchBlur()"
@@ -170,6 +171,7 @@
           <code>{{ snippet.code.substring(0, 100) }}{{ snippet.code.length > 100 ? '...' : '' }}</code>
         </div>
         <div class="snippet-actions">
+          <button class="action-btn" (click)="$event.stopPropagation(); copyCode(snippet)" title="Copiar código">📋 Copiar</button>
           <button class="action-btn" (click)="$event.stopPropagation(); editSnippet(snippet)">Editar</button>
           <button class="action-btn action-btn-danger" (click)="$event.stopPropagation(); deleteSnippet(snippet)">Eliminar</button>
         </div>

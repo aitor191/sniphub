@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterLink, RouterLinkActive } from '@angular/router';
 import { FormsModule } from '@angular/forms';
@@ -8,7 +8,10 @@ import { SearchHistoryService, SearchHistoryItem } from '../core/services/search
 import { User } from '../../shared/interfaces/auth.interface';
 import { SnippetService } from '../core/services/snippet.service';
 import { Snippet } from '../../shared/interfaces/snippet.interface';
-import { finalize } from 'rxjs/operators';
+import { NotificationService } from '../core/services/notification.service';
+import { DialogService } from '../core/services/dialog.service';
+import { Subject, Subscription } from 'rxjs';
+import { debounceTime, distinctUntilChanged, finalize } from 'rxjs/operators';
 
 @Component({
   selector: 'app-dashboard',
@@ -17,7 +20,7 @@ import { finalize } from 'rxjs/operators';
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.scss'
 })
-export class DashboardComponent implements OnInit {
+export class DashboardComponent implements OnInit, OnDestroy {
   user: User | null = null;
   isLoading = false;
   totalSnippets = 0;
@@ -36,11 +39,17 @@ export class DashboardComponent implements OnInit {
   searchHistory: SearchHistoryItem[] = [];
   showHistory = false;
 
+  // Para debounce de búsqueda
+  private searchSubject = new Subject<string>();
+  private subscriptions = new Subscription();
+
   constructor(
     private authService: AuthService,
     private snippetService: SnippetService,
     private themeService: ThemeService,
     private searchHistoryService: SearchHistoryService,
+    private notificationService: NotificationService,
+    private dialogService: DialogService,
     private router: Router,
     private cdr: ChangeDetectorRef
   ) { }
@@ -53,13 +62,34 @@ export class DashboardComponent implements OnInit {
       return;
     }
     
-    this.themeService.currentTheme$.subscribe(theme => {
+    const themeSub = this.themeService.currentTheme$.subscribe(theme => {
       this.isDarkTheme = theme === 'dark';
       this.cdr.detectChanges();
     });
+    this.subscriptions.add(themeSub);
     
     this.loadSearchHistory();
     this.loadDashboardData();
+    
+    // Configurar debounce para búsqueda
+    const searchSub = this.searchSubject.pipe(
+      debounceTime(400),
+      distinctUntilChanged()
+    ).subscribe(query => {
+      if (query.trim()) {
+        this.searchHistoryService.addSearch(query);
+        this.loadSearchHistory();
+        this.router.navigate(['/snippets'], { queryParams: { q: query } });
+      }
+    });
+    this.subscriptions.add(searchSub);
+  }
+
+  ngOnDestroy(): void {
+    // Desuscribirse de todas las suscripciones
+    this.subscriptions.unsubscribe();
+    // Completar el Subject
+    this.searchSubject.complete();
   }
 
   logout(): void {
@@ -118,16 +148,25 @@ export class DashboardComponent implements OnInit {
   }
 
   deleteSnippet(snippet: Snippet): void {
-    if (confirm(`¿Estás seguro de eliminar "${snippet.title}"?`)) {
-      this.snippetService.deleteSnippet(snippet.id).subscribe({
-        next: () => {
-          this.loadDashboardData();
-        },
-        error: (error) => {
-          console.error('Error al eliminar snippet:', error);
-        }
-      });
-    }
+    this.dialogService.confirm({
+      title: 'Eliminar Snippet',
+      message: `¿Estás seguro de eliminar "${snippet.title}"?`,
+      confirmText: 'Eliminar',
+      cancelText: 'Cancelar'
+    }).then(confirmed => {
+      if (confirmed) {
+        this.snippetService.deleteSnippet(snippet.id).subscribe({
+          next: () => {
+            this.notificationService.success('Snippet eliminado correctamente');
+            this.loadDashboardData();
+          },
+          error: (error) => {
+            console.error('Error al eliminar snippet:', error);
+            this.notificationService.error('Error al eliminar el snippet');
+          }
+        });
+      }
+    });
   }
 
   onSearch(): void {
@@ -137,6 +176,11 @@ export class DashboardComponent implements OnInit {
       // Navegar a la página de snippets con el query de búsqueda
       this.router.navigate(['/snippets'], { queryParams: { q: this.searchQuery } });
     }
+  }
+
+  onSearchInput(value: string): void {
+    // Este método se llama desde el input para debounce
+    this.searchSubject.next(value);
   }
 
   loadSearchHistory(): void {
@@ -168,10 +212,18 @@ export class DashboardComponent implements OnInit {
   }
 
   clearHistory(): void {
-    if (confirm('¿Estás seguro de que quieres limpiar todo el historial de búsquedas?')) {
-      this.searchHistoryService.clearHistory();
-      this.loadSearchHistory();
-    }
+    this.dialogService.confirm({
+      title: 'Limpiar Historial',
+      message: '¿Estás seguro de que quieres limpiar todo el historial de búsquedas?',
+      confirmText: 'Limpiar',
+      cancelText: 'Cancelar'
+    }).then(confirmed => {
+      if (confirmed) {
+        this.searchHistoryService.clearHistory();
+        this.loadSearchHistory();
+        this.notificationService.success('Historial limpiado correctamente');
+      }
+    });
   }
 
   extractPopularTags(): void {
@@ -257,5 +309,16 @@ export class DashboardComponent implements OnInit {
     
     this.recentSnippets = this.filteredSnippets;
     this.cdr.detectChanges();
+  }
+
+  copyCode(snippet: Snippet): void {
+    if (!snippet?.code) return;
+
+    navigator.clipboard.writeText(snippet.code).then(() => {
+      this.notificationService.success('Código copiado al portapapeles');
+    }).catch(err => {
+      console.error('Error al copiar:', err);
+      this.notificationService.error('Error al copiar el código');
+    });
   }
 }

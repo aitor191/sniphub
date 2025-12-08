@@ -16,6 +16,7 @@
           <input 
             type="text" 
             [(ngModel)]="searchQuery"
+            (input)="onSearchInput($any($event.target).value)"
             (keyup.enter)="onSearch()"
             (focus)="onSearchFocus()"
             (blur)="onSearchBlur()"
@@ -96,6 +97,13 @@
             <a [routerLink]="['/snippets', snippet.id]">{{ snippet.title }}</a>
           </h3>
           <div class="snippet-actions">
+            <button 
+              (click)="copyCode(snippet)"
+              class="btn-icon"
+              title="Copiar código"
+            >
+              📋
+            </button>
             <button 
               (click)="toggleFavorite(snippet)"
               [class.favorite]="snippet.is_favorite"
