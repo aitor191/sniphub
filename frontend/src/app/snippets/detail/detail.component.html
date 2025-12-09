@@ -1,4 +1,4 @@
-<div class="detail-container">
+<main class="detail-container" aria-labelledby="snippet-detail-title">
     <!-- Botón volver -->
     <div class="header-actions">
       <a routerLink="/dashboard" class="btn btn-secondary">← Volver al Dashboard</a>
@@ -19,7 +19,7 @@
       <!-- Header del snippet -->
       <div class="snippet-header">
         <div class="title-section">
-          <h1>{{ snippet.title }}</h1>
+          <h1 id="snippet-detail-title">{{ snippet.title }}</h1>
           <div class="snippet-meta">
             <span class="badge badge-language">{{ snippet.language }}</span>
             <span class="badge badge-public" *ngIf="snippet.is_public">🌐 Público</span>
@@ -58,13 +58,13 @@
   
       <!-- Descripción -->
       <div class="snippet-description" *ngIf="snippet.description">
-        <h3>Descripción</h3>
+        <h2>Descripción</h2>
         <p>{{ snippet.description }}</p>
       </div>
   
       <!-- Tags -->
       <div class="snippet-tags" *ngIf="snippet.tags && snippet.tags.length > 0">
-        <h3>Tags</h3>
+        <h2>Tags</h2>
         <div class="tags-list">
           <span class="tag" *ngFor="let tag of snippet.tags">{{ tag }}</span>
         </div>
@@ -73,7 +73,7 @@
       <!-- Código -->
       <div class="snippet-code-section">
         <div class="code-header">
-          <h3>Código</h3>
+          <h2>Código</h2>
           <div class="code-actions">
             <button 
               (click)="copyCode()"
@@ -100,7 +100,7 @@
       <!-- Explicación de IA -->
       <div class="explanation-section" *ngIf="showExplanation">
         <div class="explanation-header">
-          <h3>🤖 Explicación del código</h3>
+          <h2>🤖 Explicación del código</h2>
           <div class="explanation-badge" *ngIf="explanationProvider">
             <span *ngIf="isExplanationCached" class="badge badge-cached">💾 Desde caché</span>
             <span class="badge badge-provider">Proveedor: {{ explanationProvider }}</span>
@@ -120,4 +120,4 @@
         </div>
       </div>
     </div>
-  </div>
+  </main>

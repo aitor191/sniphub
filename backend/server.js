@@ -2,6 +2,9 @@ const express = require('express');
 const cors = require('cors');
 const helmet = require('helmet');
 const morgan = require('morgan');
+const compression = require('compression');
+const path = require('path');
+const fs = require('fs');
 require('dotenv').config();
 
 const { connectDB } = require('./src/config/database');
@@ -18,6 +21,9 @@ app.set('trust proxy', 1);
 const PORT = process.env.PORT || 4000;
 const isProd = process.env.NODE_ENV === 'production';
 const FRONTEND_ORIGIN = process.env.FRONTEND_URL || 'http://localhost:4200';
+const FRONTEND_BUILD_PATH = path.join(__dirname, '..', 'frontend', 'dist', 'frontend', 'browser');
+const ROBOTS_PATH = path.join(__dirname, '..', 'frontend', 'public', 'robots.txt');
+const hasFrontendBuild = fs.existsSync(FRONTEND_BUILD_PATH);
 
 // Middlewares de seguridad y logging
 app.use(helmet({
@@ -50,9 +56,18 @@ app.use(cors({
   allowedHeaders: ['Content-Type', 'Authorization']
 }));
 app.use(morgan('combined'));
+app.use(compression());
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true }));
 app.use(limitGlobal);
+
+// robots.txt
+app.get('/robots.txt', (req, res, next) => {
+  res.type('text/plain');
+  res.sendFile(ROBOTS_PATH, (err) => {
+    if (err) next();
+  });
+});
 
 // Rutas
 app.use('/api/test', testRoutes);
@@ -60,6 +75,26 @@ app.use('/api/auth', authRoutes);
 app.use('/api/snippets', snippetRoutes);
 app.use('/api/public', publicSnippetRoutes);
 app.use('/api/ai', aiRoutes);
+
+// Servir frontend estático en producción si existe el build
+if (hasFrontendBuild) {
+  app.use(express.static(FRONTEND_BUILD_PATH, {
+    maxAge: isProd ? '30d' : 0,
+    immutable: isProd,
+    setHeaders: (res, filePath) => {
+      if (filePath.endsWith('index.html')) {
+        res.setHeader('Cache-Control', 'no-cache');
+      }
+    }
+  }));
+
+  // Fallback para rutas del frontend (evita interceptar rutas /api)
+  app.get(/^\/(?!api\/).*/, (req, res, next) => {
+    res.sendFile(path.join(FRONTEND_BUILD_PATH, 'index.html'), (err) => {
+      if (err) next();
+    });
+  });
+}
 
 // Ruta de bienvenida
 app.get('/', (req, res) => {

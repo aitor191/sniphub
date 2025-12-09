@@ -1,159 +1,163 @@
-<div class="snippets-container">
-    <header class="snippets-header">
-      <div class="header-left">
-        <a routerLink="/dashboard" class="btn btn-secondary">← Volver al Dashboard</a>
-        <h1>🌐 Snippets Públicos</h1>
-      </div>
-      <div class="header-right">
-      </div>
-    </header>
-  
-    <!-- Filtros y búsqueda -->
-    <div class="filters-section">
-      <div class="search-box">
-        <div class="search-input-wrapper">
-          <input 
-            type="text" 
-            [(ngModel)]="searchQuery"
-            (input)="onSearchInput($any($event.target).value)"
-            (keyup.enter)="onSearch()"
-            (focus)="onSearchFocus()"
-            (blur)="onSearchBlur()"
-            placeholder="Buscar por título o descripción..."
-            class="search-input"
-          />
-          <!-- Historial de búsquedas -->
-          <div class="search-history" *ngIf="showHistory && searchHistory.length > 0">
-            <div class="history-header">
-              <span>Búsquedas recientes</span>
-              <button 
-                type="button"
-                (click)="clearHistory()"
-                class="btn-clear-history"
-                title="Limpiar historial"
-                aria-label="Limpiar historial de búsquedas"
-              >
-                🗑️ Limpiar
-              </button>
-            </div>
-            <div class="history-items">
-              <div 
-                *ngFor="let item of searchHistory" 
-                class="history-item"
-                (click)="selectHistoryItem(item)"
-              >
-                <span class="history-query">🔍 {{ item.query }}</span>
-                <button 
-                  type="button"
-                  (click)="removeHistoryItem($event, item)"
-                  class="btn-remove-item"
-                  title="Eliminar"
-                  aria-label="Eliminar búsqueda del historial"
-                >
-                  ✕
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-        <button (click)="onSearch()" class="btn btn-secondary">🔍 Buscar</button>
-      </div>
-  
-      <div class="filters">
-        <select 
-          [(ngModel)]="selectedLanguage" 
-          (change)="onFilterChange()"
-          class="filter-select"
-        >
-          <option value="">Todos los lenguajes</option>
-          <option *ngFor="let lang of languages" [value]="lang">{{ lang }}</option>
-        </select>
-      </div>
+<main class="snippets-container" aria-labelledby="public-snippets-heading">
+  <header class="snippets-header">
+    <div class="header-left">
+      <a routerLink="/dashboard" class="btn btn-secondary">← Volver al Dashboard</a>
+      <h1 id="public-snippets-heading">🌐 Snippets Públicos</h1>
     </div>
-  
-    <!-- Mensaje de error -->
-    <div class="error-message" *ngIf="errorMessage">
-      {{ errorMessage }}
+    <div class="header-right">
     </div>
-  
-    <!-- Estado de carga -->
-    <div class="loading" *ngIf="isLoading">
-      <p>Cargando snippets públicos...</p>
-    </div>
-  
-    <!-- Lista de snippets -->
-    <div class="snippets-grid" *ngIf="!isLoading && snippets.length > 0">
-      <div class="snippet-card" *ngFor="let snippet of snippets" [routerLink]="['/public', snippet.id]">
-        <div class="snippet-header">
-          <h3>{{ snippet.title }}</h3>
-          <div class="snippet-badges">
-            <span class="badge badge-language">{{ snippet.language }}</span>
-          </div>
-          <div class="snippet-actions">
+  </header>
+
+  <!-- Filtros y búsqueda -->
+  <div class="filters-section" aria-label="Filtros y búsqueda de snippets públicos">
+    <div class="search-box">
+      <div class="search-input-wrapper">
+        <input 
+          type="text" 
+          [(ngModel)]="searchQuery"
+          (input)="onSearchInput($any($event.target).value)"
+          (keyup.enter)="onSearch()"
+          (focus)="onSearchFocus()"
+          (blur)="onSearchBlur()"
+          placeholder="Buscar por título o descripción..."
+          class="search-input"
+        />
+        <!-- Historial de búsquedas -->
+        <div class="search-history" *ngIf="showHistory && searchHistory.length > 0">
+          <div class="history-header">
+            <span>Búsquedas recientes</span>
             <button 
-              (click)="$event.stopPropagation(); copyCode(snippet)"
-                class="btn-icon"
-                [class.copied]="copiedId === snippet.id"
-                [title]="copiedId === snippet.id ? 'Copiado' : 'Copiar código'"
-                [attr.aria-label]="copiedId === snippet.id ? 'Copiado' : 'Copiar código'"
+              type="button"
+              (click)="clearHistory()"
+              class="btn-clear-history"
+              title="Limpiar historial"
+              aria-label="Limpiar historial de búsquedas"
             >
-                {{ copiedId === snippet.id ? '✓' : '📋' }}
+              🗑️ Limpiar
             </button>
           </div>
-        </div>
-  
-        <p class="snippet-description" *ngIf="snippet.description">
-          {{ snippet.description }}
-        </p>
-  
-        <div class="snippet-meta">
-          <span class="snippet-date">
-            {{ snippet.updated_at | date:'short' }}
-          </span>
-        </div>
-  
-        <div class="snippet-code-preview">
-          <pre><code>{{ snippet.code.substring(0, 150) }}{{ snippet.code.length > 150 ? '...' : '' }}</code></pre>
+          <div class="history-items">
+            <div 
+              *ngFor="let item of searchHistory" 
+              class="history-item"
+              (click)="selectHistoryItem(item)"
+            >
+              <span class="history-query">🔍 {{ item.query }}</span>
+              <button 
+                type="button"
+                (click)="removeHistoryItem($event, item)"
+                class="btn-remove-item"
+                title="Eliminar"
+                aria-label="Eliminar búsqueda del historial"
+              >
+                ✕
+              </button>
+            </div>
+          </div>
         </div>
       </div>
+      <button (click)="onSearch()" class="btn btn-secondary">🔍 Buscar</button>
     </div>
-  
-    <!-- Mensaje cuando no hay snippets -->
-    <div class="empty-state" *ngIf="!isLoading && snippets.length === 0">
-      <p>No hay snippets públicos disponibles.</p>
-    </div>
-  
-    <!-- Paginación -->
-    <div class="pagination" *ngIf="!isLoading && totalPages > 1">
-      <button 
-        (click)="onPageChange(currentPage - 1)"
-        [disabled]="currentPage === 1"
-        class="btn btn-secondary"
+
+    <div class="filters">
+      <label id="public-language-filter-label" class="sr-only" for="public-language-filter">Filtrar por lenguaje</label>
+      <select 
+        id="public-language-filter"
+        aria-labelledby="public-language-filter-label"
+        aria-label="Filtrar por lenguaje"
+        [(ngModel)]="selectedLanguage" 
+        (change)="onFilterChange()"
+        class="filter-select"
       >
-        ← Anterior
-      </button>
-      
-      <div class="page-numbers">
-        <button 
-          *ngFor="let page of pages"
-          (click)="onPageChange(page)"
-          [class.active]="page === currentPage"
-          class="btn-page"
-        >
-          {{ page }}
-        </button>
-      </div>
-      
-      <button 
-        (click)="onPageChange(currentPage + 1)"
-        [disabled]="!hasNext"
-        class="btn btn-secondary"
-      >
-        Siguiente →
-      </button>
-    </div>
-  
-    <div class="pagination-info" *ngIf="!isLoading && total > 0">
-      Mostrando {{ showingRange }}
+        <option value="">Todos los lenguajes</option>
+        <option *ngFor="let lang of languages" [value]="lang">{{ lang }}</option>
+      </select>
     </div>
   </div>
+
+  <!-- Mensaje de error -->
+  <div class="error-message" *ngIf="errorMessage">
+    {{ errorMessage }}
+  </div>
+
+  <!-- Estado de carga -->
+  <div class="loading" *ngIf="isLoading">
+    <p>Cargando snippets públicos...</p>
+  </div>
+
+  <!-- Lista de snippets -->
+  <div class="snippets-grid" *ngIf="!isLoading && snippets.length > 0">
+    <div class="snippet-card" *ngFor="let snippet of snippets" [routerLink]="['/public', snippet.id]">
+      <div class="snippet-header">
+        <h2>{{ snippet.title }}</h2>
+        <div class="snippet-badges">
+          <span class="badge badge-language">{{ snippet.language }}</span>
+        </div>
+        <div class="snippet-actions">
+          <button 
+            (click)="$event.stopPropagation(); copyCode(snippet)"
+              class="btn-icon"
+              [class.copied]="copiedId === snippet.id"
+              [title]="copiedId === snippet.id ? 'Copiado' : 'Copiar código'"
+              [attr.aria-label]="copiedId === snippet.id ? 'Copiado' : 'Copiar código'"
+          >
+              {{ copiedId === snippet.id ? '✓' : '📋' }}
+          </button>
+        </div>
+      </div>
+
+      <p class="snippet-description" *ngIf="snippet.description">
+        {{ snippet.description }}
+      </p>
+
+      <div class="snippet-meta">
+        <span class="snippet-date">
+          {{ snippet.updated_at | date:'short' }}
+        </span>
+      </div>
+
+      <div class="snippet-code-preview">
+        <pre><code>{{ snippet.code.substring(0, 150) }}{{ snippet.code.length > 150 ? '...' : '' }}</code></pre>
+      </div>
+    </div>
+  </div>
+
+  <!-- Mensaje cuando no hay snippets -->
+  <div class="empty-state" *ngIf="!isLoading && snippets.length === 0">
+    <p>No hay snippets públicos disponibles.</p>
+  </div>
+
+  <!-- Paginación -->
+  <div class="pagination" *ngIf="!isLoading && totalPages > 1">
+    <button 
+      (click)="onPageChange(currentPage - 1)"
+      [disabled]="currentPage === 1"
+      class="btn btn-secondary"
+    >
+      ← Anterior
+    </button>
+    
+    <div class="page-numbers">
+      <button 
+        *ngFor="let page of pages"
+        (click)="onPageChange(page)"
+        [class.active]="page === currentPage"
+        class="btn-page"
+      >
+        {{ page }}
+      </button>
+    </div>
+    
+    <button 
+      (click)="onPageChange(currentPage + 1)"
+      [disabled]="!hasNext"
+      class="btn btn-secondary"
+    >
+      Siguiente →
+    </button>
+  </div>
+
+  <div class="pagination-info" *ngIf="!isLoading && total > 0">
+    Mostrando {{ showingRange }}
+  </div>
+</main>

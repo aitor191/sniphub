@@ -16,7 +16,7 @@
 
     <nav class="sidebar-nav">
       <div class="nav-section">
-        <h3 class="nav-section-title">Navegación</h3>
+        <h2 class="nav-section-title">Navegación</h2>
         <a routerLink="/snippets/new" class="nav-button nav-button-primary" (click)="closeMenuOnMobile()">
           <span class="nav-icon">+</span>
           <span>Nuevo Snippet</span>
@@ -183,7 +183,13 @@
           >
             {{ copiedId === snippet.id ? '✓ Copiado' : '📋 Copiar' }}
           </button>
-          <button class="action-btn" (click)="$event.stopPropagation(); editSnippet(snippet)" aria-label="Editar snippet">Editar</button>
+          <button 
+            class="action-btn" 
+            (click)="$event.stopPropagation(); editSnippet(snippet)" 
+            [attr.aria-label]="'Editar snippet ' + snippet.title"
+          >
+            Editar
+          </button>
           <button class="action-btn action-btn-danger" (click)="$event.stopPropagation(); deleteSnippet(snippet)" aria-label="Eliminar snippet">Eliminar</button>
         </div>
       </div>
