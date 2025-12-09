@@ -208,14 +208,26 @@
     justify-content: space-between;
     align-items: start;
     margin-bottom: 10px;
+    gap: 10px;
 
     h3 {
       margin: 0;
       flex: 1;
+      min-width: 0;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      word-break: break-word;
+      line-height: 1.25;
 
       a {
         color: var(--text-primary);
         text-decoration: none;
+        display: inline-block;
+        width: 100%;
 
         &:hover {
           color: hsl(var(--primary));
@@ -261,6 +273,13 @@
     color: var(--text-secondary);
     margin: 10px 0;
     font-size: 14px;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    word-break: break-word;
   }
 
   .snippet-meta {

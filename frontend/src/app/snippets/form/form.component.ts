@@ -37,8 +37,8 @@ export class FormComponent implements OnInit {
     private cdr: ChangeDetectorRef
   ) {
     this.snippetForm = this.fb.group({
-      title: ['', [Validators.required, Validators.maxLength(200)]],
-      description: [''],
+      title: ['', [Validators.required, Validators.maxLength(50)]],
+      description: ['', [Validators.maxLength(100)]],
       code: ['', [Validators.required]],
       language: ['', [Validators.required]],
       is_public: [false],

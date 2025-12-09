@@ -34,9 +34,9 @@
           />
           <div class="error-text" *ngIf="title?.invalid && title?.touched">
             <span *ngIf="title?.errors?.['required']">El título es obligatorio</span>
-            <span *ngIf="title?.errors?.['maxlength']">El título no puede tener más de 200 caracteres</span>
+            <span *ngIf="title?.errors?.['maxlength']">El título no puede tener más de 50 caracteres</span>
           </div>
-          <div class="char-count">{{ title?.value?.length || 0 }}/200</div>
+          <div class="char-count">{{ title?.value?.length || 0 }}/50</div>
         </div>
   
         <!-- Lenguaje -->
@@ -66,7 +66,12 @@
             class="form-control"
             rows="3"
             placeholder="Describe qué hace este snippet..."
+            [class.invalid]="description?.invalid && description?.touched"
           ></textarea>
+          <div class="error-text" *ngIf="description?.invalid && description?.touched">
+            <span *ngIf="description?.errors?.['maxlength']">La descripción no puede tener más de 100 caracteres</span>
+          </div>
+          <div class="char-count">{{ description?.value?.length || 0 }}/100</div>
         </div>
   
         <!-- Código -->
