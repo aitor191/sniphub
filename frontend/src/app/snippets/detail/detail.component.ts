@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, ActivatedRoute, RouterLink } from '@angular/router';
 import { SnippetService } from '../../core/services/snippet.service';
@@ -14,7 +14,8 @@ import { MarkdownPipe } from '../../../shared/pipes/markdown.pipe';
   standalone: true,
   imports: [CommonModule, RouterLink, MarkdownPipe],
   templateUrl: './detail.component.html',
-  styleUrl: './detail.component.scss'
+  styleUrl: './detail.component.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DetailComponent implements OnInit {
   snippet: Snippet | null = null;

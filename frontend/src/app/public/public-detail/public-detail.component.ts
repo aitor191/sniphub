@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, ActivatedRoute, RouterLink } from '@angular/router';
 import { SnippetService } from '../../core/services/snippet.service';
@@ -11,7 +11,8 @@ import { finalize } from 'rxjs/operators';
   standalone: true,
   imports: [CommonModule, RouterLink],
   templateUrl: './public-detail.component.html',
-  styleUrl: './public-detail.component.scss'
+  styleUrl: './public-detail.component.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class PublicDetailComponent implements OnInit {
   snippet: Snippet | null = null;

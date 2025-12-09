@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, OnDestroy, ChangeDetectorRef, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, ActivatedRoute, RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
@@ -15,7 +15,8 @@ import { debounceTime, distinctUntilChanged, finalize } from 'rxjs/operators';
   standalone: true,
   imports: [CommonModule, RouterLink, FormsModule],
   templateUrl: './public-list.component.html',
-  styleUrl: './public-list.component.scss'
+  styleUrl: './public-list.component.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class PublicListComponent implements OnInit, OnDestroy {
   snippets: Snippet[] = [];
