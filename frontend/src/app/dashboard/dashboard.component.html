@@ -149,7 +149,7 @@
     <div class="snippets-grid" *ngIf="!isLoading && recentSnippets.length > 0">
       <div class="snippet-card" *ngFor="let snippet of recentSnippets" [routerLink]="['/snippets', snippet.id]">
         <div class="snippet-card-header">
-          <h3 class="snippet-title">{{ snippet.title }}</h3>
+          <h2 class="snippet-title">{{ snippet.title }}</h2>
           <button 
             class="favorite-btn"
             [class.active]="snippet.is_favorite"

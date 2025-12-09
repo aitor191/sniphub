@@ -608,9 +608,9 @@
   }
 
   &.tag-other {
-    background: hsl(var(--secondary) / 0.2);
-    color: hsl(var(--secondary));
-    border: 1px solid hsl(var(--secondary) / 0.3);
+    background: hsl(var(--secondary) / 0.16);
+    color: hsl(var(--secondary-foreground));
+    border: 1px solid hsl(var(--secondary) / 0.35);
   }
 }
 
