@@ -189,11 +189,11 @@
   }
 
   &.btn-secondary {
-    background: hsl(var(--secondary));
-    color: hsl(var(--secondary-foreground));
+    background: #6c757d;
+    color: #fff;
 
     &:hover:not(:disabled) {
-      background: hsl(var(--secondary) / 0.9);
+      background: #545b62;
     }
 
     &:disabled {
