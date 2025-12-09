@@ -1,11 +1,12 @@
 <main class="register-container" aria-labelledby="register-title">
-    <div class="register-card">
-      <div class="register-header">
-        <h1 id="register-title">SnipHub</h1>
-        <p>Crea tu cuenta</p>
-      </div>
+  <div class="register-card">
+    <div class="register-header">
+      <img src="/logo.png" alt="SnipHub" class="header-logo">
+      <h1 id="register-title">SnipHub</h1>
+      <p>Crea tu cuenta</p>
+    </div>
   
-      <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" class="register-form">
+    <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" class="register-form">
         <!-- Username -->
         <div class="form-group">
           <label for="username">Nombre de usuario</label>
@@ -77,11 +78,11 @@
           <span *ngIf="!isLoading">Registrarse</span>
           <span *ngIf="isLoading">Registrando...</span>
         </button>
-      </form>
+    </form>
   
-      <!-- Login Link -->
-      <div class="register-footer">
-        <p>¿Ya tienes cuenta? <a routerLink="/auth/login">Inicia sesión aquí</a></p>
-      </div>
+    <!-- Login Link -->
+    <div class="register-footer">
+      <p>¿Ya tienes cuenta? <a routerLink="/auth/login">Inicia sesión aquí</a></p>
     </div>
-  </main>
+  </div>
+</main>

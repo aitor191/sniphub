@@ -1,69 +1,54 @@
 <main class="login-container" aria-labelledby="login-title">
-    <div class="login-card">
-      <div class="login-header">
-        <h1 id="login-title">SnipHub</h1>
-        <p>Inicia sesión en tu cuenta</p>
-      </div>
-  
-      <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="login-form">
-        <!-- Email -->
-        <div class="form-group">
-          <label for="email">Email</label>
-          <input
-            type="email"
-            id="email"
-            formControlName="email"
-            class="form-control"
-            [class.error]="email?.invalid && email?.touched"
-            placeholder="tu@email.com"
-          />
-          <div class="error-message" *ngIf="email?.invalid && email?.touched">
-            <span *ngIf="email?.errors?.['required']">El email es requerido</span>
-            <span *ngIf="email?.errors?.['email']">Email inválido</span>
-          </div>
-        </div>
-  
-        <!-- Password -->
-        <div class="form-group">
-          <label for="password">Contraseña</label>
-          <input
-            type="password"
-            id="password"
-            formControlName="password"
-            class="form-control"
-            [class.error]="password?.invalid && password?.touched"
-            placeholder="••••••••"
-          />
-          <div class="error-message" *ngIf="password?.invalid && password?.touched">
-            <span *ngIf="password?.errors?.['required']">La contraseña es requerida</span>
-            <span *ngIf="password?.errors?.['minlength']">Mínimo 6 caracteres</span>
-          </div>
-        </div>
-  
-        <!-- Mensaje de éxito -->
-        <div class="success-message" *ngIf="successMessage">
-          {{ successMessage }}
-        </div>
-
-        <!-- Error general -->
-        <div class="error-message general-error" *ngIf="errorMessage">
-          {{ errorMessage }}
-        </div>
-  
-        <!-- Submit Button -->
-        <button
-          type="submit"
-          class="btn btn-primary"
-          [disabled]="isLoading || loginForm.invalid"
-        >
-          <span *ngIf="!isLoading">Iniciar sesión</span>
-          <span *ngIf="isLoading">Iniciando sesión...</span>
-        </button>
-      </form>
-  
-      <!-- Register Link -->
-      <div class="login-footer">
-        <p>¿No tienes cuenta? <a routerLink="/auth/register">Regístrate aquí</a></p>
-      </div>
+  <div class="login-card">
+    <div class="login-header">
+      <img src="/logo.png" alt="SnipHub" class="header-logo">
+      <h1 id="login-title">SnipHub</h1>
+      <p>Inicia sesión en tu cuenta</p>
     </div>
-  </main>
+
+    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="login-form">
+      <!-- Email -->
+      <div class="form-group">
+        <label for="email">Email</label>
+        <input type="email" id="email" formControlName="email" class="form-control"
+          [class.error]="email?.invalid && email?.touched" placeholder="tu@email.com" />
+        <div class="error-message" *ngIf="email?.invalid && email?.touched">
+          <span *ngIf="email?.errors?.['required']">El email es requerido</span>
+          <span *ngIf="email?.errors?.['email']">Email inválido</span>
+        </div>
+      </div>
+
+      <!-- Password -->
+      <div class="form-group">
+        <label for="password">Contraseña</label>
+        <input type="password" id="password" formControlName="password" class="form-control"
+          [class.error]="password?.invalid && password?.touched" placeholder="••••••••" />
+        <div class="error-message" *ngIf="password?.invalid && password?.touched">
+          <span *ngIf="password?.errors?.['required']">La contraseña es requerida</span>
+          <span *ngIf="password?.errors?.['minlength']">Mínimo 6 caracteres</span>
+        </div>
+      </div>
+
+      <!-- Mensaje de éxito -->
+      <div class="success-message" *ngIf="successMessage">
+        {{ successMessage }}
+      </div>
+
+      <!-- Error general -->
+      <div class="error-message general-error" *ngIf="errorMessage">
+        {{ errorMessage }}
+      </div>
+
+      <!-- Submit Button -->
+      <button type="submit" class="btn btn-primary" [disabled]="isLoading || loginForm.invalid">
+        <span *ngIf="!isLoading">Iniciar sesión</span>
+        <span *ngIf="isLoading">Iniciando sesión...</span>
+      </button>
+    </form>
+
+    <!-- Register Link -->
+    <div class="login-footer">
+      <p>¿No tienes cuenta? <a routerLink="/auth/register">Regístrate aquí</a></p>
+    </div>
+  </div>
+</main>
