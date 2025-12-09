@@ -23,7 +23,8 @@ const isProd = process.env.NODE_ENV === 'production';
 const FRONTEND_ORIGIN = process.env.FRONTEND_URL || 'http://localhost:4200';
 const FRONTEND_BUILD_PATH = path.join(__dirname, '..', 'frontend', 'dist', 'frontend', 'browser');
 const ROBOTS_PATH = path.join(__dirname, '..', 'frontend', 'public', 'robots.txt');
-const hasFrontendBuild = fs.existsSync(FRONTEND_BUILD_PATH);
+const hasFrontendBuild = fs.existsSync(FRONTEND_BUILD_PATH) &&
+  fs.existsSync(path.join(FRONTEND_BUILD_PATH, 'index.html'));
 
 // Middlewares de seguridad y logging
 app.use(helmet({
@@ -142,6 +143,11 @@ const startServer = async () => {
       console.log('✅ Servidor corriendo en http://localhost:' + PORT);
       console.log('✅ Conectado a la base de datos MySQL');
       console.log('📚 Documentación disponible en http://localhost:' + PORT);
+      if (hasFrontendBuild) {
+        console.log(`✅ Sirviendo frontend desde ${FRONTEND_BUILD_PATH}`);
+      } else {
+        console.warn('⚠️ No se encontró el build de frontend. Ejecuta `npm run build -- --configuration production` en la carpeta frontend.');
+      }
     });
   } catch (error) {
     console.error('❌ Error al iniciar el servidor:', error);
