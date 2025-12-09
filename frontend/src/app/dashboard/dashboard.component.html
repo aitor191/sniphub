@@ -105,7 +105,7 @@
             </div>
             <div class="history-items">
               <div 
-                *ngFor="let item of searchHistory" 
+                *ngFor="let item of searchHistory; trackBy: trackByHistory" 
                 class="history-item"
                 (click)="selectHistoryItem(item)"
               >
@@ -134,7 +134,7 @@
           Todas
         </button>
         <button 
-          *ngFor="let tagInfo of popularTags"
+          *ngFor="let tagInfo of popularTags; trackBy: trackByTag"
           class="filter-btn"
           [class.active]="activeFilter === tagInfo.tag"
           (click)="setFilter(tagInfo.tag)"
@@ -147,7 +147,7 @@
 
     <!-- Snippets Grid -->
     <div class="snippets-grid" *ngIf="!isLoading && recentSnippets.length > 0">
-      <div class="snippet-card" *ngFor="let snippet of recentSnippets" [routerLink]="['/snippets', snippet.id]">
+      <div class="snippet-card" *ngFor="let snippet of recentSnippets; trackBy: trackBySnippet" [routerLink]="['/snippets', snippet.id]">
         <div class="snippet-card-header">
           <h2 class="snippet-title">{{ snippet.title }}</h2>
           <button 

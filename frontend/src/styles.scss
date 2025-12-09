@@ -139,8 +139,17 @@
 }
 
 /* Transiciones suaves */
-* {
-  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+:where(button, a, input, select, textarea, .card, section) {
+  transition: background-color 0.25s ease, color 0.25s ease, border-color 0.25s ease;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition: none !important;
+    scroll-behavior: auto !important;
+  }
 }
 
 /* Estilos base */

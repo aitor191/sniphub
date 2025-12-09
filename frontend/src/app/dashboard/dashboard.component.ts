@@ -341,4 +341,16 @@ export class DashboardComponent implements OnInit, OnDestroy {
       }, 0);
     });
   }
+
+  trackBySnippet(_index: number, snippet: Snippet): number {
+    return snippet.id;
+  }
+
+  trackByHistory(_index: number, item: SearchHistoryItem): string {
+    return item.query;
+  }
+
+  trackByTag(_index: number, item: { tag: string; count: number }): string {
+    return item.tag;
+  }
 }
