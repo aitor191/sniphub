@@ -81,11 +81,11 @@
   
   // Estilos por tipo
   .toast-success {
-    border-left: 4px solid hsl(142 76% 36%);
+    border-left: 4px solid hsl(var(--success));
     
     .toast-icon {
-      background-color: hsl(142 76% 36% / 0.1);
-      color: hsl(142 76% 36%);
+      background-color: hsl(var(--success) / 0.1);
+      color: hsl(var(--success));
     }
   }
   
@@ -108,11 +108,11 @@
   }
   
   .toast-warning {
-    border-left: 4px solid hsl(38 92% 50%);
+    border-left: 4px solid hsl(var(--warning));
     
     .toast-icon {
-      background-color: hsl(38 92% 50% / 0.1);
-      color: hsl(38 92% 50%);
+      background-color: hsl(var(--warning) / 0.1);
+      color: hsl(var(--warning));
     }
   }
   

@@ -164,11 +164,17 @@
 /* Ajuste de botón de búsqueda */
 .filters-section .search-box > .btn {
   height: 48px;
+  min-height: 48px;
   padding: 0 16px;
   flex-shrink: 0;
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  box-sizing: border-box;
+  border-radius: 8px;
+  border: 1px solid var(--border-color);
+  font-size: 16px;
+  line-height: 1;
 }
 
 @media (max-width: 640px) {
@@ -188,12 +194,12 @@
 }
 
 .error-message {
-  background: #fee;
-  color: #c33;
+  background: hsl(var(--destructive) / 0.1);
+  color: hsl(var(--destructive));
   padding: 1rem;
   border-radius: 8px;
   margin-bottom: 1rem;
-  border: 1px solid #fcc;
+  border: 1px solid hsl(var(--destructive) / 0.3);
 }
 
 .loading {
@@ -392,9 +398,9 @@
     }
 
     &.active {
-      background: #667eea;
-      color: white;
-      border-color: #667eea;
+      background: hsl(var(--primary));
+      color: hsl(var(--primary-foreground));
+      border-color: hsl(var(--primary));
     }
   }
 }
@@ -417,17 +423,17 @@
   transition: background 0.2s;
 
   &.btn-primary {
-    background: #007bff;
-    color: white;
+    background: hsl(var(--primary));
+    color: hsl(var(--primary-foreground));
 
     &:hover {
-      background: #0056b3;
+      background: hsl(var(--primary) / 0.9);
     }
   }
 
   &.btn-secondary {
     background: #6c757d;
-    color: white;
+    color: #fff;
 
     &:hover:not(:disabled) {
       background: #545b62;

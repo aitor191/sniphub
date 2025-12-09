@@ -76,13 +76,22 @@
       }
     }
   
+    .success-message {
+      background: hsl(var(--success) / 0.1);
+      color: hsl(var(--success));
+      padding: 10px;
+      border-radius: 4px;
+      margin-bottom: 15px;
+      border: 1px solid hsl(var(--success) / 0.3);
+    }
+
     .general-error {
-      background: #fee;
-      border: 1px solid #fcc;
+      background: hsl(var(--destructive) / 0.1);
+      border: 1px solid hsl(var(--destructive) / 0.3);
       border-radius: 6px;
       padding: 12px;
       margin-bottom: 20px;
-      color: #c33;
+      color: hsl(var(--destructive));
       font-size: 14px;
     }
   

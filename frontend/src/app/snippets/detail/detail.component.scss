@@ -14,12 +14,12 @@
   }
 
   .error-message {
-    background: #fee;
-    color: #c33;
+    background: hsl(var(--destructive) / 0.1);
+    color: hsl(var(--destructive));
     padding: 1rem;
     border-radius: 8px;
     margin-bottom: 1rem;
-    border: 1px solid #fcc;
+    border: 1px solid hsl(var(--destructive) / 0.3);
   }
 
   .snippet-detail {
@@ -224,7 +224,7 @@
         background: var(--code-bg);
         padding: 1.5rem;
         border-radius: 8px;
-        border-left: 4px solid #1976d2;
+        border-left: 4px solid hsl(var(--primary));
         line-height: 1.6;
         color: var(--text-primary);
         border: 1px solid var(--code-border);
@@ -260,33 +260,33 @@
 
   &.btn-secondary {
     background: #6c757d;
-    color: white;
+    color: #fff;
 
     &:hover {
-      background: #5a6268;
+      background: #545b62;
     }
   }
 
   &.btn-primary {
-    background: #007bff;
-    color: white;
+    background: hsl(var(--primary));
+    color: hsl(var(--primary-foreground));
 
     &:hover {
-      background: #0056b3;
+      background: hsl(var(--primary) / 0.9);
     }
 
     &:disabled {
-      background: #ccc;
+      opacity: 0.6;
       cursor: not-allowed;
     }
   }
 
   &.btn-danger {
-    background: #dc3545;
-    color: white;
+    background: hsl(var(--destructive));
+    color: hsl(var(--destructive-foreground));
 
     &:hover {
-      background: #c82333;
+      background: hsl(var(--destructive) / 0.9);
     }
   }
 

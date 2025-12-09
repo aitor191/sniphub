@@ -14,12 +14,12 @@
   }
 
   .error-message {
-    background: #fee;
-    color: #c33;
+    background: hsl(var(--destructive) / 0.1);
+    color: hsl(var(--destructive));
     padding: 1rem;
     border-radius: 8px;
     margin-bottom: 1rem;
-    border: 1px solid #fcc;
+    border: 1px solid hsl(var(--destructive) / 0.3);
   }
 
   .snippet-detail {
@@ -169,10 +169,10 @@
 
   &.btn-secondary {
     background: #6c757d;
-    color: white;
+    color: #fff;
 
     &:hover {
-      background: #5a6268;
+      background: #545b62;
     }
   }
 }

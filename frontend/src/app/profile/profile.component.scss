@@ -54,8 +54,8 @@
     }
 
     &.active {
-      color: #667eea;
-      border-bottom-color: #667eea;
+      color: hsl(var(--primary));
+      border-bottom-color: hsl(var(--primary));
       font-weight: 600;
     }
   }
@@ -97,37 +97,37 @@
 
         &:focus {
           outline: none;
-          border-color: #667eea;
+          border-color: hsl(var(--primary));
         }
 
         &.invalid {
-          border-color: #dc3545;
+          border-color: hsl(var(--destructive));
         }
       }
 
       .error-message {
-        color: #dc3545;
+        color: hsl(var(--destructive));
         font-size: 0.875rem;
         margin-top: 0.25rem;
       }
     }
 
     .success-message {
-      background: #d4edda;
-      color: #155724;
+      background: hsl(var(--success) / 0.1);
+      color: hsl(var(--success));
       padding: 1rem;
       border-radius: 6px;
       margin-bottom: 1rem;
-      border: 1px solid #c3e6cb;
+      border: 1px solid hsl(var(--success) / 0.3);
     }
 
     .error-message {
-      background: #f8d7da;
-      color: #721c24;
+      background: hsl(var(--destructive) / 0.1);
+      color: hsl(var(--destructive));
       padding: 1rem;
       border-radius: 6px;
       margin-bottom: 1rem;
-      border: 1px solid #f5c6cb;
+      border: 1px solid hsl(var(--destructive) / 0.3);
     }
 
     .loading {
@@ -213,23 +213,23 @@
 
   &.btn-secondary {
     background: #6c757d;
-    color: white;
+    color: #fff;
 
     &:hover {
-      background: #5a6268;
+      background: #545b62;
     }
   }
 
   &.btn-primary {
-    background: #667eea;
-    color: white;
+    background: hsl(var(--primary));
+    color: hsl(var(--primary-foreground));
 
     &:hover {
-      background: #5568d3;
+      background: hsl(var(--primary) / 0.9);
     }
 
     &:disabled {
-      background: #ccc;
+      opacity: 0.6;
       cursor: not-allowed;
     }
   }

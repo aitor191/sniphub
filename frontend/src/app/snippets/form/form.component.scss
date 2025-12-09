@@ -17,21 +17,21 @@
 }
 
 .success-message {
-  background: #d4edda;
-  color: #155724;
+  background: hsl(var(--success) / 0.1);
+  color: hsl(var(--success));
   padding: 12px;
   border-radius: 4px;
   margin-bottom: 20px;
-  border: 1px solid #c3e6cb;
+  border: 1px solid hsl(var(--success) / 0.3);
 }
 
 .error-message {
-  background: #f8d7da;
-  color: #721c24;
+  background: hsl(var(--destructive) / 0.1);
+  color: hsl(var(--destructive));
   padding: 12px;
   border-radius: 4px;
   margin-bottom: 20px;
-  border: 1px solid #f5c6cb;
+  border: 1px solid hsl(var(--destructive) / 0.3);
 }
 
 .loading {
@@ -75,12 +75,12 @@
 
     &:focus {
       outline: none;
-      border-color: #007bff;
-      box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
+      border-color: hsl(var(--primary));
+      box-shadow: 0 0 0 3px hsl(var(--primary) / 0.1);
     }
 
     &.invalid {
-      border-color: #dc3545;
+      border-color: hsl(var(--destructive));
     }
 
     &.code-textarea {
@@ -102,7 +102,7 @@
   }
 
   .error-text {
-    color: #dc3545;
+    color: hsl(var(--destructive));
     font-size: 12px;
     margin-top: 4px;
   }
@@ -175,11 +175,11 @@
   transition: all 0.2s;
 
   &.btn-primary {
-    background: #007bff;
-    color: white;
+    background: hsl(var(--primary));
+    color: hsl(var(--primary-foreground));
 
     &:hover:not(:disabled) {
-      background: #0056b3;
+      background: hsl(var(--primary) / 0.9);
     }
 
     &:disabled {
@@ -189,11 +189,11 @@
   }
 
   &.btn-secondary {
-    background: #6c757d;
-    color: white;
+    background: hsl(var(--secondary));
+    color: hsl(var(--secondary-foreground));
 
     &:hover:not(:disabled) {
-      background: #545b62;
+      background: hsl(var(--secondary) / 0.9);
     }
 
     &:disabled {
