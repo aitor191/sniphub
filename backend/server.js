@@ -16,11 +16,35 @@ const aiRoutes = require('./src/routes/aiRoutes');
 const app = express();
 app.set('trust proxy', 1);
 const PORT = process.env.PORT || 4000;
+const isProd = process.env.NODE_ENV === 'production';
+const FRONTEND_ORIGIN = process.env.FRONTEND_URL || 'http://localhost:4200';
 
 // Middlewares de seguridad y logging
-app.use(helmet());
+app.use(helmet({
+  contentSecurityPolicy: {
+    directives: {
+      defaultSrc: ["'self'"],
+      scriptSrc: ["'self'"],
+      styleSrc: ["'self'", "'unsafe-inline'"],
+      imgSrc: ["'self'", 'data:'],
+      connectSrc: ["'self'", FRONTEND_ORIGIN, 'ws:', 'wss:'],
+      fontSrc: ["'self'"],
+      objectSrc: ["'none'"],
+      frameAncestors: ["'none'"],
+      baseUri: ["'self'"],
+      formAction: ["'self'"],
+      trustedTypes: ["'self'"],
+      requireTrustedTypesFor: ["'script'"],
+      upgradeInsecureRequests: []
+    }
+  },
+  frameguard: { action: 'deny' },
+  crossOriginOpenerPolicy: { policy: 'same-origin' },
+  referrerPolicy: { policy: 'strict-origin-when-cross-origin' },
+  strictTransportSecurity: isProd ? { maxAge: 15552000, includeSubDomains: true, preload: true } : false
+}));
 app.use(cors({
-  origin: process.env.FRONTEND_URL || 'http://localhost:4200',
+  origin: FRONTEND_ORIGIN,
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization']
