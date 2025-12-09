@@ -20,7 +20,7 @@ export class ToastComponent implements OnInit, OnDestroy {
     private notificationService: NotificationService,
     private cdr: ChangeDetectorRef,
     private ngZone: NgZone
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.subscription = this.notificationService.getNotifications().subscribe(

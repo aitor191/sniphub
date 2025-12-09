@@ -31,7 +31,7 @@ export class DialogService {
   confirm(config: DialogConfig): Promise<boolean> {
     return new Promise((resolve) => {
       this.dialog$.next({ ...config, type: 'confirm' });
-      
+
       const subscription = this.result$.subscribe(result => {
         if (result !== null) {
           subscription.unsubscribe();
@@ -46,7 +46,7 @@ export class DialogService {
   alert(config: DialogConfig): Promise<void> {
     return new Promise((resolve) => {
       this.dialog$.next({ ...config, type: 'alert' });
-      
+
       const subscription = this.result$.subscribe(result => {
         if (result !== null) {
           subscription.unsubscribe();

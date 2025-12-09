@@ -22,17 +22,17 @@ export class PublicListComponent implements OnInit, OnDestroy {
   snippets: Snippet[] = [];
   isLoading = false;
   errorMessage = '';
-  
+
   // Paginación
   currentPage = 1;
   limit = 12;
   total = 0;
   hasNext = false;
-  
+
   // Filtros
   searchQuery = '';
   selectedLanguage = '';
-  
+
   // Historial de búsquedas
   searchHistory: SearchHistoryItem[] = [];
   showHistory = false;
@@ -41,11 +41,11 @@ export class PublicListComponent implements OnInit, OnDestroy {
   private searchSubject = new Subject<string>();
   private subscriptions = new Subscription();
   copiedId: number | null = null;
-  
+
   // Lenguajes disponibles
   languages = [
-    'JavaScript', 'TypeScript', 'Python', 'Java', 'C++', 'C#', 
-    'PHP', 'Ruby', 'Go', 'Rust', 'Swift', 'Kotlin', 'HTML', 
+    'JavaScript', 'TypeScript', 'Python', 'Java', 'C++', 'C#',
+    'PHP', 'Ruby', 'Go', 'Rust', 'Swift', 'Kotlin', 'HTML',
     'CSS', 'SQL', 'Shell', 'JSON', 'YAML', 'Markdown', 'Other'
   ];
 
@@ -57,11 +57,11 @@ export class PublicListComponent implements OnInit, OnDestroy {
     private router: Router,
     private route: ActivatedRoute,
     private cdr: ChangeDetectorRef
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.loadSearchHistory();
-    
+
     // Leer query params de la URL
     const paramsSub = this.route.queryParams.subscribe(params => {
       if (params['language']) {
@@ -75,7 +75,7 @@ export class PublicListComponent implements OnInit, OnDestroy {
       }
     });
     this.subscriptions.add(paramsSub);
-    
+
     this.loadSnippets();
 
     // Configurar debounce para búsqueda
@@ -240,14 +240,14 @@ export class PublicListComponent implements OnInit, OnDestroy {
     const pages: number[] = [];
     const total = this.totalPages;
     const current = this.currentPage;
-    
+
     let start = Math.max(1, current - 2);
     let end = Math.min(total, current + 2);
-    
+
     for (let i = start; i <= end; i++) {
       pages.push(i);
     }
-    
+
     return pages;
   }
 

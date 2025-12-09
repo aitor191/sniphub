@@ -15,7 +15,7 @@ export interface SnippetFilters {
   providedIn: 'root'
 })
 export class SnippetService {
-  constructor(private api: ApiService) {}
+  constructor(private api: ApiService) { }
 
   // Obtener todos los snippets del usuario con filtros
   getMySnippets(filters: SnippetFilters = {}): Observable<SnippetsResponse> {
@@ -62,7 +62,7 @@ export class SnippetService {
   // Helper para construir query params
   private buildQueryParams(filters: SnippetFilters): string {
     const params = new URLSearchParams();
-    
+
     if (filters.page) params.append('page', filters.page.toString());
     if (filters.limit) params.append('limit', filters.limit.toString());
     if (filters.language) params.append('language', filters.language);

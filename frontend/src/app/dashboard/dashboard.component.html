@@ -21,11 +21,13 @@
           <span class="nav-icon">+</span>
           <span>Nuevo Snippet</span>
         </a>
-        <a routerLink="/snippets" class="nav-link" routerLinkActive="active" [routerLinkActiveOptions]="{exact: false}" (click)="closeMenuOnMobile()">
+        <a routerLink="/snippets" class="nav-link" routerLinkActive="active" [routerLinkActiveOptions]="{exact: false}"
+          (click)="closeMenuOnMobile()">
           <span class="nav-link-icon">📋</span>
           <span> Todos los snippets</span>
         </a>
-        <a routerLink="/snippets" [queryParams]="{is_favorite: true}" class="nav-link" routerLinkActive="active" (click)="closeMenuOnMobile()">
+        <a routerLink="/snippets" [queryParams]="{is_favorite: true}" class="nav-link" routerLinkActive="active"
+          (click)="closeMenuOnMobile()">
           <span class="nav-link-icon">⭐</span>
           <span> Favoritos</span>
         </a>
@@ -41,11 +43,8 @@
     </nav>
 
     <div class="sidebar-footer">
-      <button 
-        (click)="toggleTheme()" 
-        class="theme-toggle"
-        [title]="isDarkTheme ? 'Cambiar a tema claro' : 'Cambiar a tema oscuro'"
-      >
+      <button (click)="toggleTheme()" class="theme-toggle"
+        [title]="isDarkTheme ? 'Cambiar a tema claro' : 'Cambiar a tema oscuro'">
         <span class="theme-icon">{{ isDarkTheme ? '☀️' : '🌙' }}</span>
         <span>Modo {{ isDarkTheme ? 'Claro' : 'Oscuro' }}</span>
       </button>
@@ -79,44 +78,24 @@
     <div class="search-filters">
       <div class="search-box">
         <div class="search-input-wrapper">
-          <input 
-            type="text" 
-            [(ngModel)]="searchQuery"
-            (input)="onSearchInput($any($event.target).value)"
-            (keyup.enter)="onSearch()"
-            (focus)="onSearchFocus()"
-            (blur)="onSearchBlur()"
-            placeholder="🔍 Buscar snippets..."
-            class="search-input"
-          />
+          <input type="text" [(ngModel)]="searchQuery" (input)="onSearchInput($any($event.target).value)"
+            (keyup.enter)="onSearch()" (focus)="onSearchFocus()" (blur)="onSearchBlur()"
+            placeholder="🔍 Buscar snippets..." class="search-input" />
           <!-- Historial de búsquedas -->
           <div class="search-history" *ngIf="showHistory && searchHistory.length > 0">
             <div class="history-header">
               <span>Búsquedas recientes</span>
-              <button 
-                type="button"
-                (click)="clearHistory()"
-                class="btn-clear-history"
-                title="Limpiar historial"
-                aria-label="Limpiar historial de búsquedas"
-              >
+              <button type="button" (click)="clearHistory()" class="btn-clear-history" title="Limpiar historial"
+                aria-label="Limpiar historial de búsquedas">
                 🗑️ Limpiar
               </button>
             </div>
             <div class="history-items">
-              <div 
-                *ngFor="let item of searchHistory; trackBy: trackByHistory" 
-                class="history-item"
-                (click)="selectHistoryItem(item)"
-              >
+              <div *ngFor="let item of searchHistory; trackBy: trackByHistory" class="history-item"
+                (click)="selectHistoryItem(item)">
                 <span class="history-query">🔍 {{ item.query }}</span>
-                <button 
-                  type="button"
-                  (click)="removeHistoryItem($event, item)"
-                  class="btn-remove-item"
-                  title="Eliminar"
-                  aria-label="Eliminar búsqueda del historial"
-                >
+                <button type="button" (click)="removeHistoryItem($event, item)" class="btn-remove-item" title="Eliminar"
+                  aria-label="Eliminar búsqueda del historial">
                   ✕
                 </button>
               </div>
@@ -126,20 +105,12 @@
         <button (click)="onSearch()" class="btn btn-secondary">🔍 Buscar</button>
       </div>
       <div class="filter-buttons">
-        <button 
-          class="filter-btn" 
-          [class.active]="activeFilter === 'all'"
-          (click)="setFilter('all')"
-        >
+        <button class="filter-btn" [class.active]="activeFilter === 'all'" (click)="setFilter('all')">
           Todas
         </button>
-        <button 
-          *ngFor="let tagInfo of popularTags; trackBy: trackByTag"
-          class="filter-btn"
-          [class.active]="activeFilter === tagInfo.tag"
-          (click)="setFilter(tagInfo.tag)"
-          [title]="'Filtrar por: ' + tagInfo.tag + ' (' + tagInfo.count + ' snippets)'"
-        >
+        <button *ngFor="let tagInfo of popularTags; trackBy: trackByTag" class="filter-btn"
+          [class.active]="activeFilter === tagInfo.tag" (click)="setFilter(tagInfo.tag)"
+          [title]="'Filtrar por: ' + tagInfo.tag + ' (' + tagInfo.count + ' snippets)'">
           {{ tagInfo.tag }}
         </button>
       </div>
@@ -147,26 +118,19 @@
 
     <!-- Snippets Grid -->
     <div class="snippets-grid" *ngIf="!isLoading && recentSnippets.length > 0">
-      <div class="snippet-card" *ngFor="let snippet of recentSnippets; trackBy: trackBySnippet" [routerLink]="['/snippets', snippet.id]">
+      <div class="snippet-card" *ngFor="let snippet of recentSnippets; trackBy: trackBySnippet"
+        [routerLink]="['/snippets', snippet.id]">
         <div class="snippet-card-header">
           <h2 class="snippet-title">{{ snippet.title }}</h2>
-          <button 
-            class="favorite-btn"
-            [class.active]="snippet.is_favorite"
-            (click)="$event.stopPropagation()"
-            title="Favorito"
-            [attr.aria-label]="snippet.is_favorite ? 'Quitar de favoritos' : 'Marcar como favorito'"
-          >
+          <button class="favorite-btn" [class.active]="snippet.is_favorite" (click)="$event.stopPropagation()"
+            title="Favorito" [attr.aria-label]="snippet.is_favorite ? 'Quitar de favoritos' : 'Marcar como favorito'">
             ⭐
           </button>
         </div>
         <p class="snippet-description">{{ snippet.description || 'Sin descripción' }}</p>
         <div class="snippet-tags">
-          <span 
-            class="tag" 
-            [class.tag-javascript]="snippet.language === 'javascript'"
-            [class.tag-other]="snippet.language !== 'javascript'"
-          >
+          <span class="tag" [class.tag-javascript]="snippet.language === 'javascript'"
+            [class.tag-other]="snippet.language !== 'javascript'">
             {{ snippet.language }}
           </span>
         </div>
@@ -174,23 +138,18 @@
           <code>{{ snippet.code.substring(0, 100) }}{{ snippet.code.length > 100 ? '...' : '' }}</code>
         </div>
         <div class="snippet-actions">
-          <button
-            class="action-btn"
-            [class.copied]="copiedId === snippet.id"
+          <button class="action-btn" [class.copied]="copiedId === snippet.id"
             (click)="$event.stopPropagation(); copyCode(snippet)"
             [title]="copiedId === snippet.id ? 'Copiado' : 'Copiar código'"
-            [attr.aria-label]="copiedId === snippet.id ? 'Copiado' : 'Copiar código'"
-          >
+            [attr.aria-label]="copiedId === snippet.id ? 'Copiado' : 'Copiar código'">
             {{ copiedId === snippet.id ? '✓ Copiado' : '📋 Copiar' }}
           </button>
-          <button 
-            class="action-btn" 
-            (click)="$event.stopPropagation(); editSnippet(snippet)" 
-            [attr.aria-label]="'Editar snippet ' + snippet.title"
-          >
+          <button class="action-btn" (click)="$event.stopPropagation(); editSnippet(snippet)"
+            [attr.aria-label]="'Editar snippet ' + snippet.title">
             Editar
           </button>
-          <button class="action-btn action-btn-danger" (click)="$event.stopPropagation(); deleteSnippet(snippet)" aria-label="Eliminar snippet">Eliminar</button>
+          <button class="action-btn action-btn-danger" (click)="$event.stopPropagation(); deleteSnippet(snippet)"
+            aria-label="Eliminar snippet">Eliminar</button>
         </div>
       </div>
     </div>

@@ -3,7 +3,7 @@ import { Router } from '@angular/router';
 import { Observable, BehaviorSubject } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import { ApiService } from './api.service';
-import { LoginRequest, RegisterRequest, AuthResponse, RegisterResponse,User } from '../../../shared/interfaces/auth.interface';
+import { LoginRequest, RegisterRequest, AuthResponse, RegisterResponse, User } from '../../../shared/interfaces/auth.interface';
 
 @Injectable({
   providedIn: 'root'
@@ -15,7 +15,7 @@ export class AuthService {
   constructor(
     private api: ApiService,
     private router: Router
-  ) {}
+  ) { }
 
   login(credentials: LoginRequest): Observable<AuthResponse> {
     return this.api.post<AuthResponse>('/auth/login', credentials).pipe(

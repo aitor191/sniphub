@@ -19,22 +19,22 @@ export class ProfileComponent implements OnInit {
   user: User | null = null;
   isLoading = false;
   isLoadingStats = false;
-  
+
   // Formularios
   profileForm: FormGroup;
   passwordForm: FormGroup;
-  
+
   // Mensajes
   profileSuccessMessage = '';
   profileErrorMessage = '';
   passwordSuccessMessage = '';
   passwordErrorMessage = '';
-  
+
   // Estadísticas
   totalSnippets = 0;
   favoriteSnippets = 0;
   publicSnippets = 0;
-  
+
   // Tabs
   activeTab: 'profile' | 'password' | 'stats' = 'profile';
 
@@ -49,7 +49,7 @@ export class ProfileComponent implements OnInit {
       username: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(50)]],
       email: ['', [Validators.required, Validators.email]]
     });
-    
+
     this.passwordForm = this.fb.group({
       currentPassword: ['', [Validators.required]],
       newPassword: ['', [Validators.required, Validators.minLength(6)]],
@@ -62,14 +62,14 @@ export class ProfileComponent implements OnInit {
       this.router.navigate(['/auth/login']);
       return;
     }
-    
+
     this.loadProfile();
     this.loadStats();
   }
 
   loadProfile(): void {
     this.isLoading = true;
-    
+
     this.authService.getProfile().pipe(
       finalize(() => {
         this.isLoading = false;
@@ -94,7 +94,7 @@ export class ProfileComponent implements OnInit {
 
   loadStats(): void {
     this.isLoadingStats = true;
-    
+
     this.snippetService.getMySnippets({ limit: 1000 }).pipe(
       finalize(() => {
         this.isLoadingStats = false;
@@ -107,7 +107,7 @@ export class ProfileComponent implements OnInit {
           is_public: Boolean(item.is_public),
           is_favorite: Boolean(item.is_favorite)
         }));
-        
+
         this.totalSnippets = response.total;
         this.favoriteSnippets = allSnippets.filter(s => s.is_favorite).length;
         this.publicSnippets = allSnippets.filter(s => s.is_public).length;
@@ -130,7 +130,7 @@ export class ProfileComponent implements OnInit {
 
     const formValue = this.profileForm.value;
     const updateData: { username?: string; email?: string } = {};
-    
+
     if (formValue.username !== this.user?.username) {
       updateData.username = formValue.username.trim();
     }
@@ -213,12 +213,12 @@ export class ProfileComponent implements OnInit {
   passwordMatchValidator(form: FormGroup) {
     const newPassword = form.get('newPassword');
     const confirmPassword = form.get('confirmPassword');
-    
+
     if (newPassword && confirmPassword && newPassword.value !== confirmPassword.value) {
       confirmPassword.setErrors({ passwordMismatch: true });
       return { passwordMismatch: true };
     }
-    
+
     return null;
   }
 

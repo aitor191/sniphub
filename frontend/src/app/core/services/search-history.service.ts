@@ -16,7 +16,7 @@ export class SearchHistoryService {
     try {
       const stored = localStorage.getItem(this.STORAGE_KEY);
       if (!stored) return [];
-      
+
       const history: SearchHistoryItem[] = JSON.parse(stored);
       // Ordenar por timestamp descendente (más recientes primero)
       return history.sort((a, b) => b.timestamp - a.timestamp);
@@ -61,7 +61,7 @@ export class SearchHistoryService {
   removeSearch(query: string): void {
     const history = this.getHistory();
     const filtered = history.filter(item => item.query !== query);
-    
+
     try {
       localStorage.setItem(this.STORAGE_KEY, JSON.stringify(filtered));
     } catch (error) {

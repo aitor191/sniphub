@@ -121,7 +121,7 @@
   transition: all 0.2s;
   margin-bottom: 0.25rem;
 
-  .nav-link-icon{
+  .nav-link-icon {
     font-size: 1.25rem;
     display: inline-flex;
     align-items: center;
@@ -130,7 +130,7 @@
     flex-shrink: 0;
   }
 
-  .nav-link-icon-star{
+  .nav-link-icon-star {
     color: hsl(45 93% 47%);
     filter: drop-shadow(0 0 2px hsl(45 93% 47% / 0.5));
   }
@@ -182,7 +182,7 @@
 
 .user-info {
   padding: 0.5rem 1rem;
-  
+
   .user-email {
     font-size: 0.875rem;
     color: hsl(var(--sidebar-foreground));
@@ -213,8 +213,8 @@
   &:hover {
     background: hsl(var(--sidebar-accent));
     color: hsl(0 84% 65%);
-    
-    .logout-icon{
+
+    .logout-icon {
       color: hsl(0 84% 65%);
     }
   }
@@ -237,6 +237,7 @@
   from {
     opacity: 0;
   }
+
   to {
     opacity: 1;
   }
@@ -456,7 +457,7 @@
 }
 
 /* Ajuste de botón de búsqueda */
-.search-box > .btn {
+.search-box>.btn {
   height: 48px;
   min-height: 48px;
   padding: 0 16px;
@@ -584,13 +585,13 @@
   font-size: 0.9rem;
   margin: 0 0 1rem 0;
   line-height: 1.5;
-   display: -webkit-box;
-   line-clamp: 3;
-   -webkit-line-clamp: 3;
-   -webkit-box-orient: vertical;
-   overflow: hidden;
-   text-overflow: ellipsis;
-   word-break: break-word;
+  display: -webkit-box;
+  line-clamp: 3;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  word-break: break-word;
 }
 
 .snippet-tags {
@@ -883,6 +884,7 @@
 
 /* Móviles pequeños (360px y menos) */
 @media (max-width: 360px) {
+
   .sidebar-header,
   .sidebar-nav,
   .sidebar-footer {

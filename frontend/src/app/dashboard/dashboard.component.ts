@@ -34,7 +34,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
   popularTags: { tag: string; count: number }[] = [];
   isDarkTheme = false;
   isMenuOpen = false;
-  
+
   // Búsqueda
   searchQuery = '';
   searchHistory: SearchHistoryItem[] = [];
@@ -58,21 +58,21 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.user = this.authService.getUser();
-    
+
     if (!this.authService.isAuthenticated()) {
       this.router.navigate(['/auth/login']);
       return;
     }
-    
+
     const themeSub = this.themeService.currentTheme$.subscribe(theme => {
       this.isDarkTheme = theme === 'dark';
       this.cdr.detectChanges();
     });
     this.subscriptions.add(themeSub);
-    
+
     this.loadSearchHistory();
     this.loadDashboardData();
-    
+
     // Configurar debounce para búsqueda
     const searchSub = this.searchSubject.pipe(
       debounceTime(400),
@@ -115,7 +115,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
   loadDashboardData(): void {
     this.isLoading = true;
-  
+
     this.snippetService.getMySnippets({ limit: 1000 }).pipe(
       finalize(() => {
         this.isLoading = false;
@@ -128,14 +128,14 @@ export class DashboardComponent implements OnInit, OnDestroy {
           is_public: Boolean(item.is_public),
           is_favorite: Boolean(item.is_favorite)
         }));
-  
+
         this.totalSnippets = response.total;
         this.favoriteSnippets = this.allSnippets.filter(s => s.is_favorite).length;
         this.publicSnippets = this.allSnippets.filter(s => s.is_public).length;
-  
+
         // Extraer y contar tags
         this.extractPopularTags();
-        
+
         // Aplicar filtro inicial
         this.applyFilter();
       },
@@ -242,7 +242,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
     this.allSnippets.forEach(snippet => {
       if (snippet.tags) {
         let tags: string[] = [];
-        
+
         // Manejar diferentes formatos de tags (array, string JSON, string simple)
         if (Array.isArray(snippet.tags)) {
           tags = snippet.tags;
@@ -286,15 +286,15 @@ export class DashboardComponent implements OnInit, OnDestroy {
       filtered = filtered.filter(snippet => {
         const title = snippet.title?.toLowerCase() || '';
         const description = snippet.description?.toLowerCase() || '';
-        return title.includes('valid') || description.includes('valid') || 
-               title.includes('validar') || description.includes('validar') ||
-               title.includes('validación') || description.includes('validación');
+        return title.includes('valid') || description.includes('valid') ||
+          title.includes('validar') || description.includes('validar') ||
+          title.includes('validación') || description.includes('validación');
       });
     } else if (this.activeFilter !== 'all') {
       // Filtrar por tag específico
       filtered = filtered.filter(snippet => {
         if (!snippet.tags) return false;
-        
+
         let tags: string[] = [];
         if (Array.isArray(snippet.tags)) {
           tags = snippet.tags;
@@ -315,7 +315,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
     this.filteredSnippets = filtered
       .sort((a, b) => new Date(b.updated_at).getTime() - new Date(a.updated_at).getTime())
       .slice(0, 5);
-    
+
     this.recentSnippets = this.filteredSnippets;
     this.cdr.detectChanges();
   }

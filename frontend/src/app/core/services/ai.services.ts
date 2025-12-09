@@ -12,7 +12,7 @@ export interface ExplainCodeResponse {
   providedIn: 'root'
 })
 export class AiService {
-  constructor(private api: ApiService) {}
+  constructor(private api: ApiService) { }
 
   explainCode(code: string): Observable<ExplainCodeResponse> {
     return this.api.post<ExplainCodeResponse>('/ai/explain', { code });

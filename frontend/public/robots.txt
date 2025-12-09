@@ -1,6 +1,4 @@
 User-agent: *
 Allow: /
 
-# Opcional: actualizar con dominio cuando tenga sitemap
-# Sitemap: https://tu-dominio.com/sitemap.xml
 

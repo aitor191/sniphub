@@ -58,10 +58,10 @@ export class LoginComponent {
         console.error('Error completo:', error);
         console.error('Error status:', error.status);
         console.error('Error body:', error.error);
-        
+
         // Resetear isLoading inmediatamente
         this.isLoading = false;
-        
+
         // Manejar diferentes tipos de errores
         if (error.status === 400) {
           // Error de validación del backend
@@ -80,7 +80,7 @@ export class LoginComponent {
         } else {
           this.errorMessage = error.error?.error || 'Error al iniciar sesión. Intenta de nuevo.';
         }
-        
+
         // Forzar detección de cambios
         this.cdr.detectChanges();
       }

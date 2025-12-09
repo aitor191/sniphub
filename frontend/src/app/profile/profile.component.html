@@ -9,25 +9,13 @@
   </header>
 
   <div class="tabs">
-    <button 
-      (click)="activeTab = 'profile'"
-      [class.active]="activeTab === 'profile'"
-      class="tab-button"
-    >
+    <button (click)="activeTab = 'profile'" [class.active]="activeTab === 'profile'" class="tab-button">
       📝 Perfil
     </button>
-    <button 
-      (click)="activeTab = 'password'"
-      [class.active]="activeTab === 'password'"
-      class="tab-button"
-    >
+    <button (click)="activeTab = 'password'" [class.active]="activeTab === 'password'" class="tab-button">
       🔒 Contraseña
     </button>
-    <button 
-      (click)="activeTab = 'stats'"
-      [class.active]="activeTab === 'stats'"
-      class="tab-button"
-    >
+    <button (click)="activeTab = 'stats'" [class.active]="activeTab === 'stats'" class="tab-button">
       📊 Estadísticas
     </button>
   </div>
@@ -36,17 +24,12 @@
   <div class="tab-content" *ngIf="activeTab === 'profile'">
     <div class="card">
       <h2>Información Personal</h2>
-      
+
       <form [formGroup]="profileForm" (ngSubmit)="updateProfile()">
         <div class="form-group">
           <label for="username">Nombre de usuario</label>
-          <input 
-            type="text" 
-            id="username"
-            formControlName="username"
-            class="form-control"
-            [class.invalid]="username?.invalid && username?.touched"
-          />
+          <input type="text" id="username" formControlName="username" class="form-control"
+            [class.invalid]="username?.invalid && username?.touched" />
           <div class="error-message" *ngIf="username?.invalid && username?.touched">
             <span *ngIf="username?.errors?.['required']">El nombre de usuario es requerido</span>
             <span *ngIf="username?.errors?.['minlength']">Mínimo 3 caracteres</span>
@@ -56,13 +39,8 @@
 
         <div class="form-group">
           <label for="email">Email</label>
-          <input 
-            type="email" 
-            id="email"
-            formControlName="email"
-            class="form-control"
-            [class.invalid]="email?.invalid && email?.touched"
-          />
+          <input type="email" id="email" formControlName="email" class="form-control"
+            [class.invalid]="email?.invalid && email?.touched" />
           <div class="error-message" *ngIf="email?.invalid && email?.touched">
             <span *ngIf="email?.errors?.['required']">El email es requerido</span>
             <span *ngIf="email?.errors?.['email']">Email inválido</span>
@@ -77,11 +55,7 @@
           {{ profileErrorMessage }}
         </div>
 
-        <button 
-          type="submit" 
-          class="btn btn-primary"
-          [disabled]="isLoading || profileForm.invalid"
-        >
+        <button type="submit" class="btn btn-primary" [disabled]="isLoading || profileForm.invalid">
           {{ isLoading ? 'Guardando...' : 'Guardar Cambios' }}
         </button>
       </form>
@@ -92,17 +66,12 @@
   <div class="tab-content" *ngIf="activeTab === 'password'">
     <div class="card">
       <h2>Cambiar Contraseña</h2>
-      
+
       <form [formGroup]="passwordForm" (ngSubmit)="changePassword()">
         <div class="form-group">
           <label for="currentPassword">Contraseña Actual</label>
-          <input 
-            type="password" 
-            id="currentPassword"
-            formControlName="currentPassword"
-            class="form-control"
-            [class.invalid]="currentPassword?.invalid && currentPassword?.touched"
-          />
+          <input type="password" id="currentPassword" formControlName="currentPassword" class="form-control"
+            [class.invalid]="currentPassword?.invalid && currentPassword?.touched" />
           <div class="error-message" *ngIf="currentPassword?.invalid && currentPassword?.touched">
             La contraseña actual es requerida
           </div>
@@ -110,13 +79,8 @@
 
         <div class="form-group">
           <label for="newPassword">Nueva Contraseña</label>
-          <input 
-            type="password" 
-            id="newPassword"
-            formControlName="newPassword"
-            class="form-control"
-            [class.invalid]="newPassword?.invalid && newPassword?.touched"
-          />
+          <input type="password" id="newPassword" formControlName="newPassword" class="form-control"
+            [class.invalid]="newPassword?.invalid && newPassword?.touched" />
           <div class="error-message" *ngIf="newPassword?.invalid && newPassword?.touched">
             <span *ngIf="newPassword?.errors?.['required']">La nueva contraseña es requerida</span>
             <span *ngIf="newPassword?.errors?.['minlength']">Mínimo 6 caracteres</span>
@@ -125,13 +89,8 @@
 
         <div class="form-group">
           <label for="confirmPassword">Confirmar Nueva Contraseña</label>
-          <input 
-            type="password" 
-            id="confirmPassword"
-            formControlName="confirmPassword"
-            class="form-control"
-            [class.invalid]="confirmPassword?.invalid && confirmPassword?.touched"
-          />
+          <input type="password" id="confirmPassword" formControlName="confirmPassword" class="form-control"
+            [class.invalid]="confirmPassword?.invalid && confirmPassword?.touched" />
           <div class="error-message" *ngIf="confirmPassword?.invalid && confirmPassword?.touched">
             <span *ngIf="confirmPassword?.errors?.['required']">Confirma la nueva contraseña</span>
             <span *ngIf="confirmPassword?.errors?.['passwordMismatch']">Las contraseñas no coinciden</span>
@@ -146,11 +105,7 @@
           {{ passwordErrorMessage }}
         </div>
 
-        <button 
-          type="submit" 
-          class="btn btn-primary"
-          [disabled]="isLoading || passwordForm.invalid"
-        >
+        <button type="submit" class="btn btn-primary" [disabled]="isLoading || passwordForm.invalid">
           {{ isLoading ? 'Cambiando...' : 'Cambiar Contraseña' }}
         </button>
       </form>
@@ -161,7 +116,7 @@
   <div class="tab-content" *ngIf="activeTab === 'stats'">
     <div class="card">
       <h2>Estadísticas Personales</h2>
-      
+
       <div class="loading" *ngIf="isLoadingStats">
         <p>Cargando estadísticas...</p>
       </div>

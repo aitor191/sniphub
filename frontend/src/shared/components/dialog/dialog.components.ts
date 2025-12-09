@@ -14,7 +14,7 @@ export class DialogComponent implements OnInit, OnDestroy {
   dialog: DialogConfig | null = null;
   private subscription?: Subscription;
 
-  constructor(private dialogService: DialogService) {}
+  constructor(private dialogService: DialogService) { }
 
   ngOnInit(): void {
     this.subscription = this.dialogService.getDialog().subscribe(

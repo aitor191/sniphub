@@ -49,7 +49,7 @@ export class RegisterComponent {
       username: formValue.username,
       email: formValue.email,
       password: formValue.password,
-    }; 
+    };
 
     this.authService.register(data).pipe(
       finalize(() => {
@@ -70,10 +70,10 @@ export class RegisterComponent {
         console.error('Error en registro:', error);
         console.error('Error status:', error.status);
         console.error('Error body:', error.error);
-        
+
         // Asegurar que isLoading se resetee inmediatamente
         this.isLoading = false;
-        
+
         if (error.status === 409) {
           this.errorMessage = error.error?.error || 'El email o nombre de usuario ya está en uso';
         } else if (error.status === 400) {
@@ -88,7 +88,7 @@ export class RegisterComponent {
           this.errorMessage = 'No se pudo conectar al servidor. Verifica que el backend esté corriendo.';
         } else {
           this.errorMessage = error.error?.error || 'Error al registrarse. Intenta de nuevo.';
-        }        
+        }
         // Forzar detección de cambios después de establecer el mensaje de error
         this.cdr.detectChanges();
       }

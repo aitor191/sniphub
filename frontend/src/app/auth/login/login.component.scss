@@ -1,148 +1,148 @@
 .login-container {
-    min-height: 100vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: hsl(var(--background));
-    padding: 20px;
-  }
-  
-  .login-card {
-    background: hsl(var(--card));
-    border: 1px solid hsl(var(--border));
-    border-radius: 12px;
-    box-shadow: var(--shadow-card);
-    width: 100%;
-    max-width: 400px;
-    padding: 40px;
-  }
-  
-  .login-header {
-    text-align: center;
-    margin-bottom: 30px;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: hsl(var(--background));
+  padding: 20px;
+}
 
-    .header-logo {
-      width: 64px;
-      height: 64px;
-      margin: 0 auto 16px;
+.login-card {
+  background: hsl(var(--card));
+  border: 1px solid hsl(var(--border));
+  border-radius: 12px;
+  box-shadow: var(--shadow-card);
+  width: 100%;
+  max-width: 400px;
+  padding: 40px;
+}
+
+.login-header {
+  text-align: center;
+  margin-bottom: 30px;
+
+  .header-logo {
+    width: 64px;
+    height: 64px;
+    margin: 0 auto 16px;
+    display: block;
+    object-fit: contain;
+  }
+
+  h1 {
+    font-size: 32px;
+    font-weight: 700;
+    color: hsl(var(--text-primary));
+    margin: 0 0 8px 0;
+  }
+
+  p {
+    color: hsl(var(--text-secondary));
+    margin: 0;
+    font-size: 14px;
+  }
+}
+
+.login-form {
+  .form-group {
+    margin-bottom: 20px;
+
+    label {
       display: block;
-      object-fit: contain;
-    }
-
-    h1 {
-      font-size: 32px;
-      font-weight: 700;
+      margin-bottom: 8px;
       color: hsl(var(--text-primary));
-      margin: 0 0 8px 0;
-    }
-  
-    p {
-      color: hsl(var(--text-secondary));
-      margin: 0;
+      font-weight: 500;
       font-size: 14px;
-    }
-  }
-  
-  .login-form {
-    .form-group {
-      margin-bottom: 20px;
-  
-      label {
-        display: block;
-        margin-bottom: 8px;
-        color: hsl(var(--text-primary));
-        font-weight: 500;
-        font-size: 14px;
-      }
-  
-      .form-control {
-        width: 100%;
-        padding: 12px;
-        border: 1px solid hsl(var(--border));
-        border-radius: 8px;
-        font-size: 14px;
-        transition: border-color 0.2s, box-shadow 0.2s;
-        background: hsl(var(--card));
-        color: hsl(var(--text-primary));
-  
-        &:focus {
-          outline: none;
-          border-color: hsl(var(--ring));
-          box-shadow: 0 0 0 3px hsl(var(--ring) / 0.2);
-        }
-  
-        &.error {
-          border-color: hsl(var(--destructive));
-        }
-      }
-  
-      .error-message {
-        color: hsl(var(--destructive));
-        font-size: 12px;
-        margin-top: 4px;
-        display: block;
-      }
-    }
-  
-    .success-message {
-      background: hsl(var(--success) / 0.1);
-      color: hsl(var(--success));
-      padding: 10px;
-      border-radius: 4px;
-      margin-bottom: 15px;
-      border: 1px solid hsl(var(--success) / 0.3);
     }
 
-    .general-error {
-      background: hsl(var(--destructive) / 0.1);
-      border: 1px solid hsl(var(--destructive) / 0.3);
-      border-radius: 6px;
-      padding: 12px;
-      margin-bottom: 20px;
-      color: hsl(var(--destructive));
-      font-size: 14px;
-    }
-  
-    .btn {
+    .form-control {
       width: 100%;
       padding: 12px;
-      border: none;
+      border: 1px solid hsl(var(--border));
       border-radius: 8px;
-      font-size: 16px;
-      font-weight: 600;
-      cursor: pointer;
-      transition: all 0.3s;
-  
-      &.btn-primary {
-        background: hsl(var(--primary));
-        color: hsl(var(--primary-foreground));
-  
-        &:hover:not(:disabled) {
-          transform: translateY(-2px);
-          box-shadow: 0 4px 12px hsl(var(--primary) / 0.35);
-        }
-  
-        &:disabled {
-          opacity: 0.6;
-          cursor: not-allowed;
-        }
+      font-size: 14px;
+      transition: border-color 0.2s, box-shadow 0.2s;
+      background: hsl(var(--card));
+      color: hsl(var(--text-primary));
+
+      &:focus {
+        outline: none;
+        border-color: hsl(var(--ring));
+        box-shadow: 0 0 0 3px hsl(var(--ring) / 0.2);
+      }
+
+      &.error {
+        border-color: hsl(var(--destructive));
       }
     }
+
+    .error-message {
+      color: hsl(var(--destructive));
+      font-size: 12px;
+      margin-top: 4px;
+      display: block;
+    }
   }
-  
-  .login-footer {
-    margin-top: 24px;
-    text-align: center;
+
+  .success-message {
+    background: hsl(var(--success) / 0.1);
+    color: hsl(var(--success));
+    padding: 10px;
+    border-radius: 4px;
+    margin-bottom: 15px;
+    border: 1px solid hsl(var(--success) / 0.3);
+  }
+
+  .general-error {
+    background: hsl(var(--destructive) / 0.1);
+    border: 1px solid hsl(var(--destructive) / 0.3);
+    border-radius: 6px;
+    padding: 12px;
+    margin-bottom: 20px;
+    color: hsl(var(--destructive));
     font-size: 14px;
-  color: hsl(var(--text-secondary));
-  
-    a {
-    color: hsl(var(--primary));
-      text-decoration: none;
-      font-weight: 600;
-  
-      &:hover {
-        text-decoration: underline;
+  }
+
+  .btn {
+    width: 100%;
+    padding: 12px;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s;
+
+    &.btn-primary {
+      background: hsl(var(--primary));
+      color: hsl(var(--primary-foreground));
+
+      &:hover:not(:disabled) {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px hsl(var(--primary) / 0.35);
+      }
+
+      &:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
       }
     }
   }
+}
+
+.login-footer {
+  margin-top: 24px;
+  text-align: center;
+  font-size: 14px;
+  color: hsl(var(--text-secondary));
+
+  a {
+    color: hsl(var(--primary));
+    text-decoration: none;
+    font-weight: 600;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+}

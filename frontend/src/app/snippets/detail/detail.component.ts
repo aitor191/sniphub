@@ -36,7 +36,7 @@ export class DetailComponent implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private cdr: ChangeDetectorRef
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     const id = this.route.snapshot.paramMap.get('id');
@@ -149,7 +149,7 @@ export class DetailComponent implements OnInit {
     if (!this.snippet) return;
 
     const newFavoriteState = !this.snippet.is_favorite;
-    
+
     this.snippetService.toggleFavorite(this.snippet.id, newFavoriteState).subscribe({
       next: () => {
         this.snippet!.is_favorite = newFavoriteState;
