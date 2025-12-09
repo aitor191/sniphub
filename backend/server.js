@@ -133,12 +133,12 @@ const startServer = async () => {
   try {
     // Conectar a la base de datos
     await connectDB();
-    
+
     // Inicializar tablas (solo en desarrollo)
     if (process.env.NODE_ENV === 'development') {
       await initDatabase();
     }
-    
+
     app.listen(PORT, () => {
       console.log('✅ Servidor corriendo en http://localhost:' + PORT);
       console.log('✅ Conectado a la base de datos MySQL');

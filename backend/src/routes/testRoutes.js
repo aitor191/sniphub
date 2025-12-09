@@ -19,7 +19,7 @@ router.get('/', (req, res) => {
 router.get('/health', async (req, res) => {
   try {
     const result = await query('SELECT 1 as test');
-    
+
     res.json({
       status: 'healthy',
       timestamp: new Date().toISOString(),

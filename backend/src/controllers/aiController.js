@@ -13,7 +13,7 @@ async function callGroqApi(prompt) {
   }
 
   const API_URL = 'https://api.groq.com/openai/v1/chat/completions';
-  
+
   const headers = {
     'Authorization': `Bearer ${GROQ_API_KEY}`,
     'Content-Type': 'application/json'
@@ -61,7 +61,7 @@ async function callHuggingFaceApi(prompt) {
   const data = { inputs: prompt };
 
   const res = await axios.post(API_URL, data, { headers, timeout: 30_000 });
-  
+
   if (Array.isArray(res.data) && res.data[0]?.generated_text) {
     return res.data[0].generated_text.trim();
   }
@@ -77,7 +77,7 @@ async function callHuggingFaceApi(prompt) {
 function explainCodeLocal(code) {
   const lowerCode = code.toLowerCase();
   let language = 'desconocido';
-  
+
   if (lowerCode.includes('import ') || lowerCode.includes('def ') || lowerCode.includes('print(')) {
     language = 'Python';
   } else if (lowerCode.includes('function ') || lowerCode.includes('const ') || lowerCode.includes('console.')) {
@@ -87,8 +87,8 @@ function explainCodeLocal(code) {
   }
 
   return `**Explicación del código (${language}):**\n\nEste código realiza operaciones de procesamiento. ` +
-         `Contiene aproximadamente ${code.split('\n').length} líneas. ` +
-         `Analiza la estructura para entender su funcionamiento específico.`;
+    `Contiene aproximadamente ${code.split('\n').length} líneas. ` +
+    `Analiza la estructura para entender su funcionamiento específico.`;
 }
 
 /**
@@ -96,7 +96,7 @@ function explainCodeLocal(code) {
  */
 async function explainCode(req, res) {
   const { code } = req.body;
-  
+
   if (!code || typeof code !== 'string' || code.trim().length === 0) {
     return res.status(400).json({ error: "Debes enviar el código a explicar en el campo 'code'." });
   }
@@ -104,12 +104,12 @@ async function explainCode(req, res) {
   // 1. Generar hash del código (normalizado: trim para mejor caché)
   const normalizedCode = code.trim();
   const codeHash = crypto.createHash('sha256').update(normalizedCode).digest('hex');
-  
+
   // 2. Buscar en caché
   try {
     const cached = await getExplanationByHash(codeHash);
     if (cached) {
-      return res.json({ 
+      return res.json({
         explanation: cached.explanation,
         provider: cached.provider,
         cached: true
@@ -122,7 +122,7 @@ async function explainCode(req, res) {
 
   // 3. Si no hay caché, generar explicación
   const MAX_CODE_LENGTH = 2000;
-  const truncatedCode = normalizedCode.length > MAX_CODE_LENGTH 
+  const truncatedCode = normalizedCode.length > MAX_CODE_LENGTH
     ? normalizedCode.substring(0, MAX_CODE_LENGTH) + '\n// ... (código truncado)'
     : normalizedCode;
 
@@ -170,7 +170,7 @@ async function explainCode(req, res) {
     }
   }
 
-  return res.json({ 
+  return res.json({
     explanation,
     provider,
     cached: false

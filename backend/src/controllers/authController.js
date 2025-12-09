@@ -16,8 +16,8 @@ async function register(req, res) {
 
 
   const user = await createUser({
-    username, 
-    email, 
+    username,
+    email,
     password: passwordHash
   });
 
@@ -32,7 +32,7 @@ async function login(req, res) {
 
   const user = await findByEmail(email);
   if (!user) { res.onAuthFail?.(); return res.status(401).json({ error: 'Credenciales inválidas' }); }
-  if (user.is_active === 0)  { res.onAuthFail?.(); return res.status(403).json({ error: 'Usuario inactivo' }); }
+  if (user.is_active === 0) { res.onAuthFail?.(); return res.status(403).json({ error: 'Usuario inactivo' }); }
 
   const ok = await comparePassword(password, user.password);
   if (!ok) { res.onAuthFail?.(); return res.status(401).json({ error: 'Credenciales inválidas' }); }
@@ -54,7 +54,7 @@ async function profile(req, res) {
 async function updateProfile(req, res) {
   const user_id = req.user.id;
   const { username, email } = req.body;
-  
+
   // Verificar que el email no esté ya en uso
   if (email) {
     const existingUser = await findByEmail(email);
@@ -62,7 +62,7 @@ async function updateProfile(req, res) {
       return res.status(409).json({ error: 'El email ya está en uso por otro usuario' });
     }
   }
-  
+
   // Verificar que el username no esté ya en uso
   if (username) {
     const existingUser = await findByUsername(username);
@@ -70,24 +70,24 @@ async function updateProfile(req, res) {
       return res.status(409).json({ error: 'El nombre de usuario ya está en uso' });
     }
   }
-  
+
   const fields = {};
   if (username) fields.username = username;
   if (email) fields.email = email;
-  
+
   const result = await updateUser(user_id, fields);
-  
+
   if (result.affectedRows === 0) {
     return res.status(400).json({ error: 'No se aplicaron cambios' });
   }
-  
+
   // Obtener usuario actualizado
   const updatedUser = await findByIdPublic(user_id);
-  
+
   if (!updatedUser) {
     return res.status(404).json({ error: 'Usuario no encontrado' });
   }
-  
+
   return res.json({
     message: 'Perfil actualizado correctamente',
     user: updatedUser
@@ -97,33 +97,33 @@ async function updateProfile(req, res) {
 async function changePassword(req, res) {
   const user_id = req.user.id;
   const { currentPassword, newPassword } = req.body;
-  
+
   if (!currentPassword || !newPassword) {
     return res.status(400).json({ error: 'Debes proporcionar la contraseña actual y la nueva contraseña' });
   }
-  
+
   // Obtener usuario con contraseña
   const user = await findByEmail(req.user.email);
   if (!user) {
     return res.status(404).json({ error: 'Usuario no encontrado' });
   }
-  
+
   // Verificar contraseña actual
   const isCurrentPasswordValid = await comparePassword(currentPassword, user.password);
   if (!isCurrentPasswordValid) {
     return res.status(401).json({ error: 'La contraseña actual es incorrecta' });
   }
-  
+
   // Hash de la nueva contraseña
   const newPasswordHash = await hashPassword(newPassword);
-  
+
   // Actualizar contraseña
   const result = await updateUser(user_id, { password: newPasswordHash });
-  
+
   if (result.affectedRows === 0) {
     return res.status(400).json({ error: 'No se pudo actualizar la contraseña' });
   }
-  
+
   return res.json({ message: 'Contraseña actualizada correctamente' });
 }
 

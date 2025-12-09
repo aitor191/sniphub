@@ -6,7 +6,7 @@ const dbConfig = {
   host: process.env.DB_HOST || 'localhost',
   port: process.env.DB_PORT || 3306,
   user: process.env.DB_USER || 'root',
-  password: process.env.DB_PASSWORD || '', // Ahora puede estar vacío
+  password: process.env.DB_PASSWORD || '',
   database: process.env.DB_NAME || 'sniphub_db',
   waitForConnections: true,
   connectionLimit: 10,
@@ -26,11 +26,11 @@ const connectDB = async () => {
       database: dbConfig.database,
       user: dbConfig.user
     });
-    
+
     // Verificar que podemos ejecutar queries
     await connection.execute('SELECT 1');
     console.log('✅ Conexión verificada exitosamente');
-    
+
     connection.release();
   } catch (error) {
     console.error('❌ Error conectando a MySQL:', error.message);

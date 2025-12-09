@@ -13,7 +13,7 @@ async function createSnippet({ title, description = null, code, language, user_i
 }
 
 /**
- * Lista todos los snippets de un usuario (paginación simple opcional en futuro)
+ * Lista todos los snippets de un usuario 
  */
 async function getSnippetsByUser(user_id) {
   return await query(

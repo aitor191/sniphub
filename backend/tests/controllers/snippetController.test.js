@@ -6,7 +6,7 @@ const {
     toggleFavoriteController,
     listMySnippetsController,
     listPublicSnippetsController,
-    getPublicSnippetByIdController 
+    getPublicSnippetByIdController
 } = require('../../src/controllers/snippetController');
 const {
     createSnippet,
@@ -219,22 +219,22 @@ describe('Snippet Controller', () => {
             });
         });
     });
-    
+
     describe('parseBool utility (testeada indirectamente)', () => {
         // parseBool se usa en listMySnippetsController para parsear query.is_favorite
         // La testeamos indirectamente a través de esa función
-        
+
         beforeEach(() => {
             // Configuración común para todos los tests de parseBool
             countSnippetsByUserWithFilters.mockResolvedValue(0);
             getSnippetsByUserPaged.mockResolvedValue([]);
         });
-        
+
         test('debería parsear "true" string a boolean true', async () => {
             req.query = { is_favorite: 'true' };
-            
+
             await listMySnippetsController(req, res);
-            
+
             // Verificamos que se llamó con is_favorite como boolean true
             expect(countSnippetsByUserWithFilters).toHaveBeenCalledWith(
                 1,
@@ -246,9 +246,9 @@ describe('Snippet Controller', () => {
 
         test('debería parsear "false" string a boolean false', async () => {
             req.query = { is_favorite: 'false' };
-            
+
             await listMySnippetsController(req, res);
-            
+
             expect(countSnippetsByUserWithFilters).toHaveBeenCalledWith(
                 1,
                 expect.objectContaining({
@@ -259,9 +259,9 @@ describe('Snippet Controller', () => {
 
         test('debería retornar undefined si el valor no es "true" ni "false"', async () => {
             req.query = { is_favorite: 'invalid' };
-            
+
             await listMySnippetsController(req, res);
-            
+
             expect(countSnippetsByUserWithFilters).toHaveBeenCalledWith(
                 1,
                 expect.objectContaining({
@@ -272,9 +272,9 @@ describe('Snippet Controller', () => {
 
         test('debería mantener boolean true si ya es boolean', async () => {
             req.query = { is_favorite: true }; // Ya es boolean
-            
+
             await listMySnippetsController(req, res);
-            
+
             expect(countSnippetsByUserWithFilters).toHaveBeenCalledWith(
                 1,
                 expect.objectContaining({
@@ -288,7 +288,7 @@ describe('Snippet Controller', () => {
     describe('listMySnippetsController', () => {
         test('debería listar snippets con paginación por defecto', async () => {
             req.query = {};
-            
+
             countSnippetsByUserWithFilters.mockResolvedValue(25);
             getSnippetsByUserPaged.mockResolvedValue([
                 { id: 1, title: 'Snippet 1', tags: null },
@@ -314,7 +314,7 @@ describe('Snippet Controller', () => {
 
         test('debería aplicar paginación personalizada', async () => {
             req.query = { page: '2', limit: '5' };
-            
+
             countSnippetsByUserWithFilters.mockResolvedValue(15);
             getSnippetsByUserPaged.mockResolvedValue([]);
 
@@ -338,7 +338,7 @@ describe('Snippet Controller', () => {
 
         test('debería aplicar filtro de lenguaje', async () => {
             req.query = { language: 'javascript' };
-            
+
             countSnippetsByUserWithFilters.mockResolvedValue(10);
             getSnippetsByUserPaged.mockResolvedValue([]);
 
@@ -354,7 +354,7 @@ describe('Snippet Controller', () => {
 
         test('debería parsear tags de JSON a array', async () => {
             req.query = {};
-            
+
             countSnippetsByUserWithFilters.mockResolvedValue(1);
             getSnippetsByUserPaged.mockResolvedValue([
                 { id: 1, title: 'Test', tags: JSON.stringify(['tag1', 'tag2']) }
@@ -375,7 +375,7 @@ describe('Snippet Controller', () => {
 
         test('debería limitar el máximo de items por página a 50', async () => {
             req.query = { limit: '100' }; // Intenta más del máximo
-            
+
             countSnippetsByUserWithFilters.mockResolvedValue(100);
             getSnippetsByUserPaged.mockResolvedValue([]);
 
@@ -391,7 +391,7 @@ describe('Snippet Controller', () => {
 
         test('debería usar página mínima de 1', async () => {
             req.query = { page: '0' }; // Página inválida
-            
+
             countSnippetsByUserWithFilters.mockResolvedValue(10);
             getSnippetsByUserPaged.mockResolvedValue([]);
 

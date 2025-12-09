@@ -19,7 +19,7 @@ async function bruteGuardDbLogin(req, res, next) {
   const email = getEmail(req);
   const ip = req.ip;
 
-  // Comprobación por email (si hay). Si no, deja que actúe solo el rate limit por IP que ya tienes.
+  // Comprobación por email.
   if (email) {
     const { count, last_at } = await getEmailFailuresSince(email, WINDOW_MS / 1000);
     if (count >= MAX_FAILS) {
@@ -33,10 +33,10 @@ async function bruteGuardDbLogin(req, res, next) {
 
   // Hooks para registrar éxito/fallo tras el controlador
   res.onAuthFail = async () => {
-    try { await logAttempt({ email: email || null, ip, success: false }); } catch {}
+    try { await logAttempt({ email: email || null, ip, success: false }); } catch { }
   };
   res.onAuthSuccess = async () => {
-    try { await logAttempt({ email: email || null, ip, success: true }); } catch {}
+    try { await logAttempt({ email: email || null, ip, success: true }); } catch { }
   };
 
   return next();

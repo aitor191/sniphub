@@ -23,7 +23,7 @@ describe('verifyToken Middleware', () => {
 
   test('debería rechazar request sin token', async () => {
     await verifyToken(req, res, next);
-    
+
     expect(res.status).toHaveBeenCalledWith(401);
     expect(res.json).toHaveBeenCalledWith({ error: 'Token no proporcionado' });
     expect(next).not.toHaveBeenCalled();
@@ -31,9 +31,9 @@ describe('verifyToken Middleware', () => {
 
   test('debería rechazar token inválido', async () => {
     req.headers.authorization = 'Bearer token.invalido';
-    
+
     await verifyToken(req, res, next);
-    
+
     expect(res.status).toHaveBeenCalledWith(401);
     expect(res.json).toHaveBeenCalledWith({ error: 'Token inválido o expirado' });
     expect(next).not.toHaveBeenCalled();
@@ -42,15 +42,15 @@ describe('verifyToken Middleware', () => {
   test('debería aceptar token válido y usuario activo', async () => {
     const token = signToken({ id: 1, username: 'testuser' });
     req.headers.authorization = `Bearer ${token}`;
-    
+
     findByIdPublic.mockResolvedValue({
       id: 1,
       username: 'testuser',
       is_active: 1
     });
-    
+
     await verifyToken(req, res, next);
-    
+
     expect(req.user).toBeDefined();
     expect(req.user.id).toBe(1);
     expect(next).toHaveBeenCalled();
@@ -59,15 +59,15 @@ describe('verifyToken Middleware', () => {
   test('debería rechazar usuario inactivo', async () => {
     const token = signToken({ id: 1, username: 'testuser' });
     req.headers.authorization = `Bearer ${token}`;
-    
+
     findByIdPublic.mockResolvedValue({
       id: 1,
       username: 'testuser',
       is_active: 0 // Usuario inactivo
     });
-    
+
     await verifyToken(req, res, next);
-    
+
     expect(res.status).toHaveBeenCalledWith(401);
     expect(res.json).toHaveBeenCalledWith({ error: 'Usuario inválido o inactivo' });
     expect(next).not.toHaveBeenCalled();

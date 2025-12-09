@@ -41,7 +41,7 @@ const initDatabase = async () => {
     // Indices para futura escabilidad de la app
     await query(`CREATE INDEX IF NOT EXISTS idx_snippets_user ON snippets (user_id, updated_at)`);
     await query(`CREATE INDEX IF NOT EXISTS idx_snippets_user_fav ON snippets (user_id, is_favorite)`);
-    await query(`CREATE INDEX IF NOT EXISTS idx_snippets_user_lang ON snippets (user_id, language)`);    
+    await query(`CREATE INDEX IF NOT EXISTS idx_snippets_user_lang ON snippets (user_id, language)`);
     await query(`CREATE INDEX IF NOT EXISTS idx_snippets_public ON snippets (is_public, updated_at)`);
     await query(`CREATE INDEX IF NOT EXISTS idx_snippets_public_lang ON snippets (is_public, language)`);
 
@@ -73,8 +73,8 @@ const initDatabase = async () => {
     `);
     console.log('✅ Tabla auth_attempts creada');
 
-     // Tabla para cachear explicaciones de IA
-     await query(`
+    // Tabla para cachear explicaciones de IA
+    await query(`
       CREATE TABLE IF NOT EXISTS code_explanations (
         id INT AUTO_INCREMENT PRIMARY KEY,
         code_hash VARCHAR(64) UNIQUE NOT NULL,

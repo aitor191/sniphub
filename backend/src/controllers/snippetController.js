@@ -100,7 +100,7 @@ async function listMySnippetsController(req, res) {
   const language = req.query.language || undefined;
   const is_favorite = parseBool(req.query.is_favorite);
   const q = req.query.q?.trim() || undefined;
-  
+
   const offset = (page - 1) * limit;
   const total = await countSnippetsByUserWithFilters(user_id, { language, is_favorite, q });
   const rows = await getSnippetsByUserPaged(user_id, { language, is_favorite, q, limit, offset });

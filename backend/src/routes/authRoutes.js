@@ -11,7 +11,7 @@ const router = express.Router();
 
 router.post(
   '/register',
-  limitAuthRegister, 
+  limitAuthRegister,
   [
     body('username').trim().isLength({ min: 3, max: 50 }).withMessage('El nombre ususario debe tener entre 3 y 50 caracteres'),
     body('email').isEmail().withMessage('Email inválido').normalizeEmail(),
@@ -23,9 +23,9 @@ router.post(
 
 router.post(
   '/login',
-  limitAuthLogin, 
-  bruteGuardLogin, 
-  bruteGuardDbLogin, 
+  limitAuthLogin,
+  bruteGuardLogin,
+  bruteGuardDbLogin,
   [
     body('email').isEmail().withMessage('Email inválido').normalizeEmail(),
     body('password').notEmpty().withMessage('Password requerido')

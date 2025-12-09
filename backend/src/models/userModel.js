@@ -29,41 +29,41 @@ async function createUser({ username, email, password }) {
 async function updateUser(id, fields) {
   const updates = [];
   const values = [];
-  
+
   if (fields.username !== undefined) {
     updates.push('username = ?');
     values.push(fields.username);
   }
-  
+
   if (fields.email !== undefined) {
     updates.push('email = ?');
     values.push(fields.email);
   }
-  
+
   if (fields.password !== undefined) {
     updates.push('password = ?');
     values.push(fields.password);
   }
-  
+
   if (updates.length === 0) {
     return { affectedRows: 0 };
   }
-  
+
   updates.push('updated_at = NOW()');
   values.push(id);
-  
+
   const result = await query(
     `UPDATE users SET ${updates.join(', ')} WHERE id = ?`,
     values
   );
-  
+
   return result;
 }
 
-module.exports = { 
-  findByEmail, 
-  findByUsername, 
-  findByIdPublic, 
+module.exports = {
+  findByEmail,
+  findByUsername,
+  findByIdPublic,
   createUser,
   updateUser
 };
