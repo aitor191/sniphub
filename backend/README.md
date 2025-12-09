@@ -64,7 +64,20 @@ npm run test:coverage # Con reporte de cobertura
 
 ## 🔐 Variables de Entorno
 
-Ver [.env.example](./.env.example) para la lista completa.
+Copia `.env.example` a `.env` y configura las variables:
+sh
+cp .env.example .envEdita `.env` con tus credenciales:
+- `DB_HOST`, `DB_USER`, `DB_PASSWORD`, `DB_NAME`: Credenciales de MySQL
+- `JWT_SECRET`: Clave secreta para tokens JWT (usa una clave segura)
+- `PORT`: Puerto del servidor (default: 4000)
+- `FRONTEND_URL`: URL del frontend para CORS (ej: http://localhost:4200)
+- `GROQ_API_KEY` / `HUGGINGFACE_API_KEY`: Opcionales, para explicaciones con IA
+
+## 🚀 Despliegue
+
+1. Configura las variables de entorno en `.env`
+2. Asegúrate de que MySQL esté corriendo
+3. Ejecuta `npm start`
 
 ## 📚 Más Información
 
@@ -72,7 +85,7 @@ Ver [.env.example](./.env.example) para la lista completa.
 
 ## 👤 Autor
 
-Aitor
+Aitor R.
 
 ## 📄 Licencia
 
