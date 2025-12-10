@@ -1,10 +1,10 @@
 const express = require('express');
 const { param, query } = require('express-validator');
+const validateRequest = require('../middlewares/validateRequest');
 const {
   listPublicSnippetsController,
   getPublicSnippetByIdController
 } = require('../controllers/snippetController');
-const validateRequest = require('../middlewares/validateRequest');
 
 const router = express.Router();
 
