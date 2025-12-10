@@ -4,6 +4,7 @@ const {
   listPublicSnippetsController,
   getPublicSnippetByIdController
 } = require('../controllers/snippetController');
+const validateRequest = require('../middlewares/validateRequest');
 
 const router = express.Router();
 
@@ -16,6 +17,7 @@ router.get(
     query('language').optional().isString(),
     query('q').optional().isString()
   ],
+  validateRequest,
   listPublicSnippetsController
 );
 
@@ -23,6 +25,7 @@ router.get(
 router.get(
   '/snippets/:id',
   [param('id').isInt().withMessage('El ID debe ser un número entero')],
+  validateRequest,
   getPublicSnippetByIdController
 );
 
