@@ -43,7 +43,7 @@ async function getMySnippetByIdController(req, res) {
   if (!snip) return res.status(404).json({ message: 'Snippet no encontrado' });
   if (snip.user_id !== user_id) return res.status(403).json({ message: 'Acceso denegado: este snippet no pertenece al usuario.' });
 
-  return res.json({ ...snip, tags: snip.tags ? JSON.parse(snip.tags) : null });
+  return res.json({ ...snip, tags: parseTags(snip.tags) });
 }
 
 /**
@@ -66,7 +66,7 @@ async function updateMySnippetController(req, res) {
   if (result.affectedRows === 0) return res.status(400).json({ message: 'No se aplicaron cambios' });
 
   const updated = await getSnippetById(id);
-  return res.json({ message: 'Snippet actualizado correctamente', snippet: { ...updated, tags: updated.tags ? JSON.parse(updated.tags) : null } });
+  return res.json({ message: 'Snippet actualizado correctamente', snippet: { ...updated, tags: parseTags(updated.tags) } });
 }
 
 /**
@@ -92,6 +92,17 @@ function parseBool(v) {
   return String(v).toLowerCase() === 'true' ? true : String(v).toLowerCase() === 'false' ? false : undefined;
 }
 
+// Función helper para parsear tags de forma segura
+function parseTags(tags) {
+  if (!tags) return null;
+  try {
+    return JSON.parse(tags);
+  } catch {
+    // Si no es JSON válido, intentar separar por comas
+    return typeof tags === 'string' ? tags.split(',').map(t => t.trim()) : null;
+  }
+}
+
 // Listado paginado + filtros
 async function listMySnippetsController(req, res) {
   const user_id = req.user.id;
@@ -104,7 +115,7 @@ async function listMySnippetsController(req, res) {
   const offset = (page - 1) * limit;
   const total = await countSnippetsByUserWithFilters(user_id, { language, is_favorite, q });
   const rows = await getSnippetsByUserPaged(user_id, { language, is_favorite, q, limit, offset });
-  const items = rows.map(r => ({ ...r, tags: r.tags ? JSON.parse(r.tags) : null }));
+  const items = rows.map(r => ({ ...r, tags: parseTags(r.tags) }));
 
   return res.json({ items, page, limit, total, hasNext: page * limit < total });
 }
@@ -135,7 +146,7 @@ async function listPublicSnippetsController(req, res) {
   const offset = (page - 1) * limit;
   const total = await countPublicSnippets({ language, q });
   const rows = await getPublicSnippets({ language, q, limit, offset });
-  const items = rows.map(r => ({ ...r, tags: r.tags ? JSON.parse(r.tags) : null }));
+  const items = rows.map(r => ({ ...r, tags: parseTags(r.tags) }));
 
   return res.json({ items, page, limit, total, hasNext: page * limit < total });
 }
@@ -144,7 +155,7 @@ async function getPublicSnippetByIdController(req, res) {
   const id = Number(req.params.id);
   const snip = await getSnippetById(id);
   if (!snip || !snip.is_public) return res.status(404).json({ message: 'Snippet no encontrado' });
-  return res.json({ ...snip, tags: snip.tags ? JSON.parse(snip.tags) : null });
+  return res.json({ ...snip, tags: parseTags(snip.tags) });
 }
 
 module.exports = {
