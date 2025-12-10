@@ -153,3 +153,16 @@ async function getPublicSnippets({ language, q, limit = 12, offset = 0 }) {
     params
   );
 }
+
+module.exports = {
+  createSnippet,
+  getSnippetsByUser,
+  getSnippetById,
+  updateSnippet,
+  deleteSnippet,
+  countSnippetsByUserWithFilters,
+  getSnippetsByUserPaged,
+  toggleFavorite,
+  countPublicSnippets,
+  getPublicSnippets
+};
