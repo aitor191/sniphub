@@ -100,15 +100,16 @@ async function getSnippetsByUserPaged(user_id, { language, is_favorite, q, limit
   if (typeof is_favorite === 'boolean') { where.push('is_favorite = ?'); params.push(is_favorite ? 1 : 0); }
   if (q) { where.push('(title LIKE ? OR description LIKE ?)'); params.push(`%${q}%`, `%${q}%`); }
 
-  params.push(Number(limit));
-  params.push(Number(offset));
+  // Interpolar LIMIT y OFFSET directamente (validados como números)
+  const safeLimit = parseInt(limit, 10) || 10;
+  const safeOffset = parseInt(offset, 10) || 0;
 
   return await query(
     `SELECT id, title, description, code, language, user_id, is_public, is_favorite, tags, created_at, updated_at
      FROM snippets
      WHERE ${where.join(' AND ')}
      ORDER BY updated_at DESC
-     LIMIT ? OFFSET ?`,
+     LIMIT ${safeLimit} OFFSET ${safeOffset}`,
     params
   );
 }
@@ -139,27 +140,16 @@ async function getPublicSnippets({ language, q, limit = 12, offset = 0 }) {
   if (language) { where.push('language = ?'); params.push(language); }
   if (q) { where.push('(title LIKE ? OR description LIKE ?)'); params.push(`%${q}%`, `%${q}%`); }
 
-  params.push(Number(limit), Number(offset));
+  // Interpolar LIMIT y OFFSET directamente (validados como números)
+  const safeLimit = parseInt(limit, 10) || 12;
+  const safeOffset = parseInt(offset, 10) || 0;
 
   return await query(
     `SELECT id, title, description, code, language, user_id, is_public, is_favorite, tags, created_at, updated_at
      FROM snippets
      WHERE ${where.join(' AND ')}
      ORDER BY updated_at DESC
-     LIMIT ? OFFSET ?`,
+     LIMIT ${safeLimit} OFFSET ${safeOffset}`,
     params
   );
 }
-
-module.exports = {
-  createSnippet,
-  getSnippetsByUser,
-  getSnippetById,
-  updateSnippet,
-  deleteSnippet,
-  countSnippetsByUserWithFilters,
-  getSnippetsByUserPaged,
-  toggleFavorite,
-  countPublicSnippets,
-  getPublicSnippets
-};
