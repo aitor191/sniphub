@@ -134,10 +134,8 @@ const startServer = async () => {
     // Conectar a la base de datos
     await connectDB();
 
-    // Inicializar tablas (solo en desarrollo)
-    if (process.env.NODE_ENV === 'development') {
-      await initDatabase();
-    }
+    // Inicializar tablas (siempre, no solo en desarrollo)
+    await initDatabase();
 
     app.listen(PORT, () => {
       console.log('✅ Servidor corriendo en http://localhost:' + PORT);
