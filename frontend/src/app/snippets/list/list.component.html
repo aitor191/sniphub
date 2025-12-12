@@ -147,6 +147,8 @@
       <div class="snippet-meta">
         <span class="badge badge-language">{{ snippet.language }}</span>
         <span class="badge badge-public" *ngIf="snippet.is_public">🌐 Público</span>
+        <!-- Mostrar los tags -->
+        <span class="badge badge-tag" *ngFor="let tag of snippet.tags">{{ tag }}</span>
         <span class="snippet-date">
           {{ snippet.updated_at | date:'short' }}
         </span>

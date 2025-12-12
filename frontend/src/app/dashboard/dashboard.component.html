@@ -133,6 +133,10 @@
             [class.tag-other]="snippet.language !== 'javascript'">
             {{ snippet.language }}
           </span>
+          <!-- Mmostrar los tags -->
+          <ng-container *ngIf="snippet.tags && snippet.tags.length > 0">
+            <span class="tag tag-custom" *ngFor="let tag of snippet.tags">{{ tag }}</span>
+          </ng-container>
         </div>
         <div class="snippet-preview">
           <code>{{ snippet.code.substring(0, 100) }}{{ snippet.code.length > 100 ? '...' : '' }}</code>
