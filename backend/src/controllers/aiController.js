@@ -2,10 +2,8 @@ const axios = require('axios');
 const crypto = require('crypto');
 const { getExplanationByHash, saveExplanation } = require('../models/codeExplanationModel');
 
-/**
- * Llama a Groq API (gratuita, rápida y sin tarjeta de crédito)
- * @param {string} prompt - Prompt a enviar
- */
+
+//Llama a Groq API (gratuita, rápida y sin tarjeta de crédito)
 async function callGroqApi(prompt) {
   const GROQ_API_KEY = process.env.GROQ_API_KEY;
   if (!GROQ_API_KEY) {
@@ -39,10 +37,7 @@ async function callGroqApi(prompt) {
   return res.data.choices[0]?.message?.content?.trim() || 'No se pudo generar la explicación';
 }
 
-/**
- * Llama a Hugging Face con el formato correcto del router
- * @param {string} prompt - Prompt a enviar
- */
+// Llama a Hugging Face con el formato correcto del router
 async function callHuggingFaceApi(prompt) {
   const HF_TOKEN = process.env.HUGGING_FACE_API_KEY;
   if (!HF_TOKEN) {
@@ -71,9 +66,7 @@ async function callHuggingFaceApi(prompt) {
   return JSON.stringify(res.data);
 }
 
-/**
- * Explicación inteligente local (fallback final)
- */
+// Explicación inteligente local (fallback final)
 function explainCodeLocal(code) {
   const lowerCode = code.toLowerCase();
   let language = 'desconocido';
@@ -91,9 +84,8 @@ function explainCodeLocal(code) {
     `Analiza la estructura para entender su funcionamiento específico.`;
 }
 
-/**
- * Ruta: POST /api/ai/explain - Explica código usando múltiples servicios con caché
- */
+
+//Ruta: POST /api/ai/explain - Explica código usando múltiples servicios con caché
 async function explainCode(req, res) {
   const { code } = req.body;
 
@@ -159,13 +151,13 @@ async function explainCode(req, res) {
     provider = 'local';
   }
 
-  // 4. Guardar en caché (solo si no es local, para ahorrar espacio en BD)
+  // 4. Guardar en caché 
   if (provider !== 'local') {
     try {
       await saveExplanation(codeHash, explanation, provider);
       console.log('>> Explicación guardada en caché');
     } catch (error) {
-      // Si falla guardar en caché, no es crítico - la explicación ya se generó
+      // Si falla guardar en caché.
       console.log('>> Error guardando en caché:', error.message);
     }
   }

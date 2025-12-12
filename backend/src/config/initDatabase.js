@@ -39,22 +39,19 @@ const initDatabase = async () => {
     console.log('✅ Tabla snippets creada');
 
     // Indices para futura escabilidad de la app
-    // Helper para crear índices de forma segura (ignora error si ya existen)
+    // Helper para crear índices de forma segura
     const createIndexSafe = async (sql) => {
       try {
         await query(sql);
       } catch (err) {
-        // Código 1061: Duplicate key name (el índice ya existe) -> Lo ignoramos
         if (err.errno === 1061) {
           console.log(`ℹ️ Índice ya existente omitido.`);
         } else {
-          // Si es otro error, lo lanzamos
           throw err;
         }
       }
     };
 
-    // Quitamos "IF NOT EXISTS" y usamos la función segura
     await createIndexSafe(`CREATE INDEX idx_snippets_user ON snippets (user_id, updated_at)`);
     await createIndexSafe(`CREATE INDEX idx_snippets_user_fav ON snippets (user_id, is_favorite)`);
     await createIndexSafe(`CREATE INDEX idx_snippets_user_lang ON snippets (user_id, language)`);

@@ -222,7 +222,6 @@ describe('Snippet Controller', () => {
 
     describe('parseBool utility (testeada indirectamente)', () => {
         // parseBool se usa en listMySnippetsController para parsear query.is_favorite
-        // La testeamos indirectamente a través de esa función
 
         beforeEach(() => {
             // Configuración común para todos los tests de parseBool
@@ -235,7 +234,7 @@ describe('Snippet Controller', () => {
 
             await listMySnippetsController(req, res);
 
-            // Verificamos que se llamó con is_favorite como boolean true
+            // Verificar que se llamó con is_favorite como boolean true
             expect(countSnippetsByUserWithFilters).toHaveBeenCalledWith(
                 1,
                 expect.objectContaining({
